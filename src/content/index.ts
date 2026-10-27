@@ -18,7 +18,7 @@ function isRunAxeRequest(message: unknown): message is RunAxeRequest {
 
 export default defineContentScript({
   registration: 'runtime',
-  matches: ['<all_urls>'],
+  matches: [],
   main() {
     // Скрипт внедряется при каждой проверке, слушатель нужен один.
     if (window.__plainA11yReady) return;
