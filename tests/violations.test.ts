@@ -4,21 +4,21 @@ import { toViolationItems } from '../src/report/violations';
 describe('toViolationItems', () => {
   it('превращает нарушения axe в строки списка', () => {
     const items = toViolationItems([
-      { id: 'image-alt', impact: 'critical', nodes: [{}, {}] },
-      { id: 'color-contrast', impact: 'serious', nodes: [{}] },
+      { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodes: [{}, {}] },
+      { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodes: [{}] },
     ]);
     expect(items).toEqual([
-      { id: 'image-alt', impact: 'critical', nodeCount: 2 },
-      { id: 'color-contrast', impact: 'serious', nodeCount: 1 },
+      { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodeCount: 2 },
+      { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodeCount: 1 },
     ]);
   });
 
   it('подставляет unknown, если impact не задан', () => {
     expect(
-      toViolationItems([{ id: 'x', impact: null, nodes: [] }, { id: 'y', nodes: [{}] }]),
+      toViolationItems([{ id: 'x', help: 'X', impact: null, nodes: [] }, { id: 'y', help: 'Y', nodes: [{}] }]),
     ).toEqual([
-      { id: 'x', impact: 'unknown', nodeCount: 0 },
-      { id: 'y', impact: 'unknown', nodeCount: 1 },
+      { id: 'x', help: 'X', impact: 'unknown', nodeCount: 0 },
+      { id: 'y', help: 'Y', impact: 'unknown', nodeCount: 1 },
     ]);
   });
 

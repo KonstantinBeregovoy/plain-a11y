@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CheckResponse, RunCheckRequest } from '../report/messages';
+import { describeRule } from '../dictionary/dictionary';
 import type { ViolationItem } from '../report/violations';
 
 type State =
@@ -52,13 +53,28 @@ export function App() {
       )}
       {state.status === 'done' && state.items.length > 0 && (
         <ul className="violations">
-          {state.items.map((item) => (
-            <li key={item.id}>
-              <strong>{item.id}</strong>
-              <span>Важность: {item.impact}</span>
-              <span>Элементов: {item.nodeCount}</span>
-            </li>
-          ))}
+          {state.items.map((item) => {
+            const rule = describeRule(item.id, item.help);
+            return (
+              <li key={item.id}>
+                <h2>{rule.title}</h2>
+                {rule.whoIsAffected && (
+                  <p>
+                    <strong>Кого касается:</strong> {rule.whoIsAffected}
+                  </p>
+                )}
+                {rule.howToFix && (
+                  <p>
+                    <strong>Как исправить:</strong> {rule.howToFix}
+                  </p>
+                )}
+                <p className="meta">
+                  Важность: {item.impact}. Элементов: {item.nodeCount}. Правило:{' '}
+                  <code>{item.id}</code>
+                </p>
+              </li>
+            );
+          })}
         </ul>
       )}
     </main>

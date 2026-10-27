@@ -64,8 +64,19 @@ button:disabled {
 }
 
 .violations li {
-  display: flex;
-  flex-direction: column;
   padding: 8px 0;
   border-top: 1px solid var(--border);
+}
+
+.violations h2 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.violations p {
+  margin: 4px 0;
+}
+
+.violations .meta {
+  font-size: 12px;
 }
