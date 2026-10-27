@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Тестовая страница с проблемами доступности</title>
+  </head>
+  <body>
+    <main>
+      <h1>Страница с заведомыми проблемами</h1>
+
+      <!-- image-alt: картинка без alt -->
+      <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" width="40" height="40" />
+
+      <!-- label: поле без подписи -->
+      <input type="text" />
+
+      <!-- color-contrast: светло-серый текст на белом -->
+      <p style="color: #bbbbbb; background: #ffffff">Этот текст почти не читается.</p>
+
+      <!-- link-name: ссылка без текста -->
+      <a href="https://example.com"></a>
+    </main>
+  </body>
+</html>
