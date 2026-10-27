@@ -35,6 +35,7 @@ export default defineContentScript({
           .then((results) => {
             const response: CheckResponse = {
               ok: true,
+              url: location.href,
               items: toViolationItems(results.violations),
             };
             sendResponse(response);

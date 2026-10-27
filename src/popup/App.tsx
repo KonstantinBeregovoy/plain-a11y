@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { Role } from '../dictionary/dictionary';
 import {
   POPUP_PORT,
   type CheckResponse,
@@ -14,15 +13,15 @@ import {
   SEVERITY_LABELS,
   groupReport,
 } from '../report/groupReport';
+import { toMarkdown } from '../report/toMarkdown';
 import type { ViolationItem } from '../report/violations';
+import { loadRoleFilter, saveRoleFilter, type RoleFilter } from './settings';
 
 type State =
   | { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'done'; items: ViolationItem[] }
+  | { status: 'done'; items: ViolationItem[]; url: string; checkedAt: Date }
   | { status: 'error'; message: string };
-
-type RoleFilter = Role | 'all';
 
 const FILTER_OPTIONS: readonly { value: RoleFilter; label: string }[] = [
   { value: 'all', label: 'Все' },
@@ -43,6 +42,21 @@ export function App() {
   useEffect(() => {
     const port = browser.runtime.connect({ name: POPUP_PORT });
     return () => port.disconnect();
+  }, []);
+
+  // Восстанавливаем выбранный фильтр роли.
+  useEffect(() => {
+    let cancelled = false;
+    loadRoleFilter()
+      .then((saved) => {
+        if (!cancelled) setRoleFilter(saved);
+      })
+      .catch(() => {
+        // Без сохранённых настроек остаётся фильтр «Все».
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const groups = useMemo(
@@ -70,11 +84,39 @@ export function App() {
       )) as CheckResponse;
       setState(
         response.ok
-          ? { status: 'done', items: response.items }
+          ? {
+              status: 'done',
+              items: response.items,
+              url: response.url,
+              checkedAt: new Date(),
+            }
           : { status: 'error', message: response.error },
       );
     } catch (error) {
       setState({ status: 'error', message: errorMessage(error) });
+    }
+  }
+
+  function changeRoleFilter(value: RoleFilter) {
+    setRoleFilter(value);
+    saveRoleFilter(value).catch(() => {
+      // Не удалось сохранить: фильтр просто не запомнится.
+    });
+  }
+
+  async function copyReport() {
+    if (state.status !== 'done') return;
+    const markdown = toMarkdown(state.items, {
+      url: state.url,
+      date: state.checkedAt,
+    });
+    // Сначала очищаем сообщение, чтобы повторное копирование объявилось заново.
+    setNotice('');
+    try {
+      await navigator.clipboard.writeText(markdown);
+      setNotice('Отчёт скопирован в буфер обмена.');
+    } catch {
+      setNotice('Не удалось скопировать отчёт.');
     }
   }
 
@@ -128,6 +170,11 @@ export function App() {
       {state.status === 'error' && (
         <p role="alert">Не удалось проверить страницу: {state.message}</p>
       )}
+      {state.status === 'done' && (
+        <button type="button" className="secondary" onClick={copyReport}>
+          Скопировать отчёт
+        </button>
+      )}
       {state.status === 'done' && state.items.length > 0 && (
         <>
           <fieldset className="filter">
@@ -139,7 +186,7 @@ export function App() {
                   name="role-filter"
                   value={option.value}
                   checked={roleFilter === option.value}
-                  onChange={() => setRoleFilter(option.value)}
+                  onChange={() => changeRoleFilter(option.value)}
                 />
                 {option.label}
               </label>

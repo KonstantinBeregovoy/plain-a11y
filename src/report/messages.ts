@@ -22,7 +22,7 @@ export interface ClearHighlightRequest {
 }
 
 export type CheckResponse =
-  | { ok: true; items: ViolationItem[] }
+  | { ok: true; url: string; items: ViolationItem[] }
   | { ok: false; error: string };
 
 export type HighlightResponse =
