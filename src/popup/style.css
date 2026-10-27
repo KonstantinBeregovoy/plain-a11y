@@ -68,7 +68,7 @@ button:disabled {
   border-top: 1px solid var(--border);
 }
 
-.violations h2 {
+.violations h4 {
   margin: 0 0 4px;
   font-size: 15px;
 }
@@ -79,4 +79,52 @@ button:disabled {
 
 .violations .meta {
   font-size: 12px;
+}
+
+.filter {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.filter legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.filter label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  margin-right: 12px;
+}
+
+.filter input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+.severity h2 {
+  margin: 16px 0 4px;
+  font-size: 16px;
+}
+
+.severity h3 {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+button.secondary[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
 }

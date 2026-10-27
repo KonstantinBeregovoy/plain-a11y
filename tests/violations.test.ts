@@ -4,25 +4,42 @@ import { toViolationItems } from '../src/report/violations';
 describe('toViolationItems', () => {
   it('превращает нарушения axe в строки списка', () => {
     const items = toViolationItems([
-      { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodes: [{}, {}] },
-      { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodes: [{}] },
+      { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodes: [{ target: ['#a'] }, { target: ['.b > img'] }] },
+      { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodes: [{ target: ['p'] }] },
     ]);
     expect(items).toEqual([
-      { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodeCount: 2 },
-      { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodeCount: 1 },
+      { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodeCount: 2, targets: ['#a', '.b > img'] },
+      { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodeCount: 1, targets: ['p'] },
     ]);
   });
 
   it('подставляет unknown, если impact не задан', () => {
     expect(
-      toViolationItems([{ id: 'x', help: 'X', impact: null, nodes: [] }, { id: 'y', help: 'Y', nodes: [{}] }]),
+      toViolationItems([{ id: 'x', help: 'X', impact: null, nodes: [] }, { id: 'y', help: 'Y', nodes: [{ target: ['p'] }] }]),
     ).toEqual([
-      { id: 'x', help: 'X', impact: 'unknown', nodeCount: 0 },
-      { id: 'y', help: 'Y', impact: 'unknown', nodeCount: 1 },
+      { id: 'x', help: 'X', impact: 'unknown', nodeCount: 0, targets: [] },
+      { id: 'y', help: 'Y', impact: 'unknown', nodeCount: 1, targets: ['p'] },
     ]);
   });
 
   it('возвращает пустой список для пустого результата', () => {
     expect(toViolationItems([])).toEqual([]);
+  });
+
+  it('пропускает селекторы для iframe и shadow DOM', () => {
+    const [item] = toViolationItems([
+      {
+        id: 'image-alt',
+        help: 'h',
+        impact: 'critical',
+        nodes: [
+          { target: ['img'] },
+          { target: ['iframe', 'img'] },
+          { target: [['#host', 'img']] },
+        ],
+      },
+    ]);
+    expect(item?.nodeCount).toBe(3);
+    expect(item?.targets).toEqual(['img']);
   });
 });
