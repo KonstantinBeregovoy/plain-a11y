@@ -95,6 +95,9 @@ describe('dictionary coverage by part', () => {
     ['semantics', 11], // TASK-11 (10 new)
     ['keyboard', 8], // TASK-11 (7 new)
     ['structure', 6], // TASK-11 (6 new)
+    ['text-alternatives', 12], // TASK-12 (9 new)
+    ['name-role-value', 7], // TASK-12 (5 new)
+    ['forms', 5], // TASK-12 (4 new)
   ];
 
   for (const [category, count] of PARTS) {
@@ -106,19 +109,31 @@ describe('dictionary coverage by part', () => {
     });
   }
 
-  it('hands the technical rules to code and the heading rule to content', () => {
+  it('hands technical rules to code, wording rules to content, layout rules to design', () => {
     const notCode = dictionary
       .filter((entry) => entry.role !== 'code')
       .map((entry) => `${entry.id}:${entry.role}`)
       .sort();
-    expect(notCode).toEqual([
-      'color-contrast:design',
-      'document-title:content',
-      'heading-order:content',
-      'image-alt:content',
-      'link-name:content',
-      'page-has-heading-one:content',
-      'target-size:design',
-    ]);
+    expect(notCode).toEqual(
+      [
+        'area-alt:content',
+        'color-contrast:design',
+        'document-title:content',
+        'empty-heading:content',
+        'empty-table-header:content',
+        'heading-order:content',
+        'image-alt:content',
+        'image-redundant-alt:content',
+        'input-image-alt:content',
+        'label-title-only:design',
+        'link-name:content',
+        'object-alt:content',
+        'page-has-heading-one:content',
+        'role-img-alt:content',
+        'svg-img-alt:content',
+        'target-size:design',
+        'video-caption:content',
+      ].sort(),
+    );
   });
 });

@@ -540,6 +540,168 @@ export const dictionary: readonly DictionaryEntry[] = [
       'Ask developers to wrap the item in a list, or to use another element.',
     role: 'code',
   },
+  {
+    id: 'area-alt',
+    title: 'Clickable part of an image has no text description',
+    whoIsAffected:
+      'Blind people and voice-control users: they cannot tell what the clickable part does.',
+    howToFix:
+      'Add a short description to each clickable part of the image that says where it leads.',
+    role: 'content',
+  },
+  {
+    id: 'frame-title-unique',
+    title: 'Two embedded frames have the same title',
+    whoIsAffected:
+      'Blind people: they cannot tell the frames apart.',
+    howToFix:
+      'Give each embedded frame its own short title that describes its content.',
+    role: 'code',
+  },
+  {
+    id: 'image-redundant-alt',
+    title: 'Image description repeats the text next to it',
+    whoIsAffected:
+      'Screen reader users, who hear the same words twice.',
+    howToFix:
+      'Shorten or remove the image description if it only repeats the text beside it. Keep it only when it adds something new.',
+    role: 'content',
+  },
+  {
+    id: 'input-image-alt',
+    title: 'Image button has no text description',
+    whoIsAffected:
+      'Blind people and voice-control users: they cannot tell what the button does.',
+    howToFix:
+      'Add a short description that names the action, for example “Search”, not what the picture looks like.',
+    role: 'content',
+  },
+  {
+    id: 'object-alt',
+    title: 'Embedded object has no text alternative',
+    whoIsAffected:
+      'Blind people: they cannot tell what the embedded content is.',
+    howToFix:
+      'Add a short text description of the embedded content, or provide the same information as ordinary text.',
+    role: 'content',
+  },
+  {
+    id: 'role-img-alt',
+    title: 'Custom image has no text description',
+    whoIsAffected:
+      'Blind people: a screen reader cannot tell them what the image shows.',
+    howToFix:
+      'Add a short description that conveys what the image means. If it is purely decorative, mark it as decorative.',
+    role: 'content',
+  },
+  {
+    id: 'server-side-image-map',
+    title: 'Clickable picture works only with a mouse',
+    whoIsAffected:
+      'Keyboard users, who cannot choose the parts of the picture.',
+    howToFix:
+      'Ask developers to replace it with ordinary links, or with a picture whose parts can be reached by keyboard.',
+    role: 'code',
+  },
+  {
+    id: 'svg-img-alt',
+    title: 'Vector graphic has no text description',
+    whoIsAffected:
+      'Blind people: a screen reader cannot tell them what the graphic shows.',
+    howToFix:
+      'Add a short title or description to the graphic that conveys its meaning. If it is only decoration, mark it as decorative.',
+    role: 'content',
+  },
+  {
+    id: 'video-caption',
+    title: 'Video has no captions',
+    whoIsAffected:
+      'Deaf and hard-of-hearing people, and anyone watching without sound.',
+    howToFix:
+      'Add captions that include speech and important sounds. Most video platforms can add them to the file.',
+    role: 'content',
+  },
+  {
+    id: 'aria-hidden-focus',
+    title: 'Hidden content can still be reached by keyboard',
+    whoIsAffected:
+      'Keyboard and screen reader users: focus lands on something they cannot see or hear.',
+    howToFix:
+      'Ask developers to either show the content to everyone, or to make it unreachable by keyboard while it is hidden.',
+    role: 'code',
+  },
+  {
+    id: 'empty-heading',
+    title: 'Heading has no text',
+    whoIsAffected:
+      'Screen reader users, who hear an empty heading and cannot tell what follows.',
+    howToFix:
+      'Add text to the heading, or remove it if it is only used for spacing.',
+    role: 'content',
+  },
+  {
+    id: 'empty-table-header',
+    title: 'Table header cell is empty',
+    whoIsAffected:
+      'Screen reader users: they cannot tell what the column or row contains.',
+    howToFix:
+      'Write a short label in each header cell, or turn the cell into an ordinary one if it needs no label.',
+    role: 'content',
+  },
+  {
+    id: 'input-button-name',
+    title: 'Button created from an input has no text',
+    whoIsAffected:
+      'Blind people and voice-control users: they cannot tell what the button does.',
+    howToFix:
+      'Give the button a text value that describes the action, for example “Send”.',
+    role: 'code',
+  },
+  {
+    id: 'summary-name',
+    title: 'Expandable section has no title',
+    whoIsAffected:
+      'Blind people and voice-control users: they cannot tell what the section contains.',
+    howToFix:
+      'Add a short title to the expandable section that says what it opens.',
+    role: 'code',
+  },
+  {
+    id: 'autocomplete-valid',
+    title: 'Form field is set to fill in the wrong kind of data',
+    whoIsAffected:
+      'People with memory or motor difficulties, who rely on the browser to fill in forms.',
+    howToFix:
+      'Ask developers to use a valid autofill value that matches the field, for example “email” for an email address.',
+    role: 'code',
+  },
+  {
+    id: 'form-field-multiple-labels',
+    title: 'Form field has several labels',
+    whoIsAffected:
+      'Screen reader users, who may hear only one of the labels or a confusing mix.',
+    howToFix:
+      'Ask developers to keep one label per field.',
+    role: 'code',
+  },
+  {
+    id: 'label-title-only',
+    title: 'Form field has no visible label',
+    whoIsAffected:
+      'Everyone, especially people with memory or attention difficulties: a hint that disappears is easy to lose.',
+    howToFix:
+      'Add a visible label next to the field. Do not rely on a tooltip or a placeholder alone.',
+    role: 'design',
+  },
+  {
+    id: 'select-name',
+    title: 'Dropdown has no label',
+    whoIsAffected:
+      'Blind people and voice-control users: they cannot tell what to choose.',
+    howToFix:
+      'Attach a visible label to the dropdown that says what the choice is for, for example “Country”.',
+    role: 'code',
+  },
 ];
 
 const byId = new Map(dictionary.map((entry) => [entry.id, entry]));
