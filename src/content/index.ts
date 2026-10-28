@@ -30,8 +30,9 @@ export default defineContentScript({
 
     browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (hasType(message, 'run-axe')) {
+        // preload: false запрещает axe скачивать стили и медиа страницы по сети.
         axe
-          .run(document)
+          .run(document, { preload: false })
           .then((results) => {
             const response: CheckResponse = {
               ok: true,
