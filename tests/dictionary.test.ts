@@ -22,10 +22,11 @@ function sentenceCount(text: string): number {
 }
 
 describe('dictionary', () => {
-  it('covers all rules from the task', () => {
-    expect(dictionary.map((entry) => entry.id).sort()).toEqual(
-      [...REQUIRED_IDS].sort(),
-    );
+  it('still contains the rules from the earlier tasks (TASK-2, TASK-9)', () => {
+    const ids = new Set(dictionary.map((entry) => entry.id));
+    for (const id of REQUIRED_IDS) {
+      expect(ids.has(id), id).toBe(true);
+    }
   });
 
   it('has every field filled in for each entry', () => {
@@ -76,5 +77,28 @@ describe('describeRule', () => {
       howToFix: null,
       role: 'code',
     });
+  });
+});
+
+describe('dictionary coverage by part', () => {
+  function ruleIds(category: string): string[] {
+    return axe
+      .getRules()
+      .filter((rule) => rule.tags.includes(`cat.${category}`) && rule.enabled)
+      .map((rule) => rule.ruleId);
+  }
+
+  it('describes every aria rule that axe runs by default (TASK-10)', () => {
+    const described = new Set(dictionary.map((entry) => entry.id));
+    const missing = ruleIds('aria').filter((id) => !described.has(id));
+    expect(missing).toEqual([]);
+  });
+
+  it('describes the 24 aria rules with the code role', () => {
+    const aria = ruleIds('aria');
+    expect(aria).toHaveLength(24);
+    for (const id of aria) {
+      expect(describeRule(id, 'help').role, id).toBe('code');
+    }
   });
 });
