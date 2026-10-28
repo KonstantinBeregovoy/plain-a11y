@@ -1,20 +1,20 @@
 import {
   POPUP_PORT,
+  errorMessage,
   hasType,
   isHighlightRequest,
   type CheckResponse,
   type ClearHighlightRequest,
   type HighlightRequest,
   type HighlightResponse,
+  type PingRequest,
+  type PingResponse,
   type RunAxeRequest,
 } from '../report/messages';
+import { ensureContentScript } from './inject';
 
 /** The tab where the highlight is currently on. */
 let highlightedTabId: number | undefined;
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
 
 async function activeTabId(): Promise<number | undefined> {
   const [tab] = await browser.tabs.query({
@@ -30,9 +30,20 @@ async function checkActiveTab(): Promise<CheckResponse> {
     if (tabId === undefined) {
       return { ok: false, error: 'Could not find the open tab.' };
     }
-    await browser.scripting.executeScript({
-      target: { tabId },
-      files: ['/content-scripts/content.js'],
+    await ensureContentScript(tabId, {
+      ping: async (id) => {
+        const request: PingRequest = { type: 'ping' };
+        const reply = (await browser.tabs.sendMessage(id, request)) as
+          | PingResponse
+          | undefined;
+        return reply?.ok === true;
+      },
+      inject: async (id) => {
+        await browser.scripting.executeScript({
+          target: { tabId: id },
+          files: ['/content-scripts/content.js'],
+        });
+      },
     });
     const request: RunAxeRequest = { type: 'run-axe' };
     return (await browser.tabs.sendMessage(tabId, request)) as CheckResponse;

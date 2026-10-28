@@ -54,4 +54,30 @@ describe('createHighlighter', () => {
     highlighter.clear();
     expect(document.documentElement.outerHTML).toBe(before);
   });
+
+  it('drops an empty style attribute that the browser leaves behind', () => {
+    // Chrome can keep style="" after removeAttribute when the inline style was
+    // changed through the CSSOM and the attribute was never read. Simulate it.
+    const before = document.documentElement.outerHTML;
+    const img = document.querySelector('img');
+    expect(img).not.toBeNull();
+    if (!img) return;
+    const original = img.removeAttribute.bind(img);
+    let leaked = false;
+    img.removeAttribute = (name: string) => {
+      if (name === 'style' && !leaked) {
+        leaked = true;
+        img.setAttribute('style', '');
+        return;
+      }
+      original(name);
+    };
+
+    const highlighter = createHighlighter(document);
+    highlighter.show(['#pic']);
+    highlighter.clear();
+
+    expect(leaked).toBe(true);
+    expect(document.documentElement.outerHTML).toBe(before);
+  });
 });

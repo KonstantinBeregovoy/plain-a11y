@@ -21,8 +21,14 @@ export function createHighlighter(doc: Document) {
 
   function clear(): void {
     for (const { element, style } of saved) {
-      if (style === null) element.removeAttribute('style');
-      else element.setAttribute('style', style);
+      if (style !== null) {
+        element.setAttribute('style', style);
+        continue;
+      }
+      element.removeAttribute('style');
+      // After inline style changes made through the CSSOM, Chrome can leave an
+      // empty style="" behind. Reading the attribute syncs it, then we drop it.
+      if (element.getAttribute('style') === '') element.removeAttribute('style');
     }
     saved = [];
   }

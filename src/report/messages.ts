@@ -10,6 +10,11 @@ export interface RunAxeRequest {
   type: 'run-axe';
 }
 
+/** The service worker asks the content script whether it is already injected. */
+export interface PingRequest {
+  type: 'ping';
+}
+
 /** Outline elements on the page. A new highlight replaces the previous one. */
 export interface HighlightRequest {
   type: 'highlight';
@@ -19,6 +24,10 @@ export interface HighlightRequest {
 /** Remove the highlight. */
 export interface ClearHighlightRequest {
   type: 'clear-highlight';
+}
+
+export interface PingResponse {
+  ok: true;
 }
 
 export type CheckResponse =
@@ -48,4 +57,8 @@ export function isHighlightRequest(
   return (
     Array.isArray(targets) && targets.every((item) => typeof item === 'string')
   );
+}
+
+export function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }

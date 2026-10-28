@@ -15,6 +15,19 @@ export interface ReportMeta {
   date: Date;
 }
 
+/**
+ * Keeps only scheme, host and path. Query strings and fragments often carry
+ * tokens or personal data, and the report is meant to be pasted into tickets.
+ */
+export function formatPageUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
+  } catch {
+    return url.split(/[?#]/)[0] ?? '';
+  }
+}
+
 function formatDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -29,7 +42,7 @@ export function toMarkdown(
   const lines = [
     '# Accessibility report',
     '',
-    `Page: ${meta.url}`,
+    `Page: ${formatPageUrl(meta.url)}`,
     `Date: ${formatDate(meta.date)}`,
     '',
   ];

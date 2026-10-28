@@ -1,9 +1,11 @@
 import axe from 'axe-core';
 import {
+  errorMessage,
   hasType,
   isHighlightRequest,
   type CheckResponse,
   type HighlightResponse,
+  type PingResponse,
 } from '../report/messages';
 import { toViolationItems } from '../report/violations';
 import { createHighlighter } from './highlight';
@@ -12,10 +14,6 @@ declare global {
   interface Window {
     __plainA11yReady?: boolean;
   }
-}
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
 }
 
 export default defineContentScript({
@@ -29,6 +27,11 @@ export default defineContentScript({
     const highlighter = createHighlighter(document);
 
     browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+      if (hasType(message, 'ping')) {
+        const response: PingResponse = { ok: true };
+        sendResponse(response);
+        return false;
+      }
       if (hasType(message, 'run-axe')) {
         // preload: false stops axe from downloading the page's styles and media.
         axe
