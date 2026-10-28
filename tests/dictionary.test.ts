@@ -88,17 +88,37 @@ describe('dictionary coverage by part', () => {
       .map((rule) => rule.ruleId);
   }
 
-  it('describes every aria rule that axe runs by default (TASK-10)', () => {
-    const described = new Set(dictionary.map((entry) => entry.id));
-    const missing = ruleIds('aria').filter((id) => !described.has(id));
-    expect(missing).toEqual([]);
-  });
+  // Categories described so far and how many rules axe runs by default in each,
+  // counting entries written in earlier tasks (for example tabindex in keyboard).
+  const PARTS: [string, number][] = [
+    ['aria', 24], // TASK-10
+    ['semantics', 11], // TASK-11 (10 new)
+    ['keyboard', 8], // TASK-11 (7 new)
+    ['structure', 6], // TASK-11 (6 new)
+  ];
 
-  it('describes the 24 aria rules with the code role', () => {
-    const aria = ruleIds('aria');
-    expect(aria).toHaveLength(24);
-    for (const id of aria) {
-      expect(describeRule(id, 'help').role, id).toBe('code');
-    }
+  for (const [category, count] of PARTS) {
+    it(`describes every ${category} rule that axe runs by default (${count})`, () => {
+      const described = new Set(dictionary.map((entry) => entry.id));
+      const ids = ruleIds(category);
+      expect(ids).toHaveLength(count);
+      expect(ids.filter((id) => !described.has(id))).toEqual([]);
+    });
+  }
+
+  it('hands the technical rules to code and the heading rule to content', () => {
+    const notCode = dictionary
+      .filter((entry) => entry.role !== 'code')
+      .map((entry) => `${entry.id}:${entry.role}`)
+      .sort();
+    expect(notCode).toEqual([
+      'color-contrast:design',
+      'document-title:content',
+      'heading-order:content',
+      'image-alt:content',
+      'link-name:content',
+      'page-has-heading-one:content',
+      'target-size:design',
+    ]);
   });
 });

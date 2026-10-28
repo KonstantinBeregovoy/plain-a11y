@@ -333,6 +333,213 @@ export const dictionary: readonly DictionaryEntry[] = [
       'Ask developers to remove the decorative role from elements that can be focused or have a label, or to remove the focus or label.',
     role: 'code',
   },
+  {
+    id: 'label-content-name-mismatch',
+    title: 'Button or link is named differently from what it shows',
+    whoIsAffected:
+      'Voice-control users, who say the words they see on the screen and get no response.',
+    howToFix:
+      'Make the hidden name include the exact visible text. For example, a button that shows “Search” should not be named “Find”.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-banner-is-top-level',
+    title: 'Page header area is nested inside another area',
+    whoIsAffected:
+      'Screen reader users, who jump between page areas and may not find the header.',
+    howToFix:
+      'Ask developers to move the page header out of other page areas, so that it sits directly in the page.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-contentinfo-is-top-level',
+    title: 'Page footer area is nested inside another area',
+    whoIsAffected:
+      'Screen reader users, who jump between page areas and may not find the footer.',
+    howToFix:
+      'Ask developers to move the page footer out of other page areas, so that it sits directly in the page.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-main-is-top-level',
+    title: 'Main content area is nested inside another area',
+    whoIsAffected:
+      'Screen reader users, who jump straight to the main content and may miss it.',
+    howToFix:
+      'Ask developers to move the main content area out of other page areas, so that it sits directly in the page.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-no-duplicate-banner',
+    title: 'Page has more than one header area',
+    whoIsAffected:
+      'Screen reader users, who cannot tell which header belongs to the whole page.',
+    howToFix:
+      'Ask developers to keep one page header and to mark any other headers as ordinary sections.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-no-duplicate-contentinfo',
+    title: 'Page has more than one footer area',
+    whoIsAffected:
+      'Screen reader users, who cannot tell which footer belongs to the whole page.',
+    howToFix:
+      'Ask developers to keep one page footer and to mark any other footers as ordinary sections.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-no-duplicate-main',
+    title: 'Page has more than one main content area',
+    whoIsAffected:
+      'Screen reader users, who cannot tell where the real main content is.',
+    howToFix:
+      'Ask developers to keep exactly one main content area on the page.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-one-main',
+    title: 'Page has no main content area',
+    whoIsAffected:
+      'Screen reader users, who cannot jump straight to the main content.',
+    howToFix:
+      'Ask developers to wrap the main content of the page in one main content area.',
+    role: 'code',
+  },
+  {
+    id: 'landmark-unique',
+    title: 'Several page areas of the same kind look identical',
+    whoIsAffected:
+      'Screen reader users, who hear the same name for different areas.',
+    howToFix:
+      'Give each of them a short, different name, for example “Main menu” and “Footer menu”.',
+    role: 'code',
+  },
+  {
+    id: 'page-has-heading-one',
+    title: 'Page has no main heading',
+    whoIsAffected:
+      'Screen reader users and anyone scanning the page: the main heading says what the page is about.',
+    howToFix:
+      'Add one top-level heading that names the page, and place it at the start of the main content.',
+    role: 'content',
+  },
+  {
+    id: 'accesskeys',
+    title: 'Two shortcut keys are the same',
+    whoIsAffected:
+      'Keyboard users: one shortcut key opens the wrong thing or does nothing.',
+    howToFix:
+      'Ask developers to give every shortcut key a different letter, or to remove the duplicates.',
+    role: 'code',
+  },
+  {
+    id: 'bypass',
+    title: 'No way to skip repeated blocks',
+    whoIsAffected:
+      'Keyboard and screen reader users, who must move through the menu again on every page.',
+    howToFix:
+      'Ask developers to add a “Skip to main content” link at the top, or to mark the page areas so that users can jump between them.',
+    role: 'code',
+  },
+  {
+    id: 'frame-focusable-content',
+    title: 'Embedded frame with clickable parts cannot be reached by keyboard',
+    whoIsAffected:
+      'Keyboard users: they cannot get into the frame.',
+    howToFix:
+      'Ask developers to remove the setting that takes the frame out of the keyboard order.',
+    role: 'code',
+  },
+  {
+    id: 'nested-interactive',
+    title: 'Clickable element is placed inside another clickable element',
+    whoIsAffected:
+      'Screen reader and voice-control users: the inner control may be ignored or announced wrongly.',
+    howToFix:
+      'Ask developers to separate them, for example a button inside a link should become two side-by-side controls.',
+    role: 'code',
+  },
+  {
+    id: 'region',
+    title: 'Some content is outside any page area',
+    whoIsAffected:
+      'Screen reader users, who jump between areas and skip content that belongs to none.',
+    howToFix:
+      'Ask developers to place all content inside page areas such as header, main, navigation and footer.',
+    role: 'code',
+  },
+  {
+    id: 'scrollable-region-focusable',
+    title: 'Scrollable area cannot be reached with the keyboard',
+    whoIsAffected:
+      'Keyboard users: they cannot scroll to see the hidden content.',
+    howToFix:
+      'Ask developers to make the scrollable area focusable, or to make sure it contains something that can be focused.',
+    role: 'code',
+  },
+  {
+    id: 'skip-link',
+    title: 'Skip link points to nothing usable',
+    whoIsAffected:
+      'Keyboard users: the link meant to jump past the menu does not work.',
+    howToFix:
+      'Ask developers to make the skip link lead to an element that exists and can receive focus, such as the main content.',
+    role: 'code',
+  },
+  {
+    id: 'avoid-inline-spacing',
+    title: 'Text spacing is locked and cannot be adjusted',
+    whoIsAffected:
+      'People with dyslexia or low vision, who widen text spacing to read comfortably.',
+    howToFix:
+      'Ask developers to remove the forced spacing from the text, so that the reader’s own style settings can override it.',
+    role: 'code',
+  },
+  {
+    id: 'definition-list',
+    title: 'Definition list is built incorrectly',
+    whoIsAffected:
+      'Screen reader users: the list is read as a jumble instead of term and meaning pairs.',
+    howToFix:
+      'Ask developers to put only term and description pairs directly inside the definition list.',
+    role: 'code',
+  },
+  {
+    id: 'dlitem',
+    title: 'Term or description is outside a definition list',
+    whoIsAffected:
+      'Screen reader users: the term is read without its list context.',
+    howToFix:
+      'Ask developers to wrap the term and description in a definition list, or to use another element.',
+    role: 'code',
+  },
+  {
+    id: 'frame-tested',
+    title: 'Content of an embedded frame was not checked',
+    whoIsAffected:
+      'Everyone who relies on that content: problems inside the frame stay unseen.',
+    howToFix:
+      'Check the framed page separately, or ask developers to let the check run inside the frame.',
+    role: 'code',
+  },
+  {
+    id: 'list',
+    title: 'List is built incorrectly',
+    whoIsAffected:
+      'Screen reader users: the list is announced with wrong or missing item counts.',
+    howToFix:
+      'Ask developers to put only list items directly inside the list. If a text editor created it, remove the stray elements between the items.',
+    role: 'code',
+  },
+  {
+    id: 'listitem',
+    title: 'List item is outside a list',
+    whoIsAffected:
+      'Screen reader users: the item is read without its list context.',
+    howToFix:
+      'Ask developers to wrap the item in a list, or to use another element.',
+    role: 'code',
+  },
 ];
 
 const byId = new Map(dictionary.map((entry) => [entry.id, entry]));
