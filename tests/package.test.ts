@@ -72,6 +72,7 @@ describe('package constraints', () => {
       'store/listing.md',
       'docs/a11y-checklist.md',
       'docs/ROADMAP.md',
+      'docs/PROJECT_LOG.md',
       'LICENSE',
       'THIRD_PARTY_NOTICES.md',
       'package.json',
