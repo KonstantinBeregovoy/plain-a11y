@@ -87,6 +87,10 @@ It is the format the Chrome Web Store requires for new extensions. It also enfor
 - The interface, the dictionary and the report are in English only.
 - The dictionary describes every rule axe runs by default (90), plus the minimum clickable size rule (`target-size`) and three AAA rules we switch on, 94 in total. A rule that is not in the dictionary, for example after an axe-core update, is shown with the English axe description and the role “code”. Experimental and deprecated rules, which axe keeps off by default, are not run.
 
+## Website
+
+The website of the project is a separate static site in its own repository (plain HTML and CSS, deployed to Cloudflare Pages). Its images are made from `store/screenshots` with `npm run site-assets -- <path to the site repository>/assets`. The site repeats `PRIVACY.md` and `LICENSE` as web pages, so change them together.
+
 ## Privacy
 
 The extension collects nothing and sends nothing. Details are in [PRIVACY.md](PRIVACY.md).

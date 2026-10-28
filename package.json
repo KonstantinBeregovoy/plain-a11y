@@ -13,7 +13,8 @@
     "test": "vitest run",
     "postinstall": "wxt prepare",
     "icons": "node scripts/make-icons.mjs",
-    "zip": "wxt zip"
+    "zip": "wxt zip",
+    "site-assets": "node scripts/make-site-assets.cjs"
   },
   "dependencies": {
     "axe-core": "4.14.0",

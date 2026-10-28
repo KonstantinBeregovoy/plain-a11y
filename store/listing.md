@@ -35,7 +35,7 @@ Check the open tab for accessibility problems and show the result in plain langu
 | --- | --- |
 | `activeTab` | Gives access to the current tab only after the user clicks the extension icon, so that exactly this tab is checked. There is no permanent access to sites. |
 | `scripting` | Injects the axe-core check script and the element highlight script into the current tab. It is the only way to run the check inside the page. |
-| `storage` | Stores the selected role filter locally so that it is restored the next time. No other data is saved. |
+| `storage` | Stores two choices locally so that they are restored the next time: the selected role filter and whether the AAA block is shown. No other data is saved. |
 
 Host access (`host_permissions`) is not requested. There is no remotely loaded code: all code is in the package.
 
