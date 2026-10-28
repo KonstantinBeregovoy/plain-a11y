@@ -69,6 +69,7 @@ describe('package constraints', () => {
       'PRIVACY.md',
       'store/listing.md',
       'docs/a11y-checklist.md',
+      'docs/ROADMAP.md',
       'package.json',
       'wxt.config.ts',
     ];
