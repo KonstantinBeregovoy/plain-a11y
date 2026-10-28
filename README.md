@@ -94,3 +94,7 @@ The extension collects nothing and sends nothing. Details are in [PRIVACY.md](PR
 ## Accessibility of the extension itself
 
 The interface is checked with axe in the tests and in a real browser. What has been checked, and what is left for manual checking with a screen reader, is recorded in [docs/a11y-checklist.md](docs/a11y-checklist.md).
+
+## License
+
+Plain A11y is released under the [MIT License](LICENSE), copyright (c) 2026 Konstantin Beregovoy. The extension bundles axe-core (MPL-2.0) and React (MIT); see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

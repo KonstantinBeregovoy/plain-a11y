@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Check a page for accessibility problems and get plain-language explanations",
+  "author": "Konstantin Beregovoy",
+  "license": "MIT",
   "scripts": {
     "dev": "wxt",
     "build": "wxt build",

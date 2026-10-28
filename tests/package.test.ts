@@ -72,11 +72,50 @@ describe('package constraints', () => {
       'store/listing.md',
       'docs/a11y-checklist.md',
       'docs/ROADMAP.md',
+      'LICENSE',
+      'THIRD_PARTY_NOTICES.md',
       'package.json',
       'wxt.config.ts',
     ];
     for (const path of files) {
       expect(readFileSync(path, 'utf8'), path).not.toMatch(/[\u0400-\u04FF]/);
     }
+  });
+});
+
+describe('license files', () => {
+  it('has an MIT license held by the author, in the repository and in the extension package', () => {
+    const license = readFileSync('LICENSE', 'utf8');
+    expect(license).toContain('MIT License');
+    expect(license).toContain('Copyright (c) 2026 Konstantin Beregovoy');
+    expect(readFileSync('src/public/LICENSE', 'utf8')).toBe(license);
+  });
+
+  it('declares the license and the author in package.json', () => {
+    const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as {
+      license: string;
+      author: string;
+    };
+    expect(pkg.license).toBe('MIT');
+    expect(pkg.author).toBe('Konstantin Beregovoy');
+  });
+
+  it('ships the notices for bundled libraries and the full axe-core license text', () => {
+    const notices = readFileSync('THIRD_PARTY_NOTICES.md', 'utf8');
+    expect(readFileSync('src/public/THIRD_PARTY_NOTICES.md', 'utf8')).toBe(notices);
+    expect(notices).toContain('axe-core');
+    expect(notices).toContain('MPL-2.0');
+    expect(notices).toContain('https://github.com/dequelabs/axe-core');
+    expect(notices).toContain('MIT License');
+    const mpl = readFileSync('src/public/licenses/axe-core-MPL-2.0.txt', 'utf8');
+    expect(mpl).toContain('Mozilla Public License, version 2.0');
+  });
+
+  it('keeps the axe-core version in the notices equal to the pinned one', () => {
+    const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as {
+      dependencies: Record<string, string>;
+    };
+    const version = pkg.dependencies['axe-core'] ?? '';
+    expect(readFileSync('THIRD_PARTY_NOTICES.md', 'utf8')).toContain(`axe-core ${version}`);
   });
 });
