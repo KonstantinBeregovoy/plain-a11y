@@ -7,8 +7,8 @@ import {
   type HighlightResponse,
   type PingResponse,
 } from '../report/messages';
-import { toViolationItems } from '../report/violations';
-import { AXE_RUN_OPTIONS } from './axeOptions';
+import { buildCheckResult } from '../report/violations';
+import { AAA_RULE_IDS, AXE_RUN_OPTIONS } from './axeOptions';
 import { createHighlighter } from './highlight';
 
 declare global {
@@ -40,9 +40,9 @@ export default defineContentScript({
             const response: CheckResponse = {
               ok: true,
               url: location.href,
-              items: toViolationItems(results.violations),
-              // Cases axe could not decide on its own: a person has to look at them.
-              review: toViolationItems(results.incomplete),
+              // items: issues; review: cases axe could not decide on its own;
+              // aaa: optional recommendations beyond the AA level.
+              ...buildCheckResult(results, AAA_RULE_IDS),
             };
             sendResponse(response);
           })

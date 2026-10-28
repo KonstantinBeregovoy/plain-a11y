@@ -41,3 +41,30 @@ export function toViolationItems(
     }),
   }));
 }
+
+/** What one axe run turns into: issues, cases to review by hand, and AAA recommendations. */
+export interface CheckResult {
+  items: ViolationItem[];
+  review: ViolationItem[];
+  aaa: ViolationItem[];
+}
+
+/**
+ * Splits an axe result. AAA rules are optional recommendations, so their
+ * violations go to `aaa`, and neither their violations nor their unclear cases
+ * end up in the main list or in the manual-review list.
+ */
+export function buildCheckResult(
+  results: {
+    violations: readonly AxeViolationLike[];
+    incomplete: readonly AxeViolationLike[];
+  },
+  aaaRuleIds: readonly string[],
+): CheckResult {
+  const isAaa = (rule: AxeViolationLike) => aaaRuleIds.includes(rule.id);
+  return {
+    items: toViolationItems(results.violations.filter((rule) => !isAaa(rule))),
+    review: toViolationItems(results.incomplete.filter((rule) => !isAaa(rule))),
+    aaa: toViolationItems(results.violations.filter(isAaa)),
+  };
+}

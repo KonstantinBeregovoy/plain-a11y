@@ -23,6 +23,14 @@ const REVIEW: ViolationItem[] = [
   { id: 'video-caption', help: 'h', impact: 'unknown', nodeCount: 1, targets: ['video'] },
 ];
 
+const AAA_ITEMS: ViolationItem[] = [
+  { id: 'color-contrast-enhanced', help: 'h', impact: 'minor', nodeCount: 2, targets: ['p'] },
+  { id: 'meta-refresh-no-exceptions', help: 'h', impact: 'minor', nodeCount: 1, targets: [] },
+];
+
+/** Stands in for chrome.storage.local, reset before every test. */
+let store: Record<string, unknown> = {};
+
 let container: HTMLDivElement;
 let root: Root;
 let respond: () => Promise<CheckResponse>;
@@ -39,8 +47,10 @@ function stubBrowser() {
     },
     storage: {
       local: {
-        get: async () => ({}),
-        set: async () => undefined,
+        get: async (key: string) => (key in store ? { [key]: store[key] } : {}),
+        set: async (items: Record<string, unknown>) => {
+          Object.assign(store, items);
+        },
       },
     },
   });
@@ -76,6 +86,7 @@ async function violationsOf(): Promise<string[]> {
 }
 
 beforeEach(() => {
+  store = {};
   stubBrowser();
   document.documentElement.lang = 'ru';
   document.title = 'Plain A11y';
@@ -87,6 +98,7 @@ beforeEach(() => {
     url: 'https://example.com/',
     items: ITEMS,
     review: [],
+    aaa: [],
   });
 });
 
@@ -128,6 +140,7 @@ describe('axe on the popup UI', () => {
       url: 'https://example.com/',
       items: [],
       review: [],
+      aaa: [],
     });
     await mount();
     await clickByName('Check page');
@@ -170,6 +183,7 @@ describe('axe on the popup UI', () => {
       url: 'https://example.com/',
       items: ITEMS,
       review: REVIEW,
+      aaa: [],
     });
     await mount();
     await clickByName('Check page');
@@ -187,6 +201,7 @@ describe('axe on the popup UI', () => {
       url: 'https://example.com/',
       items: [],
       review: REVIEW,
+      aaa: [],
     });
     await mount();
     await clickByName('Check page');
@@ -202,6 +217,7 @@ describe('axe on the popup UI', () => {
       url: 'https://example.com/',
       items: ITEMS,
       review: REVIEW,
+      aaa: [],
     });
     await mount();
     await clickByName('Check page');
@@ -232,6 +248,7 @@ describe('axe on the popup UI', () => {
       url: 'https://example.com/',
       items: ITEMS,
       review: REVIEW,
+      aaa: [],
     });
     await mount();
     await clickByName('Check page');
@@ -242,5 +259,112 @@ describe('axe on the popup UI', () => {
     expect(container.querySelector('#review-heading')?.textContent).toBe(
       'Needs manual review: 1',
     );
+  });
+
+  it('result with an AAA recommendations block at the bottom', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: ITEMS,
+      review: REVIEW,
+      aaa: AAA_ITEMS,
+    });
+    await mount();
+    await clickByName('Check page');
+    expect(container.textContent).toContain('Issues found: 5');
+    expect(container.querySelector('#aaa-heading')?.textContent).toBe(
+      'AAA recommendations: 2',
+    );
+    const sections = [...container.querySelectorAll('section')];
+    expect(sections.at(-1)?.getAttribute('aria-labelledby')).toBe('aaa-heading');
+    expect(container.textContent).toContain('not counted as issues');
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('hides the AAA block with a button that keeps focus and offers to show it again', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: ITEMS,
+      review: [],
+      aaa: AAA_ITEMS,
+    });
+    await mount();
+    await clickByName('Check page');
+    const button = [...container.querySelectorAll('button')].find(
+      (candidate) => candidate.textContent === 'Hide AAA recommendations',
+    );
+    expect(button).toBeDefined();
+    button?.focus();
+    await act(async () => {
+      button?.click();
+    });
+    expect(button?.textContent).toBe('Show AAA recommendations (2)');
+    expect(document.activeElement).toBe(button);
+    expect(container.querySelector('#aaa-heading')?.closest('section')?.querySelector('ul')).toBeNull();
+    expect(container.textContent).toContain('Hidden.');
+    expect(container.textContent).toContain('AAA recommendations hidden.');
+    expect(await violationsOf()).toEqual([]);
+
+    await act(async () => {
+      button?.click();
+    });
+    expect(button?.textContent).toBe('Hide AAA recommendations');
+    expect(container.querySelector('#aaa-heading')?.closest('section')?.querySelector('ul')).not.toBeNull();
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('remembers that the AAA block was hidden when the popup is opened again', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: ITEMS,
+      review: [],
+      aaa: AAA_ITEMS,
+    });
+    await mount();
+    await clickByName('Check page');
+    await clickByName('Hide AAA recommendations');
+    expect(store.showAaa).toBe(false);
+
+    await act(async () => root.unmount());
+    root = createRoot(container);
+    await mount();
+    await clickByName('Check page');
+    expect(
+      [...container.querySelectorAll('button')].some(
+        (candidate) => candidate.textContent === 'Show AAA recommendations (2)',
+      ),
+    ).toBe(true);
+  });
+
+  it('shows only AAA recommendations when there are no issues, and the filter still applies', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: [],
+      review: [],
+      aaa: AAA_ITEMS,
+    });
+    await mount();
+    await clickByName('Check page');
+    expect(container.textContent).toContain('No issues found.');
+    expect(container.querySelector('#aaa-heading')?.textContent).toBe(
+      'AAA recommendations: 2',
+    );
+    const design = container.querySelector<HTMLInputElement>('input[value="design"]');
+    await act(async () => {
+      design?.click();
+    });
+    expect(container.querySelector('#aaa-heading')?.textContent).toBe(
+      'AAA recommendations: 1',
+    );
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('shows no AAA block when axe found no AAA problems', async () => {
+    await mount();
+    await clickByName('Check page');
+    expect(container.querySelector('#aaa-heading')).toBeNull();
   });
 });

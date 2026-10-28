@@ -837,6 +837,33 @@ export const dictionary: readonly DictionaryEntry[] = [
       'Underline links inside text, or make them clearly different in another way, such as bold.',
     role: 'design',
   },
+  {
+    id: 'color-contrast-enhanced',
+    title: 'Text contrast is below the enhanced level',
+    whoIsAffected:
+      'People with low vision, and anyone reading in poor conditions.',
+    howToFix:
+      'Make the text darker or the background lighter for easier reading. This is an optional recommendation, not a requirement at the standard level.',
+    role: 'design',
+  },
+  {
+    id: 'identical-links-same-purpose',
+    title: 'Links with the same text lead to different places',
+    whoIsAffected:
+      'Screen reader users, who hear a list of links out of context and cannot tell them apart.',
+    howToFix:
+      'Give links that go to different places different text, for example “Read the pricing page” and “Read the careers page”.',
+    role: 'content',
+  },
+  {
+    id: 'meta-refresh-no-exceptions',
+    title: 'Page reloads or redirects by itself after a delay',
+    whoIsAffected:
+      'Screen reader and keyboard users, and anyone who needs more time: the page changes before they finish.',
+    howToFix:
+      'Ask developers to remove the automatic refresh or redirect. Let people go to the new page themselves.',
+    role: 'code',
+  },
 ];
 
 const byId = new Map(dictionary.map((entry) => [entry.id, entry]));

@@ -32,3 +32,21 @@ export async function saveRoleFilter(
 ): Promise<void> {
   await area.set({ [ROLE_FILTER_KEY]: filter });
 }
+
+const SHOW_AAA_KEY = 'showAaa';
+
+/** Whether the “AAA recommendations” block is expanded. Shown unless the person hid it. */
+export async function loadShowAaa(
+  area: StorageArea = browser.storage.local,
+): Promise<boolean> {
+  const stored = await area.get(SHOW_AAA_KEY);
+  const value = stored[SHOW_AAA_KEY];
+  return typeof value === 'boolean' ? value : true;
+}
+
+export async function saveShowAaa(
+  show: boolean,
+  area: StorageArea = browser.storage.local,
+): Promise<void> {
+  await area.set({ [SHOW_AAA_KEY]: show });
+}

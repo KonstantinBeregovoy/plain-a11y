@@ -1,5 +1,6 @@
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
+import { AAA_RULE_IDS } from '../src/content/axeOptions';
 import { describeRule, dictionary } from '../src/dictionary/dictionary';
 
 const ROLES = ['design', 'content', 'code'];
@@ -123,12 +124,14 @@ describe('dictionary coverage by part', () => {
     expect(notCode).toEqual(
       [
         'area-alt:content',
+        'color-contrast-enhanced:design',
         'color-contrast:design',
         'document-title:content',
         'empty-heading:content',
         'empty-table-header:content',
         'heading-order:content',
         'image-alt:content',
+        'identical-links-same-purpose:content',
         'image-redundant-alt:content',
         'input-image-alt:content',
         'label-title-only:design',
@@ -145,9 +148,9 @@ describe('dictionary coverage by part', () => {
   });
 
   it('has an entry for every rule axe runs by default, plus the ones we switch on (TASK-13)', () => {
-    // When more rules are switched on later (for example the AAA rules in TASK-15),
-    // add them to EXTRA together with their dictionary entries.
-    const EXTRA = ['target-size'];
+    // Rules we switch on ourselves: target-size (TASK-9) and the AAA rules (TASK-15).
+    // Add any rule switched on later here together with its dictionary entry.
+    const EXTRA = ['target-size', ...AAA_RULE_IDS];
     const enabled = axe
       .getRules()
       .filter((rule) => rule.enabled)

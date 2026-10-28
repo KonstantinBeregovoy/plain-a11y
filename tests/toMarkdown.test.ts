@@ -142,3 +142,39 @@ describe('toMarkdown manual review section', () => {
     expect(markdown).not.toContain('If confirmed');
   });
 });
+
+describe('toMarkdown AAA recommendations section', () => {
+  const AAA = [
+    item('meta-refresh-no-exceptions', 'minor'), // code
+    item('color-contrast-enhanced', 'minor'), // design
+  ];
+
+  it('adds a section at the end, after the review section', () => {
+    const markdown = toMarkdown(
+      [item('label', 'critical')],
+      META,
+      [item('video-caption', 'unknown')],
+      AAA,
+    );
+    const lines = markdown.split('\n');
+    const aaaHeading = lines.indexOf('## AAA recommendations');
+    expect(aaaHeading).toBeGreaterThan(lines.indexOf('## Needs manual review'));
+    const entries = lines.slice(aaaHeading).filter((line) => line.startsWith('- [ ] '));
+    expect(entries).toHaveLength(2);
+    expect(entries[0]).toMatch(/^- \[ \] Design: Text contrast is below the enhanced level\. How to fix: /);
+    expect(entries[1]).toMatch(/^- \[ \] Code: Page reloads or redirects by itself after a delay\./);
+    expect(markdown).toContain('Optional recommendations beyond the standard level.');
+    expect(markdown.trimEnd().split('\n').at(-1)).toBe(entries[1]);
+  });
+
+  it('has no such section when the list is empty (for example when the block is hidden)', () => {
+    expect(toMarkdown([item('label', 'critical')], META, [], [])).not.toContain('AAA');
+    expect(toMarkdown([item('label', 'critical')], META)).not.toContain('AAA');
+  });
+
+  it('does not count AAA items as issues: an empty issue list still says no issues were found', () => {
+    const markdown = toMarkdown([], META, [], AAA);
+    expect(markdown).toContain('The automated check found no issues. It covers');
+    expect(markdown).toContain('## AAA recommendations');
+  });
+});

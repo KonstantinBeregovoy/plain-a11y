@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="3600" />
+    <title>Page with AAA recommendations</title>
+  </head>
+  <body>
+    <main>
+      <h1>Page that passes AA contrast but not AAA</h1>
+
+      <!-- color-contrast-enhanced: 4.54:1 passes AA (4.5:1) but fails AAA (7:1) -->
+      <p style="color: #767676; background: #ffffff">Gray text that meets the standard level only.</p>
+
+      <!-- identical-links-same-purpose: same text, different destinations (axe usually asks for a manual review) -->
+      <a href="https://example.com/pricing">Read more</a>
+      <a href="https://example.com/careers">Read more</a>
+
+      <!-- image-alt: one ordinary AA issue so the page also has a main-list entry -->
+      <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" width="40" height="40" />
+
+      <!-- meta-refresh (an AA issue) comes from the refresh tag in the head. axe passes meta-refresh-no-exceptions for this delay. -->
+    </main>
+  </body>
+</html>

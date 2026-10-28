@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react';
 import { groupByRole, groupReport } from '../report/groupReport';
 import { toMarkdown } from '../report/toMarkdown';
 import { IssueGroups } from './IssueGroups';
+import { AaaSection } from './AaaSection';
 import { ReviewSection } from './ReviewSection';
 import { RoleFilterField } from './RoleFilterField';
 import { useCheck } from './useCheck';
 import { useHighlight } from './useHighlight';
 import { useRoleFilter } from './useRoleFilter';
+import { useShowAaa } from './useShowAaa';
 
 export function App() {
   const [notice, setNotice] = useState('');
@@ -16,6 +18,7 @@ export function App() {
     await highlight.clear();
   });
   const { roleFilter, changeRoleFilter } = useRoleFilter();
+  const { showAaa, changeShowAaa } = useShowAaa();
 
   const role = roleFilter === 'all' ? undefined : roleFilter;
   const groups = useMemo(
@@ -26,6 +29,10 @@ export function App() {
     () => (state.status === 'done' ? groupByRole(state.review, role) : []),
     [state, role],
   );
+  const aaaRoles = useMemo(
+    () => (state.status === 'done' ? groupByRole(state.aaa, role) : []),
+    [state, role],
+  );
 
   async function copyReport() {
     if (state.status !== 'done') return;
@@ -33,6 +40,7 @@ export function App() {
       state.items,
       { url: state.url, date: state.checkedAt },
       state.review,
+      showAaa ? state.aaa : [],
     );
     // Clear the message first so that copying again is announced again.
     setNotice('');
@@ -42,6 +50,11 @@ export function App() {
     } catch {
       setNotice('Could not copy the report.');
     }
+  }
+
+  function setAaaShown(value: boolean) {
+    changeShowAaa(value);
+    setNotice(value ? 'AAA recommendations shown.' : 'AAA recommendations hidden.');
   }
 
   return (
@@ -76,10 +89,11 @@ export function App() {
           Copy report
         </button>
       )}
-      {state.status === 'done' && state.items.length + state.review.length > 0 && (
+      {state.status === 'done' &&
+        state.items.length + state.review.length + state.aaa.length > 0 && (
         <>
           <RoleFilterField value={roleFilter} onChange={changeRoleFilter} />
-          {groups.length + reviewRoles.length === 0 && (
+          {groups.length + reviewRoles.length + aaaRoles.length === 0 && (
             <p>No issues found for this role.</p>
           )}
           <IssueGroups
@@ -89,6 +103,13 @@ export function App() {
           />
           <ReviewSection
             roles={reviewRoles}
+            highlightedId={highlight.highlightedId}
+            onToggleHighlight={highlight.toggle}
+          />
+          <AaaSection
+            roles={aaaRoles}
+            shown={showAaa}
+            onChangeShown={setAaaShown}
             highlightedId={highlight.highlightedId}
             onToggleHighlight={highlight.toggle}
           />

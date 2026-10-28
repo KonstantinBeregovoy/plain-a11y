@@ -13,6 +13,7 @@ export type CheckState =
       status: 'done';
       items: ViolationItem[];
       review: ViolationItem[];
+      aaa: ViolationItem[];
       url: string;
       checkedAt: Date;
     }
@@ -38,6 +39,7 @@ export function useCheck(beforeCheck: () => Promise<void>) {
               status: 'done',
               items: response.items,
               review: response.review,
+              aaa: response.aaa,
               url: response.url,
               checkedAt: new Date(),
             }

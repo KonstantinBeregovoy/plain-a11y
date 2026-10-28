@@ -37,12 +37,14 @@ function formatDate(date: Date): string {
 
 /**
  * Markdown report for pasting into a ticket: sections by role, checkbox items.
- * `review` holds the cases the automated check could not decide on its own.
+ * `review` holds the cases the automated check could not decide on its own,
+ * `aaa` the optional AAA recommendations (pass an empty list when they are hidden).
  */
 export function toMarkdown(
   items: readonly ViolationItem[],
   meta: ReportMeta,
   review: readonly ViolationItem[] = [],
+  aaa: readonly ViolationItem[] = [],
 ): string {
   const lines = [
     '# Accessibility report',
@@ -98,6 +100,22 @@ export function toMarkdown(
     for (const { role, issues: ofRole } of groupByRole(review)) {
       for (const { rule } of ofRole) {
         const fix = rule.howToFix ? ` If confirmed, how to fix: ${rule.howToFix}` : '';
+        lines.push(`- [ ] ${ROLE_LABELS[role]}: ${rule.title}.${fix}`);
+      }
+    }
+    lines.push('');
+  }
+
+  if (aaa.length > 0) {
+    lines.push(
+      '## AAA recommendations',
+      '',
+      'Optional recommendations beyond the standard level.',
+      '',
+    );
+    for (const { role, issues: ofRole } of groupByRole(aaa)) {
+      for (const { rule } of ofRole) {
+        const fix = rule.howToFix ? ` How to fix: ${rule.howToFix}` : '';
         lines.push(`- [ ] ${ROLE_LABELS[role]}: ${rule.title}.${fix}`);
       }
     }

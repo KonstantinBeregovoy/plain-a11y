@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toViolationItems } from '../src/report/violations';
+import { buildCheckResult, toViolationItems } from '../src/report/violations';
 
 describe('toViolationItems', () => {
   it('converts axe violations into list rows', () => {
@@ -41,5 +41,62 @@ describe('toViolationItems', () => {
     ]);
     expect(item?.nodeCount).toBe(3);
     expect(item?.targets).toEqual(['img']);
+  });
+});
+
+describe('buildCheckResult', () => {
+  const rule = (id: string, impact: 'critical' | 'minor' | null = 'critical') => ({
+    id,
+    help: `help ${id}`,
+    impact,
+    nodes: [{ target: ['p'] }],
+  });
+  const AAA = ['color-contrast-enhanced', 'meta-refresh-no-exceptions'];
+
+  it('puts violations in items, incomplete cases in review and AAA violations in aaa', () => {
+    const result = buildCheckResult(
+      {
+        violations: [rule('image-alt'), rule('color-contrast-enhanced', 'minor')],
+        incomplete: [rule('video-caption', null)],
+      },
+      AAA,
+    );
+    expect(result.items.map((item) => item.id)).toEqual(['image-alt']);
+    expect(result.review.map((item) => item.id)).toEqual(['video-caption']);
+    expect(result.aaa.map((item) => item.id)).toEqual(['color-contrast-enhanced']);
+  });
+
+  it('drops unclear AAA cases instead of flooding the manual-review list', () => {
+    const result = buildCheckResult(
+      {
+        violations: [],
+        incomplete: [rule('color-contrast-enhanced', null), rule('video-caption', null)],
+      },
+      AAA,
+    );
+    expect(result.review.map((item) => item.id)).toEqual(['video-caption']);
+    expect(result.aaa).toEqual([]);
+  });
+
+  it('returns three empty lists for an empty result', () => {
+    expect(buildCheckResult({ violations: [], incomplete: [] }, AAA)).toEqual({
+      items: [],
+      review: [],
+      aaa: [],
+    });
+  });
+
+  it('keeps the compact item format', () => {
+    const [aaa] = buildCheckResult(
+      { violations: [rule('meta-refresh-no-exceptions', 'minor')], incomplete: [] },
+      AAA,
+    ).aaa;
+    expect(aaa).toEqual({
+      id: 'meta-refresh-no-exceptions',
+      help: 'help meta-refresh-no-exceptions',
+      impact: 'minor',
+      nodeCount: 1,
+      targets: ['p'],
+    });
   });
 });

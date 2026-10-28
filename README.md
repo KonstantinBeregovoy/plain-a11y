@@ -10,6 +10,7 @@ Who it is for: designers, content editors, PMs and QA people without deep knowle
 - Problems are grouped by severity (critical, serious, minor) and by role (design, content, code). A role filter is available and is remembered.
 - For every problem: what is wrong, who it affects, how to fix it. The technical rule id stays as a small caption.
 - Cases the automated check could not decide on its own (axe calls them “incomplete”, for example text over a background picture or a video whose captions it cannot judge) are listed in a separate “Needs manual review” section. They are not counted as issues, have the same texts and highlight, and appear in the Markdown report in their own section.
+- Three rules of the optional AAA level (enhanced contrast, links with the same text that lead to different places, delayed page refresh) are shown in a separate “AAA recommendations” block at the bottom. It is not counted as issues, can be hidden (the choice is remembered), and is included in the Markdown report only while it is shown.
 - The “Show on page” button outlines the problem elements and scrolls to the first one. The highlight is removed by pressing the button again or by closing the popup, and the page markup returns to its original state.
 - The “Copy report” button puts a Markdown report with checkboxes on the clipboard, ready to paste into a ticket.
 
@@ -84,7 +85,7 @@ It is the format the Chrome Web Store requires for new extensions. It also enfor
 - Only elements with a simple selector can be highlighted on the page. Elements inside iframes and shadow DOM appear in the report but are not outlined.
 - Chrome service pages (`chrome://…`) and the Chrome Web Store cannot be checked: the browser does not let extensions in.
 - The interface, the dictionary and the report are in English only.
-- The dictionary describes every rule axe runs by default (90) plus the minimum clickable size rule (`target-size`), 91 in total. A rule that is not in the dictionary, for example after an axe-core update, is shown with the English axe description and the role “code”. The rules axe keeps off by default (experimental, deprecated and AAA ones) are not run.
+- The dictionary describes every rule axe runs by default (90), plus the minimum clickable size rule (`target-size`) and three AAA rules we switch on, 94 in total. A rule that is not in the dictionary, for example after an axe-core update, is shown with the English axe description and the role “code”. Experimental and deprecated rules, which axe keeps off by default, are not run.
 
 ## Privacy
 
