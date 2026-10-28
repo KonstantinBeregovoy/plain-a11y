@@ -22,7 +22,7 @@ body {
   width: 360px;
   background: var(--bg);
   color: var(--fg);
-  font: 14px/1.5 system-ui, sans-serif;
+  font: 0.8125rem/1.5 system-ui, sans-serif;
 }
 
 main {
@@ -31,7 +31,7 @@ main {
 
 h1 {
   margin: 0 0 12px;
-  font-size: 18px;
+  font-size: 1rem;
 }
 
 button {
@@ -71,7 +71,7 @@ button[aria-disabled='true'] {
 
 .violations h4 {
   margin: 0 0 4px;
-  font-size: 15px;
+  font-size: 0.8125rem;
 }
 
 .violations p {
@@ -79,7 +79,7 @@ button[aria-disabled='true'] {
 }
 
 .violations .meta {
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .filter {
@@ -110,12 +110,12 @@ button[aria-disabled='true'] {
 
 .severity h2 {
   margin: 16px 0 4px;
-  font-size: 16px;
+  font-size: 0.875rem;
 }
 
 .severity h3 {
   margin: 8px 0 0;
-  font-size: 14px;
+  font-size: 0.8125rem;
 }
 
 button.secondary {

@@ -50,6 +50,12 @@ Calculated from the values in `src/popup/style.css`:
 
 - [x] Buttons are 170×37 and 191×37 px, radio buttons are 20×20 px inside labels at least 28 px tall; `target-size` in Chromium gives 0 violations.
 
+## Text size
+
+- [x] All font sizes in `src/popup/style.css` are in `rem`, so the font size set in the browser applies. `tests/style.test.ts` checks that no size is below 12px (0.75rem) and that the agreed scale holds: headings 16/14/13px, body and issue titles 13px, captions 12px.
+- [x] Computed sizes checked in Chromium on the built extension (see the run notes in `tasks/TASK-8.md`).
+- [ ] Person: view the popup with text enlarged to 200% (browser zoom) and with a larger font set in the browser settings (Settings, Appearance, Font size). Nothing should be cut off, overlap or need horizontal scrolling inside the popup.
+
 ## Motion and color scheme
 
 - [x] `prefers-reduced-motion`: the popup styles have no animations or transitions. The highlight on the page scrolls smoothly only if the user did not ask for less motion (`src/content/highlight.ts`).
