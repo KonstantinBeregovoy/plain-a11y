@@ -92,3 +92,53 @@ describe('formatPageUrl', () => {
     expect(markdown).not.toContain('secret');
   });
 });
+
+describe('toMarkdown manual review section', () => {
+  const REVIEW = [
+    item('tabindex', 'unknown'), // code
+    item('image-alt', 'unknown'), // content
+    item('color-contrast', 'unknown'), // design
+  ];
+
+  it('adds a section after the role sections, grouped by role', () => {
+    const markdown = toMarkdown([item('label', 'critical')], META, REVIEW);
+    const lines = markdown.split('\n');
+    const heading = lines.indexOf('## Needs manual review');
+    expect(heading).toBeGreaterThan(lines.indexOf('## Code'));
+    const items = lines.slice(heading).filter((line) => line.startsWith('- [ ] '));
+    expect(items).toHaveLength(3);
+    expect(items[0]).toMatch(/^- \[ \] Design: Text is hard to read against its background\. If confirmed, how to fix: /);
+    expect(items[1]).toMatch(/^- \[ \] Content: Image has no text description\./);
+    expect(items[2]).toMatch(/^- \[ \] Code: Tab order has been changed\./);
+    expect(markdown).toContain('could not decide these items on its own');
+  });
+
+  it('has no such section when nothing needs a review', () => {
+    expect(toMarkdown([item('label', 'critical')], META, [])).not.toContain('manual review');
+    expect(toMarkdown([item('label', 'critical')], META)).not.toContain('manual review');
+  });
+
+  it('mentions the number of review items when no issues were found', () => {
+    const many = toMarkdown([], META, REVIEW);
+    expect(many).toContain(
+      'The automated check found no issues, but 3 items need a manual review (listed below).',
+    );
+    expect(many).toContain('only part of the accessibility requirements');
+    expect(many).toContain('## Needs manual review');
+    expect(toMarkdown([], META, [item('image-alt', 'unknown')])).toContain(
+      'but 1 item needs a manual review',
+    );
+  });
+
+  it('keeps the old wording for an empty result without review items', () => {
+    const markdown = toMarkdown([], META, []);
+    expect(markdown).toContain('The automated check found no issues. It covers');
+    expect(markdown).not.toContain('manual review');
+  });
+
+  it('shows items without a dictionary entry with the axe text and no fix', () => {
+    const markdown = toMarkdown([], META, [item('brand-new-rule', 'unknown', 'Some new rule')]);
+    expect(markdown).toContain('- [ ] Code: Some new rule.');
+    expect(markdown).not.toContain('If confirmed');
+  });
+});

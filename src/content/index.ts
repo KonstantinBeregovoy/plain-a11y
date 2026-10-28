@@ -41,6 +41,8 @@ export default defineContentScript({
               ok: true,
               url: location.href,
               items: toViolationItems(results.violations),
+              // Cases axe could not decide on its own: a person has to look at them.
+              review: toViolationItems(results.incomplete),
             };
             sendResponse(response);
           })

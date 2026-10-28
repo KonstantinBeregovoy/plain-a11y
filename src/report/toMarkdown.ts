@@ -4,6 +4,7 @@ import {
   ROLE_ORDER,
   SEVERITY_LABELS,
   SEVERITY_ORDER,
+  groupByRole,
   toSeverity,
 } from './groupReport';
 import type { ViolationItem } from './violations';
@@ -34,10 +35,14 @@ function formatDate(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** Markdown report for pasting into a ticket: sections by role, checkbox items. */
+/**
+ * Markdown report for pasting into a ticket: sections by role, checkbox items.
+ * `review` holds the cases the automated check could not decide on its own.
+ */
 export function toMarkdown(
   items: readonly ViolationItem[],
   meta: ReportMeta,
+  review: readonly ViolationItem[] = [],
 ): string {
   const lines = [
     '# Accessibility report',
@@ -48,12 +53,16 @@ export function toMarkdown(
   ];
 
   if (items.length === 0) {
+    const reviewNote =
+      review.length === 0
+        ? ''
+        : `, but ${review.length} ${review.length === 1 ? 'item needs' : 'items need'} a manual review (listed below)`;
     lines.push(
-      'The automated check found no issues. ' +
+      `The automated check found no issues${reviewNote}. ` +
         'It covers only part of the accessibility requirements, ' +
         'so check the rest manually.',
+      '',
     );
-    return `${lines.join('\n')}\n`;
   }
 
   const issues = items.map((item) => ({
@@ -75,6 +84,22 @@ export function toMarkdown(
       const severity = SEVERITY_LABELS[toSeverity(item.impact)];
       const fix = rule.howToFix ? ` How to fix: ${rule.howToFix}` : '';
       lines.push(`- [ ] ${severity}: ${rule.title}.${fix}`);
+    }
+    lines.push('');
+  }
+
+  if (review.length > 0) {
+    lines.push(
+      '## Needs manual review',
+      '',
+      'The automated check could not decide these items on its own. A person needs to look at them.',
+      '',
+    );
+    for (const { role, issues: ofRole } of groupByRole(review)) {
+      for (const { rule } of ofRole) {
+        const fix = rule.howToFix ? ` If confirmed, how to fix: ${rule.howToFix}` : '';
+        lines.push(`- [ ] ${ROLE_LABELS[role]}: ${rule.title}.${fix}`);
+      }
     }
     lines.push('');
   }

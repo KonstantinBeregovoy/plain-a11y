@@ -8,8 +8,8 @@ Legend:
 
 ## Automated checks
 
-- [x] An axe test on all popup states: empty, loading, result (including a pressed highlight), result without issues, error. File `tests/popup.a11y.test.tsx`, run with `npm run test`. jsdom has no layout, so the contrast rule is turned off in the test, and contrast and target size were checked in a browser (below).
-- [x] The same rule set (WCAG 2.0, 2.1, 2.2 A and AA, best-practice) was run in a real Chromium on the built extension, including `color-contrast` and `target-size`: 7 states (empty, loading, result, result with highlight, result with filter, result without issues, error), light and dark scheme, 14 runs in total, 0 violations. This run was done by a script outside the repository and is not part of `npm run test`.
+- [x] An axe test on all popup states: empty, loading, result (including a pressed highlight), result without issues, error, result with a “Needs manual review” section, and no issues with only review items. File `tests/popup.a11y.test.tsx`, run with `npm run test`. jsdom has no layout, so the contrast rule is turned off in the test, and contrast and target size were checked in a browser (below).
+- [x] The same rule set (WCAG 2.0, 2.1, 2.2 A and AA, best-practice) was run in a real Chromium on the built extension, including `color-contrast` and `target-size`: 7 states (empty, loading, result, result with highlight, result with filter, result without issues, error), light and dark scheme, 14 runs in total, 0 violations. Two more states were added later for the “Needs manual review” section (only review items, and issues only), both schemes: 4 more runs, 0 violations. These runs were done by scripts outside the repository and are not part of `npm run test`.
 
 ## Keyboard
 

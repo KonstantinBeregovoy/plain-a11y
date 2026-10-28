@@ -9,6 +9,7 @@ Who it is for: designers, content editors, PMs and QA people without deep knowle
 - The “Check page” button runs the check on the current tab.
 - Problems are grouped by severity (critical, serious, minor) and by role (design, content, code). A role filter is available and is remembered.
 - For every problem: what is wrong, who it affects, how to fix it. The technical rule id stays as a small caption.
+- Cases the automated check could not decide on its own (axe calls them “incomplete”, for example text over a background picture or a video whose captions it cannot judge) are listed in a separate “Needs manual review” section. They are not counted as issues, have the same texts and highlight, and appear in the Markdown report in their own section.
 - The “Show on page” button outlines the problem elements and scrolls to the first one. The highlight is removed by pressing the button again or by closing the popup, and the page markup returns to its original state.
 - The “Copy report” button puts a Markdown report with checkboxes on the clipboard, ready to paste into a ticket.
 

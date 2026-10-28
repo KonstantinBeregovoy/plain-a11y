@@ -46,6 +46,20 @@ export function toSeverity(impact: ViolationItem['impact']): Severity {
   return impact === 'critical' || impact === 'serious' ? impact : 'minor';
 }
 
+/** Groups items by role only, in the role order. Empty roles are omitted. */
+export function groupByRole(
+  items: readonly ViolationItem[],
+  roleFilter?: Role,
+): RoleGroup[] {
+  const issues: ReportIssue[] = items
+    .map((item) => ({ item, rule: describeRule(item.id, item.help) }))
+    .filter((issue) => roleFilter === undefined || issue.rule.role === roleFilter);
+  return ROLE_ORDER.flatMap((role) => {
+    const ofRole = issues.filter((issue) => issue.rule.role === role);
+    return ofRole.length === 0 ? [] : [{ role, issues: ofRole }];
+  });
+}
+
 /**
  * Groups violations by severity, then by role within each severity.
  * Empty groups are omitted. The order of issues within a group is preserved.

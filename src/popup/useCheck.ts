@@ -9,7 +9,13 @@ import type { ViolationItem } from '../report/violations';
 export type CheckState =
   | { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'done'; items: ViolationItem[]; url: string; checkedAt: Date }
+  | {
+      status: 'done';
+      items: ViolationItem[];
+      review: ViolationItem[];
+      url: string;
+      checkedAt: Date;
+    }
   | { status: 'error'; message: string };
 
 /** Runs the check through the service worker and tracks its state. */
@@ -31,6 +37,7 @@ export function useCheck(beforeCheck: () => Promise<void>) {
           ? {
               status: 'done',
               items: response.items,
+              review: response.review,
               url: response.url,
               checkedAt: new Date(),
             }

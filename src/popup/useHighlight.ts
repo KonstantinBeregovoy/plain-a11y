@@ -24,9 +24,10 @@ export function useHighlight(announce: (message: string) => void) {
     setHighlightedId(null);
   }
 
-  async function toggle(item: ViolationItem) {
+  /** `key` tells apart the same rule listed as a problem and as a manual-review item. */
+  async function toggle(item: ViolationItem, key: string = item.id) {
     try {
-      if (highlightedId === item.id) {
+      if (highlightedId === key) {
         await clear();
         announce('Highlight removed.');
         return;
@@ -45,7 +46,7 @@ export function useHighlight(announce: (message: string) => void) {
         setHighlightedId(null);
         announce('Element not found on the page.');
       } else {
-        setHighlightedId(item.id);
+        setHighlightedId(key);
         announce(`Highlighted elements: ${response.found}.`);
       }
     } catch (error) {

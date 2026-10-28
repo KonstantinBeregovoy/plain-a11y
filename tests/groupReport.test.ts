@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { groupReport, toSeverity } from '../src/report/groupReport';
+import { groupByRole, groupReport, toSeverity } from '../src/report/groupReport';
 import type { ViolationItem } from '../src/report/violations';
 
 function item(id: string, impact: ViolationItem['impact']): ViolationItem {
@@ -80,5 +80,37 @@ describe('toSeverity', () => {
     expect(toSeverity('moderate')).toBe('minor');
     expect(toSeverity('minor')).toBe('minor');
     expect(toSeverity('unknown')).toBe('minor');
+  });
+});
+
+describe('groupByRole', () => {
+  it('returns an empty list for an empty result', () => {
+    expect(groupByRole([])).toEqual([]);
+  });
+
+  it('keeps the role order design, content, code and the input order inside a role', () => {
+    const roles = groupByRole([
+      item('tabindex', 'unknown'), // code
+      item('image-alt', 'unknown'), // content
+      item('color-contrast', 'unknown'), // design
+      item('link-name', 'unknown'), // content
+    ]);
+    expect(roles.map((group) => group.role)).toEqual(['design', 'content', 'code']);
+    expect(roles[1]?.issues.map((issue) => issue.item.id)).toEqual([
+      'image-alt',
+      'link-name',
+    ]);
+  });
+
+  it('does not mix severity into the grouping', () => {
+    const roles = groupByRole([item('image-alt', 'critical'), item('link-name', 'minor')]);
+    expect(roles).toHaveLength(1);
+    expect(roles[0]?.issues).toHaveLength(2);
+  });
+
+  it('filters by role', () => {
+    const items = [item('image-alt', 'unknown'), item('tabindex', 'unknown')];
+    expect(groupByRole(items, 'code').map((group) => group.role)).toEqual(['code']);
+    expect(groupByRole(items, 'design')).toEqual([]);
   });
 });

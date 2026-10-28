@@ -31,7 +31,7 @@ export interface PingResponse {
 }
 
 export type CheckResponse =
-  | { ok: true; url: string; items: ViolationItem[] }
+  | { ok: true; url: string; items: ViolationItem[]; review: ViolationItem[] }
   | { ok: false; error: string };
 
 export type HighlightResponse =

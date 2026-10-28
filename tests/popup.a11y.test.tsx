@@ -17,6 +17,12 @@ const ITEMS: ViolationItem[] = [
   { id: 'brand-new-rule', help: 'Some new rule', impact: 'minor', nodeCount: 1, targets: ['a'] },
 ];
 
+const REVIEW: ViolationItem[] = [
+  { id: 'color-contrast', help: 'h', impact: 'unknown', nodeCount: 2, targets: ['p'] },
+  { id: 'image-alt', help: 'h', impact: 'unknown', nodeCount: 1, targets: ['img'] },
+  { id: 'video-caption', help: 'h', impact: 'unknown', nodeCount: 1, targets: ['video'] },
+];
+
 let container: HTMLDivElement;
 let root: Root;
 let respond: () => Promise<CheckResponse>;
@@ -76,7 +82,12 @@ beforeEach(() => {
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
-  respond = async () => ({ ok: true, url: 'https://example.com/', items: ITEMS });
+  respond = async () => ({
+    ok: true,
+    url: 'https://example.com/',
+    items: ITEMS,
+    review: [],
+  });
 });
 
 afterEach(async () => {
@@ -112,7 +123,12 @@ describe('axe on the popup UI', () => {
   });
 
   it('result without issues', async () => {
-    respond = async () => ({ ok: true, url: 'https://example.com/', items: [] });
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: [],
+      review: [],
+    });
     await mount();
     await clickByName('Check page');
     expect(container.textContent).toContain('No issues found.');
@@ -146,5 +162,85 @@ describe('axe on the popup UI', () => {
     // Pressing again during the check does not start a second check.
     await clickByName('Check page');
     expect(calls).toBe(1);
+  });
+
+  it('result with issues and a manual review section', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: ITEMS,
+      review: REVIEW,
+    });
+    await mount();
+    await clickByName('Check page');
+    expect(container.textContent).toContain('Issues found: 5');
+    expect(container.textContent).toContain('Needs manual review: 3');
+    expect(container.querySelector('#review-heading')?.textContent).toBe(
+      'Needs manual review: 3',
+    );
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('no issues but items to review', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: [],
+      review: REVIEW,
+    });
+    await mount();
+    await clickByName('Check page');
+    expect(container.textContent).toContain('No issues found.');
+    expect(container.textContent).toContain('Needs manual review: 3');
+    expect(container.querySelector('fieldset')).not.toBeNull();
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('highlights the review copy of a rule without pressing the issue copy', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: ITEMS,
+      review: REVIEW,
+    });
+    await mount();
+    await clickByName('Check page');
+    const buttons = [
+      ...container.querySelectorAll<HTMLButtonElement>(
+        'button[aria-label="Show on page: Image has no text description"]',
+      ),
+    ];
+    expect(buttons).toHaveLength(2); // one among the issues, one among the review items
+    const reviewButton = buttons[1];
+    expect(reviewButton?.closest('section')?.getAttribute('aria-labelledby')).toBe(
+      'review-heading',
+    );
+    expect(buttons[0]?.closest('section')?.getAttribute('aria-labelledby')).not.toBe(
+      'review-heading',
+    );
+    await act(async () => {
+      reviewButton?.click();
+    });
+    expect(buttons[0]?.getAttribute('aria-pressed')).toBe('false');
+    expect(buttons[1]?.getAttribute('aria-pressed')).toBe('true');
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('keeps the role filter working for the review section', async () => {
+    respond = async () => ({
+      ok: true,
+      url: 'https://example.com/',
+      items: ITEMS,
+      review: REVIEW,
+    });
+    await mount();
+    await clickByName('Check page');
+    const design = container.querySelector<HTMLInputElement>('input[value="design"]');
+    await act(async () => {
+      design?.click();
+    });
+    expect(container.querySelector('#review-heading')?.textContent).toBe(
+      'Needs manual review: 1',
+    );
   });
 });

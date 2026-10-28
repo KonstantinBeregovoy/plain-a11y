@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Page with items for manual review</title>
+  </head>
+  <body>
+    <main>
+      <h1>Page where the automated check cannot decide</h1>
+
+      <!-- color-contrast (needs review): text over a background image, axe cannot know the real colors -->
+      <p style="background-image: url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==); background-size: cover; color: #777777; padding: 20px">
+        Text over a picture.
+      </p>
+
+      <!-- video-caption (needs review): axe cannot tell whether the video has captions -->
+      <video controls width="240">
+        <source src="clip.mp4" type="video/mp4" />
+      </video>
+    </main>
+  </body>
+</html>
