@@ -23,6 +23,19 @@ const PAGE_SIZE = { width: 800, height: 576 };
 // 15px wider than the popup content: a real popup grows by the width of its scrollbar.
 const POPUP_SIZE = { width: 375, height: 600 };
 
+// The frames use the palette and the fonts of the website (the "Engineering Blueprint" theme of bereg.dev).
+// The fonts are read from the website repository when it sits next to this one; otherwise system fonts are used.
+const FONT_DIR = path.join(ROOT, '..', 'plain-a11y-site', 'public', 'fonts');
+const plexSans = path.join(FONT_DIR, 'plex-sans-var.woff2');
+const plexMono = path.join(FONT_DIR, 'plex-mono-400.woff2');
+const FONT_FACES =
+  (fs.existsSync(plexSans)
+    ? `@font-face { font-family: 'IBM Plex Sans'; font-weight: 200 700; src: url(data:font/woff2;base64,${fs.readFileSync(plexSans).toString('base64')}) format('woff2'); }`
+    : '') +
+  (fs.existsSync(plexMono)
+    ? `@font-face { font-family: 'IBM Plex Mono'; font-weight: 400; src: url(data:font/woff2;base64,${fs.readFileSync(plexMono).toString('base64')}) format('woff2'); }`
+    : '');
+
 const ICON = fs.readFileSync(path.join(ROOT, 'src', 'public', 'icon', '48.png'));
 const DEMO = {
   '/': fs.readFileSync(path.join(ROOT, 'store', 'demo', 'index.html'), 'utf8'),
@@ -85,13 +98,27 @@ function ticketHtml(markdown) {
 function frameHtml({ caption, subtitle, left, popup, address }) {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     * { box-sizing: border-box; }
+    ${FONT_FACES}
     body { margin: 0; width: 1280px; height: 800px; position: relative; overflow: hidden;
-      background: linear-gradient(135deg, #0b2b5c 0%, #0b57d0 100%);
-      font-family: system-ui, "Segoe UI", Roboto, sans-serif; color: #fff; }
-    h1 { position: absolute; left: 40px; top: 30px; margin: 0; font-size: 40px; line-height: 1.15; font-weight: 700; }
-    .sub { position: absolute; left: 40px; top: 84px; margin: 0; font-size: 21px; color: #dbe7ff; }
+      background: #0a1220; color: #dbe6f5;
+      font-family: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif; }
+    /* The drawing grid of the website: fine lines every 24px, major lines every 120px, crosshair dots. */
+    body::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgb(120 170 255 / 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(120 170 255 / 0.055) 1px, transparent 1px),
+        linear-gradient(to right, rgb(120 170 255 / 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(120 170 255 / 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgb(120 194 255 / 0.5) 1.5px, transparent 2.5px);
+      background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px, 120px 120px;
+      background-position: 0 0, 0 0, 0 0, 0 0, -60px -60px;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.35) 100%); }
+    .eyebrow { position: absolute; left: 40px; top: 24px; margin: 0; font: 400 13px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+      letter-spacing: 0.08em; text-transform: uppercase; color: #f2b45e; }
+    h1 { position: absolute; left: 40px; top: 46px; margin: 0; font-size: 40px; line-height: 1.15; font-weight: 700; letter-spacing: -0.03em; color: #dbe6f5; }
+    .sub { position: absolute; left: 40px; top: 98px; margin: 0; font-size: 21px; font-weight: 300; color: #8ea3bf; }
     .window { position: absolute; left: 40px; top: 140px; width: 800px; height: 620px; background: #fff;
-      border-radius: 12px; overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.35); }
+      border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #1f3350, 0 18px 50px rgba(0,0,0,.55); }
     .toolbar { height: 44px; background: #e9edf3; display: flex; align-items: center; padding: 0 14px; gap: 8px; }
     .dot { width: 12px; height: 12px; border-radius: 50%; background: #c5ccd8; }
     .address { flex: 1; margin: 0 10px 0 14px; height: 28px; border-radius: 14px; background: #fff; color: #4b5563;
@@ -100,7 +127,7 @@ function frameHtml({ caption, subtitle, left, popup, address }) {
     .content { width: 800px; height: 576px; position: relative; overflow: hidden; background: #fff; }
     .content > img { display: block; width: 800px; height: 576px; }
     .popup { position: absolute; right: 40px; top: 140px; border-radius: 12px; overflow: hidden;
-      box-shadow: 0 18px 50px rgba(0,0,0,.4); background: #fff; }
+      box-shadow: 0 0 0 1px #1f3350, 0 18px 50px rgba(0,0,0,.55); background: #fff; }
     .popup img { display: block; }
     .ticket { color: #1f2933; height: 576px; background: #f7f8fa; padding: 22px 26px; overflow: hidden; position: relative; }
     .ticket::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 70px;
@@ -115,6 +142,7 @@ function frameHtml({ caption, subtitle, left, popup, address }) {
     .ticket-body li { display: flex; gap: 8px; margin: 5px 0; }
     .box { flex: none; width: 13px; height: 13px; border: 2px solid #64748b; border-radius: 3px; margin-top: 3px; }
   </style></head><body>
+    <p class="eyebrow">Plain A11y · Chrome extension</p>
     <h1>${caption}</h1>
     <p class="sub">${subtitle}</p>
     <div class="window">
