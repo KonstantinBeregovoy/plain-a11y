@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sunrise Coffee: freshly roasted beans (fixed)</title>
+    <style>
+      :root { --ink: #2b2118; --cream: #fbf6ef; --accent: #8c3d12; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font: 16px/1.55 system-ui, sans-serif; color: var(--ink); background: #ffffff; }
+      header { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; background: var(--cream); border-bottom: 1px solid #eadfce; }
+      .brand { font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; }
+      nav a { margin-left: 18px; color: var(--ink); text-decoration: none; }
+      .cart { display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; border: 1px solid #d9c9b0; border-radius: 50%; margin-left: 18px; }
+      .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; padding: 34px 28px; align-items: center; background: var(--cream); }
+      h1 { margin: 0 0 12px; font-size: 38px; line-height: 1.12; }
+      .lead { margin: 0 0 18px; font-size: 18px; color: #5a4a3a; }
+      .cta { display: inline-block; padding: 12px 22px; background: var(--accent); color: #fff; font-weight: 700; border-radius: 8px; text-decoration: none; }
+      .hero img { width: 100%; max-width: 300px; justify-self: center; }
+      section.shop { padding: 28px; }
+      h2 { margin: 0 0 14px; font-size: 22px; }
+      .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .card { border: 1px solid #eadfce; border-radius: 10px; padding: 16px; }
+      .card h3 { margin: 0 0 4px; font-size: 17px; }
+      .card p { margin: 0; color: #5a4a3a; font-size: 14px; }
+      .signup { display: flex; gap: 8px; padding: 0 28px 20px; }
+      .signup label { align-self: center; font-size: 14px; }
+      .signup input { flex: 1; padding: 10px 12px; border: 1px solid #b9a98f; border-radius: 8px; font: inherit; }
+      .signup button { padding: 10px 18px; border: 0; border-radius: 8px; background: var(--ink); color: #fff; font: inherit; font-weight: 700; }
+      .share { display: flex; align-items: center; gap: 0; padding: 0 28px 28px; }
+      .share span { margin-right: 10px; color: #5a4a3a; font-size: 14px; }
+      .share button { width: 28px; height: 28px; padding: 0; margin: 0 6px 0 0; border: 0; border-radius: 6px; background: var(--accent); }
+      .share button + button { background: #6b4a2b; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="#top">Sunrise Coffee</a>
+      <nav aria-label="Main">
+        <a href="#shop">Shop</a><a href="#roasts">Roasts</a><a href="#about">About</a>
+        
+        <a class="cart" href="#cart" aria-label="Shopping cart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2b2118" stroke-width="2"><path d="M3 4h2l2 12h11l2-8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg></a>
+      </nav>
+    </header>
+    <main id="top">
+      <div class="hero">
+        <div>
+          <h1>Freshly roasted, delivered every week</h1>
+          
+          <p class="lead">Small-batch beans from three family farms, roasted on Monday and at your door by Thursday.</p>
+          <a class="cta" href="#shop">Start my first box</a>
+        </div>
+        
+        <img alt="A steaming terracotta coffee cup" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 260'%3E%3Cellipse cx='150' cy='228' rx='110' ry='16' fill='%23e6d3b8'/%3E%3Cpath d='M70 90h160v70a60 60 0 0 1-60 60h-40a60 60 0 0 1-60-60z' fill='%23b4531e'/%3E%3Cpath d='M230 112h18a26 26 0 0 1 0 52h-18' fill='none' stroke='%23b4531e' stroke-width='14'/%3E%3Cpath d='M110 60c-12-16 12-24 0-40M150 64c-12-16 12-24 0-40M190 60c-12-16 12-24 0-40' fill='none' stroke='%23c9a27a' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E" width="300" height="260" />
+      </div>
+      <section class="shop" id="shop">
+        
+        <h2>Our roasts</h2>
+        <div class="cards">
+          <div class="card"><h3>Morning Light</h3><p>Light roast, notes of citrus and honey. $14</p></div>
+          <div class="card"><h3>Harbor Blend</h3><p>Medium roast, chocolate and toasted nut. $13</p></div>
+          <div class="card"><h3>Midnight Oak</h3><p>Dark roast, smoky and deep. $15</p></div>
+        </div>
+      </section>
+      
+      <form class="signup" action="#">
+        <label for="email">Get our roast guide by email</label>
+        <input id="email" type="email" />
+        <button type="submit">Subscribe</button>
+      </form>
+      
+      <div class="share"><span>Share:</span><button type="button" aria-label="Share by email"></button><button type="button" aria-label="Share on a social network"></button></div>
+    </main>
+    <footer style="padding: 14px 28px; color: #5a4a3a; font-size: 14px">&copy; Sunrise Coffee. Roasted with care.</footer>
+  </body>
+</html>
