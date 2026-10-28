@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Проверка доступности страницы простым языком",
+  "description": "Check a page for accessibility problems and get plain-language explanations",
   "scripts": {
     "dev": "wxt",
     "build": "wxt build",

@@ -57,8 +57,8 @@ async function clickByName(name: string) {
 }
 
 async function violationsOf(): Promise<string[]> {
-  // В jsdom нет раскладки, поэтому контраст проверяется в настоящем браузере
-  // (docs/a11y-checklist.md). Здесь проверяем структуру и подписи.
+  // jsdom has no layout, so contrast is checked in a real browser
+  // (docs/a11y-checklist.md). Here we check structure and labels.
   const results = await axe.run(document, {
     runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'],
     rules: { 'color-contrast': { enabled: false } },
@@ -85,51 +85,51 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-describe('axe на интерфейсе popup', () => {
-  it('пустое состояние', async () => {
+describe('axe on the popup UI', () => {
+  it('empty state', async () => {
     await mount();
-    expect(container.textContent).toContain('Проверить страницу');
+    expect(container.textContent).toContain('Check page');
     expect(await violationsOf()).toEqual([]);
   });
 
-  it('состояние загрузки', async () => {
+  it('loading state', async () => {
     respond = () => new Promise(() => undefined);
     await mount();
-    await clickByName('Проверить страницу');
-    expect(container.textContent).toContain('Проверяем');
+    await clickByName('Check page');
+    expect(container.textContent).toContain('Checking');
     expect(await violationsOf()).toEqual([]);
   });
 
-  it('результат со всеми группами и подсветкой', async () => {
+  it('result with all groups and a highlight', async () => {
     await mount();
-    await clickByName('Проверить страницу');
+    await clickByName('Check page');
     expect(container.querySelectorAll('li').length).toBe(ITEMS.length);
     expect(await violationsOf()).toEqual([]);
 
-    await clickByName('Показать на странице');
+    await clickByName('Show on page');
     expect(container.querySelector('[aria-pressed="true"]')).not.toBeNull();
     expect(await violationsOf()).toEqual([]);
   });
 
-  it('результат без нарушений', async () => {
+  it('result without issues', async () => {
     respond = async () => ({ ok: true, url: 'https://example.com/', items: [] });
     await mount();
-    await clickByName('Проверить страницу');
-    expect(container.textContent).toContain('Нарушений не найдено.');
+    await clickByName('Check page');
+    expect(container.textContent).toContain('No issues found.');
     expect(await violationsOf()).toEqual([]);
   });
 
-  it('состояние ошибки', async () => {
-    respond = async () => ({ ok: false, error: 'Не удалось найти открытую вкладку.' });
+  it('error state', async () => {
+    respond = async () => ({ ok: false, error: 'Could not find the open tab.' });
     await mount();
-    await clickByName('Проверить страницу');
+    await clickByName('Check page');
     expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-      'Не удалось проверить страницу',
+      'Could not check the page',
     );
     expect(await violationsOf()).toEqual([]);
   });
 
-  it('фокус остаётся на кнопке проверки, пока идёт проверка', async () => {
+  it('keeps focus on the check button while the check is running', async () => {
     let calls = 0;
     respond = () => {
       calls += 1;
@@ -138,13 +138,13 @@ describe('axe на интерфейсе popup', () => {
     await mount();
     const button = container.querySelector('button');
     button?.focus();
-    await clickByName('Проверить страницу');
+    await clickByName('Check page');
     expect(document.activeElement).toBe(button);
     expect(button?.getAttribute('aria-disabled')).toBe('true');
     expect(button?.disabled).toBe(false);
 
-    // Повторное нажатие во время проверки не запускает вторую проверку.
-    await clickByName('Проверить страницу');
+    // Pressing again during the check does not start a second check.
+    await clickByName('Check page');
     expect(calls).toBe(1);
   });
 });

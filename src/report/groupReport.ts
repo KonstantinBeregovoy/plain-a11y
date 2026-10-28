@@ -15,14 +15,14 @@ export const SEVERITY_ORDER: readonly Severity[] = [
 export const ROLE_ORDER: readonly Role[] = ['design', 'content', 'code'];
 
 export const SEVERITY_LABELS: Record<Severity, string> = {
-  critical: 'Критично',
-  serious: 'Важно',
-  minor: 'Желательно',
+  critical: 'Critical',
+  serious: 'Serious',
+  minor: 'Minor',
 };
 export const ROLE_LABELS: Record<Role, string> = {
-  design: 'Дизайн',
-  content: 'Контент',
-  code: 'Код',
+  design: 'Design',
+  content: 'Content',
+  code: 'Code',
 };
 
 export interface ReportIssue {
@@ -41,14 +41,14 @@ export interface SeverityGroup {
   roles: RoleGroup[];
 }
 
-/** moderate, minor и неизвестная важность попадают в minor. */
+/** moderate, minor and unknown impact all fall into minor. */
 export function toSeverity(impact: ViolationItem['impact']): Severity {
   return impact === 'critical' || impact === 'serious' ? impact : 'minor';
 }
 
 /**
- * Группирует нарушения по важности, внутри по роли.
- * Пустые группы не возвращаются. Порядок задач внутри группы сохраняется.
+ * Groups violations by severity, then by role within each severity.
+ * Empty groups are omitted. The order of issues within a group is preserved.
  */
 export function groupReport(
   items: readonly ViolationItem[],

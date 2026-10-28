@@ -2,7 +2,7 @@ const OUTLINE_COLOR = '#d93025';
 
 interface SavedStyle {
   element: Element & ElementCSSInlineStyle;
-  /** Исходное значение атрибута style, null если атрибута не было. */
+  /** Original value of the style attribute, null if there was none. */
   style: string | null;
 }
 
@@ -13,8 +13,8 @@ function hasInlineStyle(
 }
 
 /**
- * Подсветка элементов временным контуром. Меняет только inline-style,
- * а при снятии возвращает атрибут к исходному значению.
+ * Highlights elements with a temporary outline. Only touches inline style
+ * and restores the attribute to its original value on clear.
  */
 export function createHighlighter(doc: Document) {
   let saved: SavedStyle[] = [];
@@ -33,13 +33,13 @@ export function createHighlighter(doc: Document) {
       try {
         doc.querySelectorAll(selector).forEach((element) => found.add(element));
       } catch {
-        // Селектор, который браузер не понимает, пропускаем.
+        // Skip selectors the browser cannot parse.
       }
     }
     return [...found];
   }
 
-  /** Подсвечивает элементы, прокручивает к первому. Возвращает число найденных. */
+  /** Highlights elements and scrolls to the first one. Returns how many were found. */
   function show(selectors: readonly string[]): number {
     clear();
     const elements = find(selectors).filter(hasInlineStyle);

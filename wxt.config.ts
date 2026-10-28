@@ -7,12 +7,12 @@ export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   filterEntrypoints: ['popup', 'background', 'content'],
   vite: () => ({
-    // Полифил предзагрузки модулей делает fetch, а сетевых запросов в пакете быть не должно.
+    // The module preload polyfill uses fetch, and the package must make no network requests.
     build: { modulePreload: { polyfill: false } },
   }),
   manifest: {
     name: 'Plain A11y',
-    description: 'Проверка доступности страницы простым языком',
+    description: 'Check a page for accessibility problems and get plain-language explanations.',
     permissions: ['activeTab', 'scripting', 'storage'],
   },
 });

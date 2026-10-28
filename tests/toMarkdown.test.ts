@@ -13,7 +13,7 @@ function item(
 const META = { url: 'https://example.com/page', date: new Date(2026, 9, 27) };
 
 describe('toMarkdown', () => {
-  it('формирует отчёт для фиксированного входа', () => {
+  it('builds the report for a fixed input', () => {
     const markdown = toMarkdown(
       [
         item('tabindex', 'minor'),
@@ -28,27 +28,27 @@ describe('toMarkdown', () => {
     expect(markdown).toMatchSnapshot();
   });
 
-  it('пишет адрес и дату в заголовок', () => {
+  it('writes the address and date in the header', () => {
     const markdown = toMarkdown([item('image-alt', 'critical')], META);
-    expect(markdown).toContain('Страница: https://example.com/page');
-    expect(markdown).toContain('Дата: 2026-10-27');
+    expect(markdown).toContain('Page: https://example.com/page');
+    expect(markdown).toContain('Date: 2026-10-27');
   });
 
-  it('делает пункты-чекбоксы, внутри роли сначала более важные', () => {
+  it('makes checkbox items, more severe first within a role', () => {
     const markdown = toMarkdown(
       [item('tabindex', 'minor'), item('label', 'critical')],
       META,
     );
     const checkboxes = markdown.split('\n').filter((line) => line.startsWith('- [ ] '));
     expect(checkboxes).toHaveLength(2);
-    expect(checkboxes[0]).toMatch(/^- \[ \] Критично: У поля ввода нет подписи\. Как исправить: /);
-    expect(checkboxes[1]).toMatch(/^- \[ \] Желательно: /);
+    expect(checkboxes[0]).toMatch(/^- \[ \] Critical: Form field has no label\. How to fix: /);
+    expect(checkboxes[1]).toMatch(/^- \[ \] Minor: /);
   });
 
-  it('для пустого результата говорит, что проблем не найдено, и напоминает об ограничении', () => {
+  it('says no issues were found for an empty result and reminds about the limitation', () => {
     const markdown = toMarkdown([], META);
-    expect(markdown).toContain('Автоматическая проверка проблем не нашла.');
-    expect(markdown).toContain('только часть требований');
+    expect(markdown).toContain('The automated check found no issues.');
+    expect(markdown).toContain('only part of the accessibility requirements');
     expect(markdown).not.toContain('- [ ]');
     expect(markdown).not.toContain('## ');
   });

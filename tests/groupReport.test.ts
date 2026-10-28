@@ -7,11 +7,11 @@ function item(id: string, impact: ViolationItem['impact']): ViolationItem {
 }
 
 describe('groupReport', () => {
-  it('возвращает пустой список для пустого результата', () => {
+  it('returns an empty list for an empty result', () => {
     expect(groupReport([])).toEqual([]);
   });
 
-  it('держит порядок групп: critical, serious, minor', () => {
+  it('keeps the group order: critical, serious, minor', () => {
     const groups = groupReport([
       item('tabindex', 'minor'),
       item('image-alt', 'critical'),
@@ -24,7 +24,7 @@ describe('groupReport', () => {
     ]);
   });
 
-  it('объединяет moderate, minor и неизвестную важность в minor', () => {
+  it('merges moderate, minor and unknown impact into minor', () => {
     const groups = groupReport([
       item('heading-order', 'moderate'),
       item('tabindex', 'minor'),
@@ -35,7 +35,7 @@ describe('groupReport', () => {
     expect(groups[0]?.count).toBe(3);
   });
 
-  it('внутри важности держит порядок ролей: design, content, code', () => {
+  it('keeps the role order within a severity: design, content, code', () => {
     const [group] = groupReport([
       item('tabindex', 'serious'), // code
       item('image-alt', 'serious'), // content
@@ -48,17 +48,17 @@ describe('groupReport', () => {
     ]);
   });
 
-  it('не возвращает пустые роли', () => {
+  it('does not return empty roles', () => {
     const [group] = groupReport([item('image-alt', 'critical')]);
     expect(group?.roles.map((role) => role.role)).toEqual(['content']);
   });
 
-  it('неизвестное правило попадает в роль code', () => {
+  it('puts an unknown rule into the code role', () => {
     const [group] = groupReport([item('brand-new-rule', 'serious')]);
     expect(group?.roles[0]?.role).toBe('code');
   });
 
-  it('фильтрует по роли и пересчитывает количество', () => {
+  it('filters by role and recounts', () => {
     const items = [
       item('image-alt', 'critical'), // content
       item('link-name', 'serious'), // content
@@ -74,7 +74,7 @@ describe('groupReport', () => {
 });
 
 describe('toSeverity', () => {
-  it('переводит важность axe в три уровня', () => {
+  it('maps axe impact to three levels', () => {
     expect(toSeverity('critical')).toBe('critical');
     expect(toSeverity('serious')).toBe('serious');
     expect(toSeverity('moderate')).toBe('minor');

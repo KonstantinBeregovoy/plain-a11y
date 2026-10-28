@@ -13,8 +13,8 @@ function sourceFiles(dir: string): string[] {
 const SOURCES = sourceFiles('src').filter((path) => /\.(ts|tsx|html)$/.test(path));
 
 
-describe('ограничения пакета', () => {
-  it('в манифесте только activeTab, scripting, storage и нет host_permissions', async () => {
+describe('package constraints', () => {
+  it('declares only activeTab, scripting and storage and no host_permissions', async () => {
     expect(typeof config.manifest).not.toBe('function');
     const manifest =
       typeof config.manifest === 'function' ? undefined : await config.manifest;
@@ -27,7 +27,7 @@ describe('ограничения пакета', () => {
     expect(manifest?.host_permissions).toBeUndefined();
   });
 
-  it('в исходниках нет сетевых вызовов и удалённо загружаемого кода', () => {
+  it('has no network calls or remotely loaded code in the sources', () => {
     expect(SOURCES.length).toBeGreaterThan(5);
     const forbidden = [
       /\bfetch\s*\(/,
@@ -48,15 +48,32 @@ describe('ограничения пакета', () => {
     }
   });
 
-  it('axe-core не скачивает ресурсы страницы (preload: false)', () => {
+  it('does not let axe-core download page resources (preload: false)', () => {
     const content = readFileSync('src/content/index.ts', 'utf8');
     expect(content).toMatch(/axe\s*\.run\(document,\s*\{\s*preload:\s*false\s*\}\)/);
   });
 
-  it('версия axe-core закреплена точным номером', () => {
+  it('pins the axe-core version to an exact number', () => {
     const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as {
       dependencies: Record<string, string>;
     };
     expect(pkg.dependencies['axe-core']).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
+  it('keeps the project language English: no Cyrillic in sources, tests or docs', () => {
+    const files = [
+      ...sourceFiles('src').filter((path) => !path.endsWith('.png')),
+      ...sourceFiles('tests'),
+      ...sourceFiles('scripts'),
+      'README.md',
+      'PRIVACY.md',
+      'store/listing.md',
+      'docs/a11y-checklist.md',
+      'package.json',
+      'wxt.config.ts',
+    ];
+    for (const path of files) {
+      expect(readFileSync(path, 'utf8'), path).not.toMatch(/[\u0400-\u04FF]/);
+    }
   });
 });

@@ -1,24 +1,24 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`toMarkdown > формирует отчёт для фиксированного входа 1`] = `
-"# Отчёт о доступности
+exports[`toMarkdown > builds the report for a fixed input 1`] = `
+"# Accessibility report
 
-Страница: https://example.com/page
-Дата: 2026-10-27
+Page: https://example.com/page
+Date: 2026-10-27
 
-## Дизайн
+## Design
 
-- [ ] Важно: Текст плохо виден на фоне. Как исправить: Сделайте текст темнее или фон светлее, пока текст не станет легко читаться. Проверьте пару цветов в любом инструменте для проверки контраста.
+- [ ] Serious: Text is hard to read against its background. How to fix: Make the text darker or the background lighter until the text is easy to read. Check the color pair with any contrast checker.
 
-## Контент
+## Content
 
-- [ ] Критично: У картинки нет текстового описания. Как исправить: Добавьте к картинке короткое описание, которое передаёт её смысл. Если картинка только украшает страницу, пометьте её как декоративную.
-- [ ] Важно: У ссылки нет понятного текста. Как исправить: Напишите в ссылке текст, который говорит, куда она ведёт. Избегайте слов «здесь» и «подробнее» без пояснения.
+- [ ] Critical: Image has no text description. How to fix: Add a short description that conveys what the image means. If the image is purely decorative, mark it as decorative.
+- [ ] Serious: Link has no meaningful text. How to fix: Write link text that says where the link leads. Avoid bare “click here” or “read more”.
 
-## Код
+## Code
 
-- [ ] Критично: У поля ввода нет подписи. Как исправить: Привяжите к полю видимую подпись, а не только подсказку внутри поля. Подпись должна оставаться на месте, когда человек начинает печатать.
-- [ ] Желательно: Порядок перехода по клавише Tab нарушен. Как исправить: Попросите разработчиков убрать лишние настройки порядка и оставить естественный порядок элементов. Тогда фокус пойдёт сверху вниз, как читается страница.
-- [ ] Желательно: Some new rule must pass.
+- [ ] Critical: Form field has no label. How to fix: Attach a visible label to the field instead of relying on placeholder text alone. The label should stay in place while someone types.
+- [ ] Minor: Tab order has been changed. How to fix: Ask developers to remove the extra tab-order settings and keep the natural order of elements. Focus then moves top to bottom, the way the page reads.
+- [ ] Minor: Some new rule must pass.
 "
 `;

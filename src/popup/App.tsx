@@ -24,7 +24,7 @@ type State =
   | { status: 'error'; message: string };
 
 const FILTER_OPTIONS: readonly { value: RoleFilter; label: string }[] = [
-  { value: 'all', label: 'Все' },
+  { value: 'all', label: 'All' },
   ...ROLE_ORDER.map((role) => ({ value: role, label: ROLE_LABELS[role] })),
 ];
 
@@ -38,13 +38,13 @@ export function App() {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
 
-  // Открытый порт сообщает service worker, когда popup закрыт: тогда он снимает подсветку.
+  // The open port tells the service worker when the popup closes, so it can remove the highlight.
   useEffect(() => {
     const port = browser.runtime.connect({ name: POPUP_PORT });
     return () => port.disconnect();
   }, []);
 
-  // Восстанавливаем выбранный фильтр роли.
+  // Restore the selected role filter.
   useEffect(() => {
     let cancelled = false;
     loadRoleFilter()
@@ -52,7 +52,7 @@ export function App() {
         if (!cancelled) setRoleFilter(saved);
       })
       .catch(() => {
-        // Без сохранённых настроек остаётся фильтр «Все».
+        // Without saved settings the filter stays on “All”.
       });
     return () => {
       cancelled = true;
@@ -74,7 +74,7 @@ export function App() {
   }
 
   async function runCheck() {
-    // aria-disabled вместо disabled: так фокус клавиатуры остаётся на кнопке.
+    // aria-disabled instead of disabled keeps keyboard focus on the button.
     if (state.status === 'loading') return;
     setState({ status: 'loading' });
     setNotice('');
@@ -102,7 +102,7 @@ export function App() {
   function changeRoleFilter(value: RoleFilter) {
     setRoleFilter(value);
     saveRoleFilter(value).catch(() => {
-      // Не удалось сохранить: фильтр просто не запомнится.
+      // Saving failed: the filter simply will not be remembered.
     });
   }
 
@@ -112,13 +112,13 @@ export function App() {
       url: state.url,
       date: state.checkedAt,
     });
-    // Сначала очищаем сообщение, чтобы повторное копирование объявилось заново.
+    // Clear the message first so that copying again is announced again.
     setNotice('');
     try {
       await navigator.clipboard.writeText(markdown);
-      setNotice('Отчёт скопирован в буфер обмена.');
+      setNotice('Report copied to the clipboard.');
     } catch {
-      setNotice('Не удалось скопировать отчёт.');
+      setNotice('Could not copy the report.');
     }
   }
 
@@ -126,7 +126,7 @@ export function App() {
     try {
       if (highlightedId === item.id) {
         await clearHighlight();
-        setNotice('Подсветка снята.');
+        setNotice('Highlight removed.');
         return;
       }
       const request: HighlightRequest = {
@@ -138,17 +138,17 @@ export function App() {
       )) as HighlightResponse;
       if (!response.ok) {
         setHighlightedId(null);
-        setNotice(`Не удалось подсветить: ${response.error}`);
+        setNotice(`Could not highlight: ${response.error}`);
       } else if (response.found === 0) {
         setHighlightedId(null);
-        setNotice('Элемент не найден на странице.');
+        setNotice('Element not found on the page.');
       } else {
         setHighlightedId(item.id);
-        setNotice(`Подсвечено элементов: ${response.found}.`);
+        setNotice(`Highlighted elements: ${response.found}.`);
       }
     } catch (error) {
       setHighlightedId(null);
-      setNotice(`Не удалось подсветить: ${errorMessage(error)}`);
+      setNotice(`Could not highlight: ${errorMessage(error)}`);
     }
   }
 
@@ -160,31 +160,31 @@ export function App() {
         onClick={runCheck}
         aria-disabled={state.status === 'loading'}
       >
-        Проверить страницу
+        Check page
       </button>
       <div role="status" aria-live="polite">
-        {state.status === 'loading' && <p>Проверяем…</p>}
+        {state.status === 'loading' && <p>Checking…</p>}
         {state.status === 'done' && (
           <p>
             {state.items.length === 0
-              ? 'Нарушений не найдено.'
-              : `Найдено нарушений: ${state.items.length}`}
+              ? 'No issues found.'
+              : `Issues found: ${state.items.length}`}
           </p>
         )}
         {notice && <p>{notice}</p>}
       </div>
       {state.status === 'error' && (
-        <p role="alert">Не удалось проверить страницу: {state.message}</p>
+        <p role="alert">Could not check the page: {state.message}</p>
       )}
       {state.status === 'done' && (
         <button type="button" className="secondary" onClick={copyReport}>
-          Скопировать отчёт
+          Copy report
         </button>
       )}
       {state.status === 'done' && state.items.length > 0 && (
         <>
           <fieldset className="filter">
-            <legend>Показать задачи для роли</legend>
+            <legend>Show tasks for role</legend>
             {FILTER_OPTIONS.map((option) => (
               <label key={option.value}>
                 <input
@@ -198,7 +198,7 @@ export function App() {
               </label>
             ))}
           </fieldset>
-          {groups.length === 0 && <p>Для этой роли проблем не найдено.</p>}
+          {groups.length === 0 && <p>No issues found for this role.</p>}
           {groups.map((group) => (
             <section
               key={group.severity}
@@ -219,27 +219,27 @@ export function App() {
                         <h4>{rule.title}</h4>
                         {rule.whoIsAffected && (
                           <p>
-                            <strong>Кого касается:</strong> {rule.whoIsAffected}
+                            <strong>Who is affected:</strong> {rule.whoIsAffected}
                           </p>
                         )}
                         {rule.howToFix && (
                           <p>
-                            <strong>Как исправить:</strong> {rule.howToFix}
+                            <strong>How to fix:</strong> {rule.howToFix}
                           </p>
                         )}
                         <p className="meta">
-                          Элементов: {item.nodeCount}. Правило:{' '}
+                          Elements: {item.nodeCount}. Rule:{' '}
                           <code>{item.id}</code>
                         </p>
                         <button
                           type="button"
                           className="secondary"
                           aria-pressed={highlightedId === item.id}
-                          aria-label={`Показать на странице: ${rule.title}`}
+                          aria-label={`Show on page: ${rule.title}`}
                           disabled={item.targets.length === 0}
                           onClick={() => toggleHighlight(item)}
                         >
-                          Показать на странице
+                          Show on page
                         </button>
                       </li>
                     ))}

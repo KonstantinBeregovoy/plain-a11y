@@ -4,10 +4,10 @@ import { createHighlighter } from '../src/content/highlight';
 
 const PAGE = `
   <main>
-    <h1 style="color: red">Заголовок</h1>
+    <h1 style="color: red">Heading</h1>
     <img id="pic" src="x.gif">
-    <p class="note" style="margin: 0">Текст</p>
-    <p class="note">Ещё текст</p>
+    <p class="note" style="margin: 0">Text</p>
+    <p class="note">More text</p>
     <a href="#"></a>
   </main>`;
 
@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 
 describe('createHighlighter', () => {
-  it('после включения и снятия подсветки разметка совпадает с исходной', () => {
+  it('restores the original markup after the highlight is shown and removed', () => {
     const before = document.documentElement.outerHTML;
     const highlighter = createHighlighter(document);
 
@@ -27,14 +27,14 @@ describe('createHighlighter', () => {
     expect(document.documentElement.outerHTML).toBe(before);
   });
 
-  it('обводит найденные элементы и возвращает их число', () => {
+  it('outlines the found elements and returns their count', () => {
     const highlighter = createHighlighter(document);
     expect(highlighter.show(['.note'])).toBe(2);
     const note = document.querySelector<HTMLElement>('.note');
     expect(note?.style.getPropertyValue('outline')).toContain('3px solid');
   });
 
-  it('новая подсветка заменяет прежнюю', () => {
+  it('replaces the previous highlight with a new one', () => {
     const before = document.documentElement.outerHTML;
     const highlighter = createHighlighter(document);
     highlighter.show(['h1']);
@@ -46,10 +46,10 @@ describe('createHighlighter', () => {
     expect(document.documentElement.outerHTML).toBe(before);
   });
 
-  it('повторное снятие и неизвестный селектор ничего не ломают', () => {
+  it('survives repeated clearing and unknown selectors', () => {
     const before = document.documentElement.outerHTML;
     const highlighter = createHighlighter(document);
-    expect(highlighter.show(['#нет-такого', '###'])).toBe(0);
+    expect(highlighter.show(['#no-such-element', '###'])).toBe(0);
     highlighter.clear();
     highlighter.clear();
     expect(document.documentElement.outerHTML).toBe(before);

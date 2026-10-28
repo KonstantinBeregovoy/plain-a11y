@@ -1,64 +1,64 @@
-# Чек-лист доступности интерфейса расширения
+# Accessibility checklist of the extension interface
 
-Цель: интерфейс Plain A11y соответствует WCAG 2.2 AA (см. SPEC.md).
+Goal: the Plain A11y interface meets WCAG 2.2 AA (see SPEC.md).
 
-Обозначения:
-- `[x]` выполнено и проверено агентом, способ проверки указан рядом;
-- `[ ]` требует проверки человеком, агент этого сделать не может.
+Legend:
+- `[x]` done and verified by the agent, the way of checking is given next to it;
+- `[ ]` needs a check by a person, the agent cannot do it.
 
-## Автоматические проверки
+## Automated checks
 
-- [x] Тест axe на всех состояниях popup: пустое, загрузка, результат (в том числе с нажатой подсветкой), результат без нарушений, ошибка. Файл `tests/popup.a11y.test.tsx`, запуск `npm run test`. В jsdom нет раскладки, поэтому правило контраста в тесте выключено, а контраст и размер целей проверены в браузере (ниже).
-- [x] Тот же набор правил (WCAG 2.0, 2.1, 2.2 A и AA, best-practice) прогнан в настоящем Chromium на собранном расширении, включая `color-contrast` и `target-size`: 7 состояний (пустое, загрузка, результат, результат с подсветкой, результат с фильтром, результат без нарушений, ошибка), светлая и тёмная схема, итого 14 прогонов, 0 нарушений. Этот прогон выполнялся скриптом вне репозитория и не входит в `npm run test`.
+- [x] An axe test on all popup states: empty, loading, result (including a pressed highlight), result without issues, error. File `tests/popup.a11y.test.tsx`, run with `npm run test`. jsdom has no layout, so the contrast rule is turned off in the test, and contrast and target size were checked in a browser (below).
+- [x] The same rule set (WCAG 2.0, 2.1, 2.2 A and AA, best-practice) was run in a real Chromium on the built extension, including `color-contrast` and `target-size`: 7 states (empty, loading, result, result with highlight, result with filter, result without issues, error), light and dark scheme, 14 runs in total, 0 violations. This run was done by a script outside the repository and is not part of `npm run test`.
 
-## Клавиатура
+## Keyboard
 
-- [x] Порядок Tab (проверено в Chromium): «Проверить страницу», «Скопировать отчёт», фильтр роли (одна остановка на группу радиокнопок, переключение стрелками), затем кнопки «Показать на странице» сверху вниз. Порядок совпадает с визуальным.
-- [x] Все действия доступны с клавиатуры: проверка, копирование, фильтр, подсветка (нативные `button` и `input[type=radio]`).
-- [x] Фокус остаётся на кнопке «Проверить страницу» во время проверки. Была ошибка: `disabled` сбрасывал фокус на `body`. Исправлено заменой на `aria-disabled`, есть регрессионный тест.
-- [ ] Человек: пройти весь popup только с клавиатуры в обычном Chrome, открыв popup кликом по иконке, и убедиться, что после закрытия по Escape фокус возвращается на страницу.
+- [x] Tab order (checked in Chromium): “Check page”, “Copy report”, the role filter (one stop for the radio group, switched with arrow keys), then the “Show on page” buttons from top to bottom. The order matches the visual order.
+- [x] All actions are available from the keyboard: check, copy, filter, highlight (native `button` and `input[type=radio]`).
+- [x] Focus stays on the “Check page” button while the check runs. There was a bug: `disabled` dropped focus to `body`. Fixed by replacing it with `aria-disabled`, and there is a regression test.
+- [ ] Person: go through the whole popup with the keyboard only in regular Chrome, opening the popup by clicking the icon, and make sure focus returns to the page after closing with Escape.
 
-## Видимый фокус
+## Visible focus
 
-- [x] У каждого интерактивного элемента `:focus-visible` даёт сплошную рамку 3 px цвета основного текста (проверено через computed style в Chromium для всех остановок Tab). Контраст рамки с фоном: 17.4:1 в светлой схеме, 15.5:1 в тёмной.
-- [ ] Человек: убедиться глазами, что рамка не обрезается краем popup.
+- [x] Every interactive element gets a solid 3 px `:focus-visible` outline in the main text color (checked through computed style in Chromium for all Tab stops). Contrast of the outline against the background: 17.4:1 in the light scheme, 15.5:1 in the dark one.
+- [ ] Person: make sure by eye that the outline is not clipped by the edge of the popup.
 
-## Объявление результата (aria-live)
+## Announcing the result (aria-live)
 
-- [x] Область `role="status"` с `aria-live="polite"` присутствует в разметке с первого рендера, в неё попадают «Проверяем…», число нарушений, «Подсвечено элементов…», «Подсветка снята», «Отчёт скопирован…». Повторное копирование объявляется заново.
-- [x] Ошибка проверки выводится через `role="alert"`.
-- [ ] Человек: проверить в NVDA (Windows, Chrome) и VoiceOver (macOS, Chrome), что все сообщения реально произносятся, не дублируются и идут в разумном порядке.
-- [ ] Человек: проверить, как читаются заголовки (h1 → h2 важность → h3 роль → h4 проблема) и навигацию по ним, а также кнопки «Показать на странице: …» (состояние нажатости через `aria-pressed`).
-- [ ] Человек: отключённая кнопка «Показать на странице» (у проблем, где нет простого селектора, например внутри iframe) пропускается при Tab. Решить, нужно ли объяснять причину текстом.
+- [x] A `role="status"` area with `aria-live="polite"` is in the markup from the first render. It receives “Checking…”, the issue count, “Highlighted elements…”, “Highlight removed”, “Report copied…”. Copying again is announced again.
+- [x] A check error is shown through `role="alert"`.
+- [ ] Person: verify in NVDA (Windows, Chrome) and VoiceOver (macOS, Chrome) that every message is actually spoken, not duplicated and in a sensible order.
+- [ ] Person: verify how the headings are read (h1 → h2 severity → h3 role → h4 issue) and heading navigation, and the “Show on page: …” buttons (pressed state through `aria-pressed`).
+- [ ] Person: a disabled “Show on page” button (for issues without a simple selector, for example inside an iframe) is skipped by Tab. Decide whether the reason needs to be explained in text.
 
-## Контраст (не ниже 4.5:1 для текста)
+## Contrast (at least 4.5:1 for text)
 
-Посчитано по значениям из `src/popup/style.css`:
+Calculated from the values in `src/popup/style.css`:
 
-| Пара | Светлая схема | Тёмная схема |
+| Pair | Light scheme | Dark scheme |
 | --- | --- | --- |
-| Текст на фоне | 17.40:1 | 15.55:1 |
-| Текст основной кнопки на её фоне | 6.39:1 | 10.10:1 |
-| Основная кнопка на фоне страницы (нетекстовый элемент, нужно 3:1) | 6.39:1 | 10.12:1 |
-| Рамка полей и разделителей на фоне (нужно 3:1) | 4.54:1 | 6.19:1 |
+| Text on background | 17.40:1 | 15.55:1 |
+| Primary button text on its background | 6.39:1 | 10.10:1 |
+| Primary button against the page background (non-text element, 3:1 needed) | 6.39:1 | 10.12:1 |
+| Field and divider border against the background (3:1 needed) | 4.54:1 | 6.19:1 |
 
-- [x] Значения посчитаны, `color-contrast` в Chromium даёт 0 нарушений в обеих схемах.
-- [x] Цвет не единственный носитель смысла: важность и роль написаны словами в заголовках, а нажатое состояние кнопки подсветки отличается не только заливкой, но и значением `aria-pressed`.
-- [ ] Человек: просмотреть popup в режиме высокого контраста Windows (forced-colors) и при увеличении текста до 200 %.
+- [x] The values were calculated, and `color-contrast` in Chromium gives 0 violations in both schemes.
+- [x] Color is not the only carrier of meaning: severity and role are written in words in the headings, and the pressed state of the highlight button differs not only by fill but also by the `aria-pressed` value.
+- [ ] Person: view the popup in Windows forced-colors (high contrast) mode and with text enlarged to 200%.
 
-## Размер целей (не меньше 24×24 px)
+## Target size (at least 24×24 px)
 
-- [x] Кнопки 170×37 и 191×37 px, радиокнопки 20×20 px внутри подписей высотой от 28 px; `target-size` в Chromium даёт 0 нарушений.
+- [x] Buttons are 170×37 and 191×37 px, radio buttons are 20×20 px inside labels at least 28 px tall; `target-size` in Chromium gives 0 violations.
 
-## Движение и цветовая схема
+## Motion and color scheme
 
-- [x] `prefers-reduced-motion`: в стилях popup нет анимаций и переходов. Подсветка на странице прокручивает к элементу плавно, только если пользователь не просил меньше движения (`src/content/highlight.ts`).
-- [x] `prefers-color-scheme`: светлая и тёмная схема заданы переменными в `src/popup/style.css`, обе проверены axe в Chromium.
-- [ ] Человек: проверить подсветку на странице при включённом «Уменьшить движение» в настройках системы.
+- [x] `prefers-reduced-motion`: the popup styles have no animations or transitions. The highlight on the page scrolls smoothly only if the user did not ask for less motion (`src/content/highlight.ts`).
+- [x] `prefers-color-scheme`: light and dark schemes are defined by variables in `src/popup/style.css`, and both were checked with axe in Chromium.
+- [ ] Person: check the highlight on a page with “Reduce motion” turned on in the system settings.
 
-## Что остаётся за человеком (сводка)
+## What is left for a person (summary)
 
-1. Тест с NVDA и VoiceOver (объявления, заголовки, кнопки с `aria-pressed`).
-2. Прохождение с клавиатуры в обычном Chrome после клика по иконке.
-3. Forced-colors и увеличение текста.
-4. Подсветка при включённом «Уменьшить движение».
+1. A test with NVDA and VoiceOver (announcements, headings, buttons with `aria-pressed`).
+2. A keyboard pass in regular Chrome after clicking the icon.
+3. Forced-colors mode and text enlarged to 200%.
+4. The highlight with “Reduce motion” turned on.

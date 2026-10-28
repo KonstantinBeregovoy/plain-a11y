@@ -3,7 +3,7 @@ import type { Role } from '../dictionary/dictionary';
 
 export type RoleFilter = Role | 'all';
 
-/** Нужная часть storage.local: так её проще подменить в тесте. */
+/** The part of storage.local we use: this makes it easy to fake in tests. */
 export interface StorageArea {
   get(key: string): Promise<Record<string, unknown>>;
   set(items: Record<string, unknown>): Promise<void>;

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { toViolationItems } from '../src/report/violations';
 
 describe('toViolationItems', () => {
-  it('превращает нарушения axe в строки списка', () => {
+  it('converts axe violations into list rows', () => {
     const items = toViolationItems([
       { id: 'image-alt', help: 'Images must have alternate text', impact: 'critical', nodes: [{ target: ['#a'] }, { target: ['.b > img'] }] },
       { id: 'color-contrast', help: 'Elements must have sufficient color contrast', impact: 'serious', nodes: [{ target: ['p'] }] },
@@ -13,7 +13,7 @@ describe('toViolationItems', () => {
     ]);
   });
 
-  it('подставляет unknown, если impact не задан', () => {
+  it('uses unknown when impact is missing', () => {
     expect(
       toViolationItems([{ id: 'x', help: 'X', impact: null, nodes: [] }, { id: 'y', help: 'Y', nodes: [{ target: ['p'] }] }]),
     ).toEqual([
@@ -22,11 +22,11 @@ describe('toViolationItems', () => {
     ]);
   });
 
-  it('возвращает пустой список для пустого результата', () => {
+  it('returns an empty list for an empty result', () => {
     expect(toViolationItems([])).toEqual([]);
   });
 
-  it('пропускает селекторы для iframe и shadow DOM', () => {
+  it('skips selectors for iframes and shadow DOM', () => {
     const [item] = toViolationItems([
       {
         id: 'image-alt',

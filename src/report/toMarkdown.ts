@@ -9,9 +9,9 @@ import {
 import type { ViolationItem } from './violations';
 
 export interface ReportMeta {
-  /** Адрес проверенной страницы. */
+  /** Address of the checked page. */
   url: string;
-  /** Дата проверки в локальном времени. */
+  /** Date of the check in local time. */
   date: Date;
 }
 
@@ -21,24 +21,24 @@ function formatDate(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** Отчёт в Markdown для вставки в тикет: секции по ролям, пункты-чекбоксы. */
+/** Markdown report for pasting into a ticket: sections by role, checkbox items. */
 export function toMarkdown(
   items: readonly ViolationItem[],
   meta: ReportMeta,
 ): string {
   const lines = [
-    '# Отчёт о доступности',
+    '# Accessibility report',
     '',
-    `Страница: ${meta.url}`,
-    `Дата: ${formatDate(meta.date)}`,
+    `Page: ${meta.url}`,
+    `Date: ${formatDate(meta.date)}`,
     '',
   ];
 
   if (items.length === 0) {
     lines.push(
-      'Автоматическая проверка проблем не нашла. ' +
-        'Она покрывает только часть требований доступности, ' +
-        'поэтому остальное нужно проверить вручную.',
+      'The automated check found no issues. ' +
+        'It covers only part of the accessibility requirements, ' +
+        'so check the rest manually.',
     );
     return `${lines.join('\n')}\n`;
   }
@@ -60,7 +60,7 @@ export function toMarkdown(
     lines.push(`## ${ROLE_LABELS[role]}`, '');
     for (const { item, rule } of ofRole) {
       const severity = SEVERITY_LABELS[toSeverity(item.impact)];
-      const fix = rule.howToFix ? ` Как исправить: ${rule.howToFix}` : '';
+      const fix = rule.howToFix ? ` How to fix: ${rule.howToFix}` : '';
       lines.push(`- [ ] ${severity}: ${rule.title}.${fix}`);
     }
     lines.push('');

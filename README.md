@@ -1,94 +1,94 @@
 # Plain A11y
 
-Расширение для Chrome, которое проверяет открытую страницу на проблемы доступности и объясняет их простым языком. Для каждой проблемы оно показывает, что не так, кого это затрагивает, как исправить и кому передать задачу: дизайнеру, контент-менеджеру или разработчику.
+A Chrome extension that checks the open page for accessibility problems and explains them in plain language. For every problem it shows what is wrong, who it affects, how to fix it and who to hand the task to: a designer, a content editor or a developer.
 
-Для кого: дизайнеры, контент-менеджеры, PM и QA без глубокого знания WCAG. Отчёты axe DevTools, WAVE и Lighthouse написаны для разработчиков, а здесь отчёт читается без терминов и сразу делится по ролям.
+Who it is for: designers, content editors, PMs and QA people without deep knowledge of WCAG. The reports of axe DevTools, WAVE and Lighthouse are written for developers. Here the report reads without jargon and is split by role right away.
 
-## Что умеет
+## What it does
 
-- Кнопка «Проверить страницу» запускает проверку на текущей вкладке.
-- Проблемы сгруппированы по важности (критично, важно, желательно) и по роли (дизайн, контент, код). Есть фильтр по роли, он запоминается.
-- У каждой проблемы: что не так, кого касается, как исправить. Технический id правила остаётся мелкой подписью.
-- Кнопка «Показать на странице» обводит проблемные элементы и прокручивает к первому. Подсветка снимается повторным нажатием или при закрытии popup, разметка страницы возвращается к исходной.
-- Кнопка «Скопировать отчёт» кладёт в буфер обмена отчёт в Markdown с чекбоксами, готовый для вставки в тикет.
+- The “Check page” button runs the check on the current tab.
+- Problems are grouped by severity (critical, serious, minor) and by role (design, content, code). A role filter is available and is remembered.
+- For every problem: what is wrong, who it affects, how to fix it. The technical rule id stays as a small caption.
+- The “Show on page” button outlines the problem elements and scrolls to the first one. The highlight is removed by pressing the button again or by closing the popup, and the page markup returns to its original state.
+- The “Copy report” button puts a Markdown report with checkboxes on the clipboard, ready to paste into a ticket.
 
-## Установка из исходников
+## Install from source
 
-Нужны Node.js и npm (проверено на Node.js 22).
+You need Node.js and npm (tested on Node.js 22).
 
 ```bash
 npm install
 npm run build
 ```
 
-Дальше в Chrome:
+Then in Chrome:
 
-1. Откройте `chrome://extensions` и включите «Режим разработчика».
-2. Нажмите «Загрузить распакованное расширение» и выберите папку `.output/chrome-mv3`.
-3. Откройте страницу, нажмите на иконку расширения и на «Проверить страницу».
+1. Open `chrome://extensions` and turn on “Developer mode”.
+2. Click “Load unpacked” and choose the `.output/chrome-mv3` folder.
+3. Open a page, click the extension icon and press “Check page”.
 
-Чтобы проверять локальные файлы (`file://`), включите в настройках расширения «Разрешить доступ к URL файлов».
+To check local files (`file://`), turn on “Allow access to file URLs” in the extension settings.
 
-## Команды
+## Commands
 
-| Команда | Что делает |
+| Command | What it does |
 | --- | --- |
-| `npm run build` | Собирает расширение в `.output/chrome-mv3` |
-| `npm run zip` | Собирает архив для загрузки в Chrome Web Store: `.output/plain-a11y-<версия>-chrome.zip` |
-| `npm run typecheck` | Проверка типов (TypeScript strict) |
-| `npm run test` | Тесты (Vitest) |
-| `npm run icons` | Перегенерирует иконки 16, 48 и 128 px из `scripts/icon.svg` |
-| `npm run dev` | Сборка с перезагрузкой для разработки |
+| `npm run build` | Builds the extension into `.output/chrome-mv3` |
+| `npm run zip` | Builds the archive for upload to the Chrome Web Store: `.output/plain-a11y-<version>-chrome.zip` |
+| `npm run typecheck` | Type check (TypeScript strict) |
+| `npm run test` | Tests (Vitest) |
+| `npm run icons` | Regenerates the 16, 48 and 128 px icons from `scripts/icon.svg` |
+| `npm run dev` | Development build with reload |
 
-## Архитектура
+## Architecture
 
 ```
 popup (React)  ──run-check──▶  service worker  ──executeScript──▶  content script (axe-core)
       ▲                              │                                      │
-      └──────── список проблем ──────┴───────────── результат axe ◀─────────┘
+      └────── list of problems ──────┴────────── axe result ◀───────────────┘
 ```
 
-1. Popup отправляет команду в service worker.
-2. Service worker внедряет content script в активную вкладку через `chrome.scripting.executeScript` и отправляет ему сообщение.
-3. Content script запускает axe-core на странице и возвращает компактный список нарушений.
-4. Popup превращает правила axe в простые слова через словарь, группирует и выводит.
-5. Подсветка работает тем же путём: popup → service worker → content script. Пока popup открыт, он держит порт к service worker, и закрытие popup снимает подсветку.
+1. The popup sends a command to the service worker.
+2. The service worker injects the content script into the active tab with `chrome.scripting.executeScript` and sends it a message.
+3. The content script runs axe-core on the page and returns a compact list of violations.
+4. The popup turns axe rules into plain words through the dictionary, groups the result and displays it.
+5. The highlight takes the same route: popup → service worker → content script. While the popup is open it keeps a port to the service worker, and closing the popup removes the highlight.
 
-Структура репозитория:
+Repository layout:
 
-| Папка | Что внутри |
+| Folder | What is inside |
 | --- | --- |
-| `src/popup` | React-интерфейс и сохранение настроек |
+| `src/popup` | React interface and settings storage |
 | `src/background` | Service worker |
-| `src/content` | Запуск axe-core и подсветка элементов |
-| `src/dictionary` | Словарь правил: название, кого касается, как исправить, роль |
-| `src/report` | Группировка, экспорт в Markdown, типы сообщений |
-| `tests` | Unit-тесты, тест axe на самом popup, фикстура страницы |
-| `docs` | Чек-лист доступности самого расширения |
-| `store` | Материалы для Chrome Web Store |
-| `tasks` | Файлы заданий разработки по этапам |
+| `src/content` | axe-core runner and element highlight |
+| `src/dictionary` | Rule dictionary: title, who is affected, how to fix, role |
+| `src/report` | Grouping, Markdown export, message types |
+| `tests` | Unit tests, an axe test of the popup itself, a page fixture |
+| `docs` | Accessibility checklist of the extension itself |
+| `store` | Chrome Web Store materials |
+| `tasks` | Development task files, stage by stage |
 
-### Почему axe-core
+### Why axe-core
 
-Собственные правила доступности писать и поддерживать дорого и рискованно: легко ошибиться и давать ложные срабатывания. axe-core это общепринятый движок с открытым кодом, который ведётся годами и работает целиком в браузере. Расширение отвечает только за то, что делает его результат понятным нетехническому человеку. Версия axe-core закреплена точным номером в `package.json`, потому что набор правил меняется между версиями, а словарь на них опирается. Обновлять её нужно осознанно и прогонять тесты словаря.
+Writing and maintaining your own accessibility rules is expensive and risky: it is easy to be wrong and to produce false positives. axe-core is a widely accepted open-source engine that has been maintained for years and runs entirely in the browser. The extension only makes its result understandable to a non-technical person. The axe-core version is pinned to an exact number in `package.json`, because the set of rules changes between versions and the dictionary relies on it. Update it deliberately and run the dictionary tests.
 
-### Почему Manifest V3
+### Why Manifest V3
 
-Это формат, который требует Chrome Web Store для новых расширений. Он же задаёт нужные ограничения: весь код лежит внутри пакета, удалённо загружаемого кода нет, а права минимальны. Расширение запрашивает только `activeTab`, `scripting` и `storage`, без доступа ко всем сайтам: проверка запускается кликом по иконке и касается только текущей вкладки.
+It is the format the Chrome Web Store requires for new extensions. It also enforces the right constraints: all code lives inside the package, there is no remotely loaded code, and permissions are minimal. The extension asks only for `activeTab`, `scripting` and `storage`, with no access to all sites: the check starts by clicking the icon and touches only the current tab.
 
-## Ограничения
+## Limitations
 
-- **Автоматическая проверка находит только часть проблем.** axe-core не может судить о смысле: хорошо ли описана картинка, понятна ли форма, логичен ли порядок табуляции. Пустой отчёт не означает, что страница доступна. Ручную проверку (клавиатура, screen reader) это расширение не заменяет.
-- Содержимое вложенных iframe в проверку не попадает.
-- Подсветить на странице можно только элементы с простым селектором. Элементы внутри iframe и shadow DOM показываются в отчёте, но не обводятся.
-- Нельзя проверять служебные страницы Chrome (`chrome://…`) и Chrome Web Store: браузер не пускает туда расширения.
-- Отчёт и словарь только на русском языке.
-- Тексты словаря покрывают 10 самых частых правил. Для остальных правил показывается описание из axe на английском и роль «код».
+- **Automated checking finds only part of the problems.** axe-core cannot judge meaning: whether an image is described well, whether a form is understandable, whether the tab order is logical. An empty report does not mean the page is accessible. This extension does not replace manual checking (keyboard, screen reader).
+- The content of nested iframes is not included in the check.
+- Only elements with a simple selector can be highlighted on the page. Elements inside iframes and shadow DOM appear in the report but are not outlined.
+- Chrome service pages (`chrome://…`) and the Chrome Web Store cannot be checked: the browser does not let extensions in.
+- The interface, the dictionary and the report are in English only.
+- The dictionary texts cover the 10 most common rules. For other rules the axe description is shown and the role is “code”.
 
-## Приватность
+## Privacy
 
-Расширение ничего не собирает и не отправляет. Подробности в [PRIVACY.md](PRIVACY.md).
+The extension collects nothing and sends nothing. Details are in [PRIVACY.md](PRIVACY.md).
 
-## Доступность самого расширения
+## Accessibility of the extension itself
 
-Интерфейс проверяется axe в тестах и в настоящем браузере. Что проверено и что осталось для ручной проверки со screen reader, записано в [docs/a11y-checklist.md](docs/a11y-checklist.md).
+The interface is checked with axe in the tests and in a real browser. What has been checked, and what is left for manual checking with a screen reader, is recorded in [docs/a11y-checklist.md](docs/a11y-checklist.md).

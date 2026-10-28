@@ -1,61 +1,61 @@
-# Описание для Chrome Web Store
+# Chrome Web Store listing
 
-## Название
+## Name
 
 Plain A11y
 
-## Краткое описание (до 132 символов)
+## Short description (up to 132 characters)
 
-Проверка доступности страницы простым языком: что не так, кого касается, как исправить и кому передать задачу.
+Check a page for accessibility problems in plain language: what is wrong, who it affects, how to fix it and who should do it.
 
-## Полное описание
+## Full description
 
-Plain A11y проверяет открытую страницу на проблемы доступности и объясняет их простым языком, без терминов WCAG. Расширение сделано для дизайнеров, контент-менеджеров, PM и QA.
+Plain A11y checks the open page for accessibility problems and explains them in plain language, without WCAG jargon. The extension is made for designers, content editors, PMs and QA people.
 
-Что вы получаете:
-- Список проблем, сгруппированный по важности: критично, важно, желательно.
-- Для каждой проблемы: что не так, кого это затрагивает и как исправить.
-- Роль, которой передать задачу: дизайн, контент или код. Список можно отфильтровать по роли.
-- Подсветку проблемного элемента прямо на странице.
-- Отчёт в Markdown с чекбоксами одной кнопкой: вставьте его в тикет.
+What you get:
+- A list of problems grouped by severity: critical, serious, minor.
+- For every problem: what is wrong, who it affects and how to fix it.
+- The role that should handle the task: design, content or code. The list can be filtered by role.
+- Highlighting of the problem element right on the page.
+- A Markdown report with checkboxes in one click: paste it into a ticket.
 
-Приватность: проверка идёт целиком в вашем браузере. Расширение ничего не собирает, не отправляет и не загружает из сети. Запрашиваются только права activeTab, scripting и storage, без доступа ко всем сайтам.
+Privacy: the check runs entirely in your browser. The extension collects nothing, sends nothing and loads nothing from the network. It asks only for the activeTab, scripting and storage permissions, with no access to all sites.
 
-Важно: автоматическая проверка находит только часть проблем доступности. Она не оценивает смысл текстов, понятность форм и порядок работы с клавиатуры, поэтому не заменяет проверку человеком. Если проблем не найдено, это ещё не значит, что страница доступна. Проверку выполняет движок axe-core.
+Important: automated checking finds only part of the accessibility problems. It does not judge the meaning of texts, how understandable forms are or how the keyboard flow works, so it does not replace checking by a person. If no problems are found, that does not mean the page is accessible. The check itself is performed by the axe-core engine.
 
-Интерфейс и словарь сейчас на русском языке.
+The interface and the dictionary are in English only for now.
 
-## Единственная цель расширения
+## Single purpose
 
-Проверить открытую вкладку на проблемы доступности и показать результат понятным языком с разбивкой по ролям.
+Check the open tab for accessibility problems and show the result in plain language, split by role.
 
-## Обоснование разрешений
+## Permission justification
 
-| Разрешение | Зачем нужно |
+| Permission | Why it is needed |
 | --- | --- |
-| `activeTab` | Даёт доступ к текущей вкладке только после клика пользователя по иконке расширения, чтобы проверить именно её. Постоянного доступа к сайтам нет. |
-| `scripting` | Внедряет в текущую вкладку скрипт с проверкой axe-core и скрипт подсветки элементов. Это единственный способ запустить проверку внутри страницы. |
-| `storage` | Хранит локально выбранный фильтр роли, чтобы он восстанавливался при следующем открытии. Другие данные не сохраняются. |
+| `activeTab` | Gives access to the current tab only after the user clicks the extension icon, so that exactly this tab is checked. There is no permanent access to sites. |
+| `scripting` | Injects the axe-core check script and the element highlight script into the current tab. It is the only way to run the check inside the page. |
+| `storage` | Stores the selected role filter locally so that it is restored the next time. No other data is saved. |
 
-Доступ к хостам (`host_permissions`) не запрашивается. Удалённо загружаемого кода нет: весь код лежит в пакете.
+Host access (`host_permissions`) is not requested. There is no remotely loaded code: all code is in the package.
 
-## Раскрытие данных для формы магазина
+## Data disclosure for the store form
 
-- Расширение не собирает и не передаёт пользовательские данные.
-- Данные не продаются и не передаются третьим лицам.
-- Данные не используются для целей, не связанных с единственной целью расширения.
-- Политика конфиденциальности: файл `PRIVACY.md` из репозитория. Для формы магазина нужна публичная ссылка на него (например, на страницу репозитория или опубликованный текст).
+- The extension does not collect or transmit user data.
+- Data is not sold or shared with third parties.
+- Data is not used for purposes unrelated to the single purpose of the extension.
+- Privacy policy: the `PRIVACY.md` file from the repository. The store form needs a public link to it (for example, the repository page or a published copy of the text).
 
-## Графика
+## Graphics
 
-- Иконки 16, 48 и 128 px: `src/public/icon/`, генерируются командой `npm run icons` из `scripts/icon.svg`.
-- Скриншоты 1280×800 агент не делал. Нужные кадры:
-  1. Popup до проверки: кнопка «Проверить страницу» на фоне открытой страницы.
-  2. Результат проверки: группа «Критично» с проблемами по ролям.
-  3. Крупный план одной проблемы: что не так, кого касается, как исправить.
-  4. Подсветка проблемного элемента на странице при нажатой кнопке «Показать на странице».
-  5. Фильтр по роли «Дизайн»: видны только задачи дизайнера.
-  6. Скопированный отчёт Markdown, вставленный в тикет.
-  7. Состояние «Нарушений не найдено» с копией отчёта и напоминанием об ограничениях автоматической проверки.
-  8. Тёмная тема popup.
-- Короткое демо (GIF или видео): проверка страницы, подсветка элемента, копирование отчёта.
+- Icons 16, 48 and 128 px: `src/public/icon/`, generated by `npm run icons` from `scripts/icon.svg`.
+- Screenshots 1280×800 were not made by the agent. Frames needed:
+  1. The popup before the check: the “Check page” button over an open page.
+  2. The result of a check: the “Critical” group with problems by role.
+  3. A close-up of one problem: what is wrong, who is affected, how to fix it.
+  4. The highlight of a problem element on the page with the “Show on page” button pressed.
+  5. The “Design” role filter: only the designer’s tasks are visible.
+  6. The copied Markdown report pasted into a ticket.
+  7. The “No issues found” state with the copied report and the reminder about the limits of automated checking.
+  8. The dark theme of the popup.
+- A short demo (GIF or video): checking a page, highlighting an element, copying the report.

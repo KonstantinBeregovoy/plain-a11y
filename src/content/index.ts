@@ -22,7 +22,7 @@ export default defineContentScript({
   registration: 'runtime',
   matches: [],
   main() {
-    // Скрипт внедряется при каждой проверке, слушатель нужен один.
+    // The script is injected on every check, but one listener is enough.
     if (window.__plainA11yReady) return;
     window.__plainA11yReady = true;
 
@@ -30,7 +30,7 @@ export default defineContentScript({
 
     browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (hasType(message, 'run-axe')) {
-        // preload: false запрещает axe скачивать стили и медиа страницы по сети.
+        // preload: false stops axe from downloading the page's styles and media.
         axe
           .run(document, { preload: false })
           .then((results) => {

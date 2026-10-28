@@ -1,23 +1,23 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Тестовая страница с проблемами доступности</title>
+    <title>Test page with accessibility problems</title>
   </head>
   <body>
     <main>
-      <h1>Страница с заведомыми проблемами</h1>
+      <h1>Page with deliberate problems</h1>
 
-      <!-- image-alt: картинка без alt -->
+      <!-- image-alt: image without alt -->
       <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" width="40" height="40" />
 
-      <!-- label: поле без подписи -->
+      <!-- label: field without a label -->
       <input type="text" />
 
-      <!-- color-contrast: светло-серый текст на белом -->
-      <p style="color: #bbbbbb; background: #ffffff">Этот текст почти не читается.</p>
+      <!-- color-contrast: light gray text on white -->
+      <p style="color: #bbbbbb; background: #ffffff">This text is barely readable.</p>
 
-      <!-- link-name: ссылка без текста -->
+      <!-- link-name: link without text -->
       <a href="https://example.com"></a>
     </main>
   </body>

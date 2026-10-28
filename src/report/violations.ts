@@ -1,6 +1,6 @@
 export type Impact = 'minor' | 'moderate' | 'serious' | 'critical';
 
-/** Минимальный набор полей нарушения axe, который нужен остальному коду. */
+/** The minimal set of axe violation fields the rest of the code needs. */
 export interface AxeViolationLike {
   id: string;
   help: string;
@@ -8,19 +8,19 @@ export interface AxeViolationLike {
   nodes: readonly { target: readonly unknown[] }[];
 }
 
-/** Строка списка в popup. */
+/** One row of the popup list. */
 export interface ViolationItem {
   id: string;
   help: string;
   impact: Impact | 'unknown';
   nodeCount: number;
-  /** CSS-селекторы элементов, которые можно подсветить на странице. */
+  /** CSS selectors of elements that can be highlighted on the page. */
   targets: string[];
 }
 
 /**
- * Из target берём только простой селектор в одном документе.
- * Цепочки для iframe и shadow DOM подсветить нельзя.
+ * From a target we only take a simple selector within a single document.
+ * Selector chains for iframes and shadow DOM cannot be highlighted.
  */
 function simpleSelector(target: readonly unknown[]): string | null {
   const [first] = target;

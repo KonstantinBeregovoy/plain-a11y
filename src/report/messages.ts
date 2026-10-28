@@ -1,22 +1,22 @@
 import type { ViolationItem } from './violations';
 
-/** Popup просит service worker проверить активную вкладку. */
+/** The popup asks the service worker to check the active tab. */
 export interface RunCheckRequest {
   type: 'run-check';
 }
 
-/** Service worker просит content script запустить axe-core. */
+/** The service worker asks the content script to run axe-core. */
 export interface RunAxeRequest {
   type: 'run-axe';
 }
 
-/** Обвести элементы на странице. Новая подсветка заменяет прежнюю. */
+/** Outline elements on the page. A new highlight replaces the previous one. */
 export interface HighlightRequest {
   type: 'highlight';
   targets: string[];
 }
 
-/** Снять подсветку. */
+/** Remove the highlight. */
 export interface ClearHighlightRequest {
   type: 'clear-highlight';
 }
@@ -29,7 +29,7 @@ export type HighlightResponse =
   | { ok: true; found: number }
   | { ok: false; error: string };
 
-/** Имя порта, который popup держит открытым, пока он виден. */
+/** Name of the port the popup keeps open while it is visible. */
 export const POPUP_PORT = 'popup';
 
 export function hasType(message: unknown, type: string): boolean {

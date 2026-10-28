@@ -1,33 +1,33 @@
-# Политика конфиденциальности Plain A11y
+# Plain A11y privacy policy
 
-Дата последнего обновления: 28 октября 2026 года.
+Last updated: 28 October 2026.
 
-## Коротко
+## In short
 
-Plain A11y ничего не собирает и ничего не отправляет. Вся работа происходит в вашем браузере.
+Plain A11y collects nothing and sends nothing. All work happens in your browser.
 
-## Что происходит с данными
+## What happens to data
 
-- **Содержимое страниц.** Когда вы нажимаете «Проверить страницу», проверка запускается на текущей вкладке прямо в браузере. Содержимое страницы и результат проверки никуда не отправляются и не сохраняются. Результат живёт, пока открыт popup.
-- **Буфер обмена.** Расширение записывает отчёт в буфер обмена только когда вы нажимаете «Скопировать отчёт». Читать буфер обмена оно не умеет.
-- **Настройки.** Единственное, что сохраняется, это выбранный фильтр роли («Все», «Дизайн», «Контент» или «Код»). Он хранится локально в браузере (`chrome.storage.local`) и не покидает ваше устройство.
+- **Page content.** When you press “Check page”, the check runs on the current tab right in the browser. The page content and the result of the check are not sent anywhere and are not stored. The result lives only while the popup is open.
+- **Clipboard.** The extension writes the report to the clipboard only when you press “Copy report”. It cannot read the clipboard.
+- **Settings.** The only thing that is saved is the selected role filter (“All”, “Design”, “Content” or “Code”). It is stored locally in the browser (`chrome.storage.local`) and never leaves your device.
 
-## Чего в расширении нет
+## What the extension does not have
 
-- Нет сервера, аккаунтов и регистрации.
-- Нет аналитики, счётчиков и отслеживания.
-- Нет сетевых запросов. Проверка отключает загрузку ресурсов страницы, которую умеет делать axe-core.
-- Нет удалённо загружаемого кода. Весь код находится внутри пакета расширения.
-- Данные не продаются, не передаются третьим лицам и не используются для рекламы.
+- No server, no accounts and no sign-up.
+- No analytics, counters or tracking.
+- No network requests. The check turns off the loading of page resources that axe-core can otherwise do.
+- No remotely loaded code. All code is inside the extension package.
+- Data is not sold, not shared with third parties and not used for advertising.
 
-## Разрешения
+## Permissions
 
-- `activeTab`: доступ к текущей вкладке только после вашего клика по иконке расширения.
-- `scripting`: запуск проверки на этой вкладке.
-- `storage`: сохранение выбранного фильтра роли.
+- `activeTab`: access to the current tab only after you click the extension icon.
+- `scripting`: running the check on that tab.
+- `storage`: saving the selected role filter.
 
-Доступа ко всем сайтам расширение не запрашивает.
+The extension does not request access to all sites.
 
-## Вопросы
+## Questions
 
-Задать вопрос или сообщить о проблеме можно через раздел Issues репозитория проекта.
+You can ask a question or report a problem through the Issues section of the project repository.

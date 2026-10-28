@@ -1,4 +1,4 @@
-// Генерирует иконки расширения из scripts/icon.svg в src/public/icon.
+// Generates the extension icons from scripts/icon.svg into src/public/icon.
 import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +10,7 @@ const outDir = join(root, 'src', 'public', 'icon');
 await mkdir(outDir, { recursive: true });
 
 for (const size of [16, 48, 128]) {
-  // Большая плотность, чтобы мелкие размеры получались чёткими.
+  // High density keeps the small sizes crisp.
   await sharp(svg, { density: 384 })
     .resize(size, size)
     .png()

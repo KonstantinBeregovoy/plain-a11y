@@ -8,7 +8,7 @@ export interface DictionaryEntry {
   role: Role;
 }
 
-/** Описание правила для popup. Для неизвестных правил текстов может не быть. */
+/** Rule description for the popup. Rules outside the dictionary may have no texts. */
 export interface RuleDescription {
   id: string;
   title: string;
@@ -20,92 +20,92 @@ export interface RuleDescription {
 export const dictionary: readonly DictionaryEntry[] = [
   {
     id: 'color-contrast',
-    title: 'Текст плохо виден на фоне',
+    title: 'Text is hard to read against its background',
     whoIsAffected:
-      'Людям со слабым зрением и всем, кто читает с экрана на ярком свете.',
+      'People with low vision, and anyone reading a screen in bright light.',
     howToFix:
-      'Сделайте текст темнее или фон светлее, пока текст не станет легко читаться. Проверьте пару цветов в любом инструменте для проверки контраста.',
+      'Make the text darker or the background lighter until the text is easy to read. Check the color pair with any contrast checker.',
     role: 'design',
   },
   {
     id: 'image-alt',
-    title: 'У картинки нет текстового описания',
+    title: 'Image has no text description',
     whoIsAffected:
-      'Незрячим людям: программа для чтения с экрана не сможет рассказать, что на картинке.',
+      'Blind people: a screen reader cannot tell them what the image shows.',
     howToFix:
-      'Добавьте к картинке короткое описание, которое передаёт её смысл. Если картинка только украшает страницу, пометьте её как декоративную.',
+      'Add a short description that conveys what the image means. If the image is purely decorative, mark it as decorative.',
     role: 'content',
   },
   {
     id: 'label',
-    title: 'У поля ввода нет подписи',
+    title: 'Form field has no label',
     whoIsAffected:
-      'Незрячим людям и тем, кто управляет сайтом голосом или с клавиатуры: они не поймут, что нужно ввести.',
+      'Blind people and people who use voice control or a keyboard: they cannot tell what to enter.',
     howToFix:
-      'Привяжите к полю видимую подпись, а не только подсказку внутри поля. Подпись должна оставаться на месте, когда человек начинает печатать.',
+      'Attach a visible label to the field instead of relying on placeholder text alone. The label should stay in place while someone types.',
     role: 'code',
   },
   {
     id: 'link-name',
-    title: 'У ссылки нет понятного текста',
+    title: 'Link has no meaningful text',
     whoIsAffected:
-      'Незрячим людям: программа для чтения с экрана произнесёт просто «ссылка» без пояснений.',
+      'Blind people: a screen reader will just say “link” with no hint where it goes.',
     howToFix:
-      'Напишите в ссылке текст, который говорит, куда она ведёт. Избегайте слов «здесь» и «подробнее» без пояснения.',
+      'Write link text that says where the link leads. Avoid bare “click here” or “read more”.',
     role: 'content',
   },
   {
     id: 'button-name',
-    title: 'У кнопки нет названия',
+    title: 'Button has no name',
     whoIsAffected:
-      'Незрячим людям и тем, кто управляет сайтом голосом: они не узнают, что делает кнопка.',
+      'Blind people and voice-control users: they cannot tell what the button does.',
     howToFix:
-      'Добавьте кнопке текст или, если на ней только значок, скрытое название действия. Название должно говорить о действии, например «Закрыть».',
+      'Give the button a text label, or a hidden name if it only shows an icon. The name should describe the action, for example “Close”.',
     role: 'code',
   },
   {
     id: 'heading-order',
-    title: 'Заголовки идут не по порядку',
+    title: 'Headings skip levels',
     whoIsAffected:
-      'Незрячим людям и всем, кто быстро перемещается по странице по заголовкам.',
+      'Blind people and anyone who jumps around a page using its headings.',
     howToFix:
-      'Выстройте заголовки по уровням без пропусков: после первого уровня идёт второй, после второго третий. Уровень выбирайте по смыслу, а не по размеру шрифта.',
+      'Arrange headings in levels without gaps: a second level follows the first, a third follows the second. Choose the level by meaning, not by font size.',
     role: 'content',
   },
   {
     id: 'document-title',
-    title: 'У страницы нет названия',
+    title: 'Page has no title',
     whoIsAffected:
-      'Всем, кто работает с несколькими вкладками, и незрячим людям: название страницы читают первым.',
+      'Anyone with many tabs open, and blind people, whose screen reader reads the title first.',
     howToFix:
-      'Задайте странице короткое название, которое отличает её от других страниц сайта. Лучше начинать с главного, а название сайта ставить в конец.',
+      'Give the page a short title that sets it apart from other pages on the site. Put the main topic first and the site name last.',
     role: 'content',
   },
   {
     id: 'html-has-lang',
-    title: 'Не указан язык страницы',
+    title: 'Page language is not set',
     whoIsAffected:
-      'Незрячим людям: программа для чтения с экрана может читать текст с неправильным произношением.',
+      'Blind people: a screen reader may read the text with the wrong pronunciation.',
     howToFix:
-      'Попросите разработчиков указать язык страницы, например русский. Это делается один раз для всего сайта.',
+      'Ask developers to set the page language, for example English. It is done once for the whole site.',
     role: 'code',
   },
   {
     id: 'frame-title',
-    title: 'У встроенного блока нет названия',
+    title: 'Embedded frame has no title',
     whoIsAffected:
-      'Незрячим людям: они не поймут, что находится во встроенном блоке, например в карте или видео.',
+      'Blind people: they cannot tell what an embedded frame, such as a map or a video, contains.',
     howToFix:
-      'Добавьте встроенному блоку короткое название, которое говорит о его содержимом. Например, «Карта проезда».',
+      'Give the frame a short title that describes its content, for example “Directions map”.',
     role: 'code',
   },
   {
     id: 'tabindex',
-    title: 'Порядок перехода по клавише Tab нарушен',
+    title: 'Tab order has been changed',
     whoIsAffected:
-      'Людям, которые работают без мыши: фокус прыгает по странице в неожиданном порядке.',
+      'People who work without a mouse: focus jumps around the page in an unexpected order.',
     howToFix:
-      'Попросите разработчиков убрать лишние настройки порядка и оставить естественный порядок элементов. Тогда фокус пойдёт сверху вниз, как читается страница.',
+      'Ask developers to remove the extra tab-order settings and keep the natural order of elements. Focus then moves top to bottom, the way the page reads.',
     role: 'code',
   },
 ];
@@ -113,8 +113,8 @@ export const dictionary: readonly DictionaryEntry[] = [
 const byId = new Map(dictionary.map((entry) => [entry.id, entry]));
 
 /**
- * Возвращает понятное описание правила. Если правила нет в словаре,
- * берёт описание help из axe и передаёт задачу в роль code.
+ * Returns a plain-language description of a rule. If the rule is not in the
+ * dictionary, it falls back to the axe help text and hands the task to `code`.
  */
 export function describeRule(id: string, axeHelp: string): RuleDescription {
   const entry = byId.get(id);

@@ -15,12 +15,12 @@ function memoryArea(initial: Record<string, unknown> = {}): StorageArea {
   };
 }
 
-describe('настройки', () => {
-  it('по умолчанию фильтр «all»', async () => {
+describe('settings', () => {
+  it('defaults to the “all” filter', async () => {
     expect(await loadRoleFilter(memoryArea())).toBe('all');
   });
 
-  it('сохранённый фильтр читается обратно', async () => {
+  it('reads back a saved filter', async () => {
     const area = memoryArea();
     await saveRoleFilter('design', area);
     expect(await loadRoleFilter(area)).toBe('design');
@@ -28,7 +28,7 @@ describe('настройки', () => {
     expect(await loadRoleFilter(area)).toBe('all');
   });
 
-  it('мусор в хранилище заменяется на «all»', async () => {
+  it('replaces garbage in storage with “all”', async () => {
     expect(await loadRoleFilter(memoryArea({ roleFilter: 'admin' }))).toBe('all');
     expect(await loadRoleFilter(memoryArea({ roleFilter: 42 }))).toBe('all');
   });

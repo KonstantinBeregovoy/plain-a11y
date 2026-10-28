@@ -9,7 +9,7 @@ import {
   type RunAxeRequest,
 } from '../report/messages';
 
-/** Вкладка, на которой сейчас включена подсветка. */
+/** The tab where the highlight is currently on. */
 let highlightedTabId: number | undefined;
 
 function errorMessage(error: unknown): string {
@@ -28,7 +28,7 @@ async function checkActiveTab(): Promise<CheckResponse> {
   try {
     const tabId = await activeTabId();
     if (tabId === undefined) {
-      return { ok: false, error: 'Не удалось найти открытую вкладку.' };
+      return { ok: false, error: 'Could not find the open tab.' };
     }
     await browser.scripting.executeScript({
       target: { tabId },
@@ -45,7 +45,7 @@ async function highlight(request: HighlightRequest): Promise<HighlightResponse> 
   try {
     const tabId = await activeTabId();
     if (tabId === undefined) {
-      return { ok: false, error: 'Не удалось найти открытую вкладку.' };
+      return { ok: false, error: 'Could not find the open tab.' };
     }
     highlightedTabId = tabId;
     return (await browser.tabs.sendMessage(tabId, request)) as HighlightResponse;
@@ -62,7 +62,7 @@ async function clearHighlight(): Promise<HighlightResponse> {
     const request: ClearHighlightRequest = { type: 'clear-highlight' };
     return (await browser.tabs.sendMessage(tabId, request)) as HighlightResponse;
   } catch (error) {
-    // Вкладку могли закрыть или перезагрузить, подсвечивать там уже нечего.
+    // The tab may have been closed or reloaded, so there is nothing left to clear.
     return { ok: false, error: errorMessage(error) };
   }
 }
@@ -84,7 +84,7 @@ export default defineBackground(() => {
     return false;
   });
 
-  // Пока popup открыт, порт жив. Закрытие popup разрывает порт.
+  // The port stays alive while the popup is open. Closing the popup drops it.
   browser.runtime.onConnect.addListener((port) => {
     if (port.name !== POPUP_PORT) return;
     port.onDisconnect.addListener(() => {
