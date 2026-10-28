@@ -74,6 +74,8 @@ export function App() {
   }
 
   async function runCheck() {
+    // aria-disabled вместо disabled: так фокус клавиатуры остаётся на кнопке.
+    if (state.status === 'loading') return;
     setState({ status: 'loading' });
     setNotice('');
     try {
@@ -153,7 +155,11 @@ export function App() {
   return (
     <main>
       <h1>Plain A11y</h1>
-      <button type="button" onClick={runCheck} disabled={state.status === 'loading'}>
+      <button
+        type="button"
+        onClick={runCheck}
+        aria-disabled={state.status === 'loading'}
+      >
         Проверить страницу
       </button>
       <div role="status" aria-live="polite">

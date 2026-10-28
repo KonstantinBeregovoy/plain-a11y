@@ -47,7 +47,8 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
+button:disabled,
+button[aria-disabled='true'] {
   cursor: progress;
   opacity: 0.8;
 }
