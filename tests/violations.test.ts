@@ -26,7 +26,7 @@ describe('toViolationItems', () => {
     expect(toViolationItems([])).toEqual([]);
   });
 
-  it('skips selectors for iframes and shadow DOM', () => {
+  it('keeps simple selectors and shadow DOM paths, and skips iframe targets', () => {
     const [item] = toViolationItems([
       {
         id: 'image-alt',
@@ -34,13 +34,36 @@ describe('toViolationItems', () => {
         impact: 'critical',
         nodes: [
           { target: ['img'] },
-          { target: ['iframe', 'img'] },
           { target: [['#host', 'img']] },
+          { target: [['#outer', '#inner', 'button']] },
+          { target: ['iframe', 'img'] },
+          { target: ['iframe', ['#host', 'img']] },
         ],
       },
     ]);
-    expect(item?.nodeCount).toBe(3);
-    expect(item?.targets).toEqual(['img']);
+    expect(item?.nodeCount).toBe(5);
+    expect(item?.targets).toEqual([
+      'img',
+      ['#host', 'img'],
+      ['#outer', '#inner', 'button'],
+    ]);
+  });
+
+  it('skips malformed targets', () => {
+    const [item] = toViolationItems([
+      {
+        id: 'image-alt',
+        help: 'h',
+        impact: 'critical',
+        nodes: [
+          { target: [] },
+          { target: [[]] },
+          { target: [[1, 2]] },
+          { target: [{ fromShadowDom: ['#a'] }] },
+        ],
+      },
+    ]);
+    expect(item?.targets).toEqual([]);
   });
 });
 

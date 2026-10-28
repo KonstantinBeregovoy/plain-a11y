@@ -8,23 +8,42 @@ export interface AxeViolationLike {
   nodes: readonly { target: readonly unknown[] }[];
 }
 
+/**
+ * Where to find an element that can be highlighted:
+ * - a string is a CSS selector in the page document;
+ * - an array of strings is a path through open shadow roots: the first selector
+ *   is looked up in the document, each next one inside the shadow root of the
+ *   element found by the previous one.
+ */
+export type HighlightTarget = string | string[];
+
 /** One row of the popup list. */
 export interface ViolationItem {
   id: string;
   help: string;
   impact: Impact | 'unknown';
   nodeCount: number;
-  /** CSS selectors of elements that can be highlighted on the page. */
-  targets: string[];
+  /** Elements of this problem that can be highlighted on the page. */
+  targets: HighlightTarget[];
 }
 
 /**
- * From a target we only take a simple selector within a single document.
- * Selector chains for iframes and shadow DOM cannot be highlighted.
+ * From an axe target we take what can be highlighted: a simple selector or a
+ * path through shadow roots, both within the page document. A target with more
+ * than one entry points into an iframe, which cannot be reached from here.
  */
-function simpleSelector(target: readonly unknown[]): string | null {
+function highlightTarget(target: readonly unknown[]): HighlightTarget | null {
+  if (target.length !== 1) return null;
   const [first] = target;
-  return target.length === 1 && typeof first === 'string' ? first : null;
+  if (typeof first === 'string') return first;
+  if (
+    Array.isArray(first) &&
+    first.length > 0 &&
+    first.every((part): part is string => typeof part === 'string')
+  ) {
+    return first;
+  }
+  return null;
 }
 
 export function toViolationItems(
@@ -36,8 +55,8 @@ export function toViolationItems(
     impact: violation.impact ?? 'unknown',
     nodeCount: violation.nodes.length,
     targets: violation.nodes.flatMap((node) => {
-      const selector = simpleSelector(node.target);
-      return selector === null ? [] : [selector];
+      const found = highlightTarget(node.target);
+      return found === null ? [] : [found];
     }),
   }));
 }

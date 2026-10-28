@@ -1,3 +1,5 @@
+import type { HighlightTarget } from '../report/violations';
+
 const OUTLINE_COLOR = '#d93025';
 
 interface SavedStyle {
@@ -33,11 +35,24 @@ export function createHighlighter(doc: Document) {
     saved = [];
   }
 
-  function find(selectors: readonly string[]): Element[] {
+  /** Resolves one target. A path goes through open shadow roots, one selector per level. */
+  function resolve(target: HighlightTarget): Element[] {
+    const path = typeof target === 'string' ? [target] : target;
+    let scopes: ParentNode[] = [doc];
+    let found: Element[] = [];
+    for (const selector of path) {
+      found = scopes.flatMap((scope) => [...scope.querySelectorAll(selector)]);
+      // Closed shadow roots are not reachable: such hosts yield no scope, so the next level finds nothing.
+      scopes = found.flatMap((host) => (host.shadowRoot ? [host.shadowRoot] : []));
+    }
+    return found;
+  }
+
+  function find(targets: readonly HighlightTarget[]): Element[] {
     const found = new Set<Element>();
-    for (const selector of selectors) {
+    for (const target of targets) {
       try {
-        doc.querySelectorAll(selector).forEach((element) => found.add(element));
+        resolve(target).forEach((element) => found.add(element));
       } catch {
         // Skip selectors the browser cannot parse.
       }
@@ -46,9 +61,9 @@ export function createHighlighter(doc: Document) {
   }
 
   /** Highlights elements and scrolls to the first one. Returns how many were found. */
-  function show(selectors: readonly string[]): number {
+  function show(targets: readonly HighlightTarget[]): number {
     clear();
-    const elements = find(selectors).filter(hasInlineStyle);
+    const elements = find(targets).filter(hasInlineStyle);
     for (const element of elements) {
       saved.push({ element, style: element.getAttribute('style') });
       element.style.setProperty('outline', `3px solid ${OUTLINE_COLOR}`, 'important');

@@ -29,7 +29,8 @@ Legend:
 - [x] A check error is shown through `role="alert"`.
 - [ ] Person: verify in NVDA (Windows, Chrome) and VoiceOver (macOS, Chrome) that every message is actually spoken, not duplicated and in a sensible order.
 - [ ] Person: verify how the headings are read (h1 → h2 severity → h3 role → h4 issue) and heading navigation, and the “Show on page: …” buttons (pressed state through `aria-pressed`).
-- [ ] Person: a disabled “Show on page” button (for issues without a simple selector, for example inside an iframe) is skipped by Tab. Decide whether the reason needs to be explained in text.
+- [x] A disabled “Show on page” button (for issues whose elements are inside an embedded frame) is skipped by Tab, so the reason is written as text next to it and linked with `aria-describedby`. A test checks the link, and axe on the state with the note gives 0 violations in both schemes in Chromium. Today the content of frames is not checked, so this state cannot appear on a real page yet.
+- [ ] Person: read that note with NVDA or VoiceOver and decide whether the wording is clear.
 
 ## Contrast (at least 4.5:1 for text)
 

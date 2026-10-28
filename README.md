@@ -82,7 +82,7 @@ It is the format the Chrome Web Store requires for new extensions. It also enfor
 
 - **Automated checking finds only part of the problems.** axe-core cannot judge meaning: whether an image is described well, whether a form is understandable, whether the tab order is logical. An empty report does not mean the page is accessible. This extension does not replace manual checking (keyboard, screen reader).
 - The content of nested iframes is not included in the check.
-- Only elements with a simple selector can be highlighted on the page. Elements inside iframes and shadow DOM appear in the report but are not outlined.
+- “Show on page” works for elements in the page and in open shadow DOM, including nested shadow roots. Elements in closed shadow roots cannot be reached, and issues inside iframes are not found at all, because the content of iframes is not checked. If an issue ever points into a frame, its button is disabled and the reason is written next to it.
 - Chrome service pages (`chrome://…`) and the Chrome Web Store cannot be checked: the browser does not let extensions in.
 - The interface, the dictionary and the report are in English only.
 - The dictionary describes every rule axe runs by default (90), plus the minimum clickable size rule (`target-size`) and three AAA rules we switch on, 94 in total. A rule that is not in the dictionary, for example after an axe-core update, is shown with the English axe description and the role “code”. Experimental and deprecated rules, which axe keeps off by default, are not run.

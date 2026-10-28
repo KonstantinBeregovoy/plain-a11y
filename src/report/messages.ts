@@ -1,4 +1,4 @@
-import type { ViolationItem } from './violations';
+import type { HighlightTarget, ViolationItem } from './violations';
 
 /** The popup asks the service worker to check the active tab. */
 export interface RunCheckRequest {
@@ -18,7 +18,7 @@ export interface PingRequest {
 /** Outline elements on the page. A new highlight replaces the previous one. */
 export interface HighlightRequest {
   type: 'highlight';
-  targets: string[];
+  targets: HighlightTarget[];
 }
 
 /** Remove the highlight. */
@@ -60,9 +60,12 @@ export function isHighlightRequest(
 ): message is HighlightRequest {
   if (!hasType(message, 'highlight')) return false;
   const { targets } = message as { targets?: unknown };
-  return (
-    Array.isArray(targets) && targets.every((item) => typeof item === 'string')
-  );
+  const isTarget = (item: unknown) =>
+    typeof item === 'string' ||
+    (Array.isArray(item) &&
+      item.length > 0 &&
+      item.every((part) => typeof part === 'string'));
+  return Array.isArray(targets) && targets.every(isTarget);
 }
 
 export function errorMessage(error: unknown): string {

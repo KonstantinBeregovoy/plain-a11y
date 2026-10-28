@@ -54,11 +54,20 @@ export function RoleGroupList({
                     className="secondary"
                     aria-pressed={highlightedId === key}
                     aria-label={`Show on page: ${rule.title}`}
+                    aria-describedby={
+                      item.targets.length === 0 ? `no-highlight-${key}` : undefined
+                    }
                     disabled={item.targets.length === 0}
                     onClick={() => onToggleHighlight(item, key)}
                   >
                     Show on page
                   </button>
+                  {item.targets.length === 0 && (
+                    <p className="meta" id={`no-highlight-${key}`}>
+                      Cannot be shown on the page: the elements are inside an
+                      embedded frame.
+                    </p>
+                  )}
                 </li>
               );
             })}

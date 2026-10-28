@@ -24,6 +24,10 @@ describe('message guards', () => {
   it('accepts only well-formed highlight requests', () => {
     expect(isHighlightRequest({ type: 'highlight', targets: ['img', '#a'] })).toBe(true);
     expect(isHighlightRequest({ type: 'highlight', targets: [1] })).toBe(false);
+    expect(isHighlightRequest({ type: 'highlight', targets: [['#host', 'img']] })).toBe(true);
+    expect(isHighlightRequest({ type: 'highlight', targets: ['img', ['#a', '#b', 'p']] })).toBe(true);
+    expect(isHighlightRequest({ type: 'highlight', targets: [[]] })).toBe(false);
+    expect(isHighlightRequest({ type: 'highlight', targets: [['#a', 2]] })).toBe(false);
     expect(isHighlightRequest({ type: 'highlight' })).toBe(false);
     expect(isHighlightRequest({ type: 'clear-highlight' })).toBe(false);
   });

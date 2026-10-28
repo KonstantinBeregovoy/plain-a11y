@@ -2,19 +2,21 @@
 
 This file lists what is planned, in order, and what is parked. Stage files with acceptance criteria are in `tasks/`.
 
-## Next stages (tasks/TASK-7 to TASK-16)
+## Done: stages 7 to 16
 
-| Stage | What | Why |
-| --- | --- | --- |
-| 7 | Fixes and refactor from the architecture review | Stale content script after an update, query strings in the report URL, duplicated code, oversized `App.tsx` |
-| 8 | Popup typography | Smaller headings and body text, sizes in `rem` |
-| 9 | Turn on `target-size` (WCAG 2.2 AA) | The spec targets WCAG 2.2 AA but axe keeps this rule off by default |
-| 10 to 13 | Plain-language dictionary for the 80 remaining rules, in four batches | 80 of 90 checked rules still show generic English axe text |
-| 14 | “Needs manual review” section | axe reports unclear cases separately; today they are invisible |
-| 15 | “AAA recommendations” block at the bottom, can be hidden | Three AAA rules, shown separately from AA problems |
-| 16 | “Show on page” for elements inside shadow DOM | They appear in the report but cannot be outlined today |
+All of these are finished. The results and deviations are at the end of each task file in `tasks/`.
 
-## Important features for the stage after that (in this order)
+| Stage | What |
+| --- | --- |
+| 7 | Fixes and refactor from the architecture review |
+| 8 | Popup typography |
+| 9 | `target-size` (WCAG 2.2 AA) turned on |
+| 10 to 13 | Plain-language dictionary for all rules axe runs by default |
+| 14 | “Needs manual review” section |
+| 15 | “AAA recommendations” block, hideable |
+| 16 | “Show on page” for elements inside open shadow DOM |
+
+## Next: important features (in this order)
 
 1. **Check a selected block of the page.** Let the person pick a part of the page and run the check only there.
 2. **Compare two checks.** Show what was fixed and what appeared between two runs. Needs the previous result to be stored.

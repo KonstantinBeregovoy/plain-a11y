@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Page with problems inside shadow DOM</title>
+  </head>
+  <body>
+    <main>
+      <h1>Problems inside shadow DOM</h1>
+      <p>The problems are far below this line, so the page has to scroll to them.</p>
+
+      <div style="height: 1800px"></div>
+
+      <!-- image-alt and button-name inside an open shadow root -->
+      <div id="host"></div>
+
+      <!-- image-alt inside a shadow root nested in another shadow root -->
+      <div id="outer"></div>
+    </main>
+    <script>
+      const gif = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+      document.getElementById('host').attachShadow({ mode: 'open' }).innerHTML =
+        '<img src="' + gif + '" width="40" height="40">' +
+        '<button type="button" style="width: 40px; height: 40px"></button>';
+
+      const root = document.getElementById('outer').attachShadow({ mode: 'open' });
+      root.innerHTML = '<div id="inner"></div>';
+      root.getElementById('inner').attachShadow({ mode: 'open' }).innerHTML =
+        '<img src="' + gif + '" width="40" height="40">';
+    </script>
+  </body>
+</html>

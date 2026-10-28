@@ -367,4 +367,70 @@ describe('axe on the popup UI', () => {
     await clickByName('Check page');
     expect(container.querySelector('#aaa-heading')).toBeNull();
   });
+
+  it('explains in text why an issue inside a frame cannot be shown on the page', async () => {
+    await mount();
+    await clickByName('Check page');
+    const button = container.querySelector<HTMLButtonElement>(
+      'button[aria-label="Show on page: Headings skip levels"]',
+    );
+    expect(button?.disabled).toBe(true);
+    const describedBy = button?.getAttribute('aria-describedby') ?? '';
+    expect(describedBy).not.toBe('');
+    expect(document.getElementById(describedBy)?.textContent).toContain(
+      'the elements are inside an embedded frame',
+    );
+    // Issues that can be highlighted have no such note.
+    const enabled = container.querySelector<HTMLButtonElement>(
+      'button[aria-label="Show on page: Image has no text description"]',
+    );
+    expect(enabled?.disabled).toBe(false);
+    expect(enabled?.hasAttribute('aria-describedby')).toBe(false);
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('sends shadow DOM paths to the page when the button is pressed', async () => {
+    const sent: unknown[] = [];
+    vi.stubGlobal('browser', {
+      runtime: {
+        connect: () => ({ disconnect: () => undefined }),
+        sendMessage: async (message: { type: string; targets?: unknown }) => {
+          if (message.type === 'run-check') {
+            return {
+              ok: true,
+              url: 'https://example.com/',
+              items: [
+                {
+                  id: 'image-alt',
+                  help: 'h',
+                  impact: 'critical',
+                  nodeCount: 1,
+                  targets: [['#host', 'img']],
+                },
+              ],
+              review: [],
+              aaa: [],
+            };
+          }
+          if (message.type === 'highlight') {
+            sent.push(message.targets);
+            return { ok: true, found: 1 };
+          }
+          return { ok: true, found: 0 };
+        },
+      },
+      storage: { local: { get: async () => ({}), set: async () => undefined } },
+    });
+    await mount();
+    await clickByName('Check page');
+    const button = container.querySelector<HTMLButtonElement>(
+      'button[aria-label="Show on page: Image has no text description"]',
+    );
+    expect(button?.disabled).toBe(false);
+    await act(async () => {
+      button?.click();
+    });
+    expect(sent).toEqual([[['#host', 'img']]]);
+    expect(button?.getAttribute('aria-pressed')).toBe('true');
+  });
 });
