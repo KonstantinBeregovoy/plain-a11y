@@ -702,6 +702,141 @@ export const dictionary: readonly DictionaryEntry[] = [
       'Attach a visible label to the dropdown that says what the choice is for, for example “Country”.',
     role: 'code',
   },
+  {
+    id: 'scope-attr-valid',
+    title: 'Table header scope is set incorrectly',
+    whoIsAffected:
+      'Screen reader users: cells may be linked to the wrong headers.',
+    howToFix:
+      'Ask developers to fix the scope setting on the header cells, or to remove it if the table is simple.',
+    role: 'code',
+  },
+  {
+    id: 'table-duplicate-name',
+    title: 'Table summary repeats its caption',
+    whoIsAffected:
+      'Screen reader users, who hear the same text twice.',
+    howToFix:
+      'Keep the caption and give the summary different information, or remove the summary.',
+    role: 'code',
+  },
+  {
+    id: 'td-headers-attr',
+    title: 'Table cell points to a header that does not exist',
+    whoIsAffected:
+      'Screen reader users: the cell is read without its header.',
+    howToFix:
+      'Ask developers to point each cell only to header cells that are in the same table.',
+    role: 'code',
+  },
+  {
+    id: 'th-has-data-cells',
+    title: 'Table header has no data to describe',
+    whoIsAffected:
+      'Screen reader users: the header is read but nothing follows it.',
+    howToFix:
+      'Ask developers to check that every header cell has data cells to describe, or to turn the unused header into an ordinary cell.',
+    role: 'code',
+  },
+  {
+    id: 'html-lang-valid',
+    title: 'Page language code is invalid',
+    whoIsAffected:
+      'Blind people: a screen reader may read the page with the wrong voice and pronunciation.',
+    howToFix:
+      'Ask developers to use a valid language code, such as “en” for English.',
+    role: 'code',
+  },
+  {
+    id: 'html-xml-lang-mismatch',
+    title: 'Page declares two different languages',
+    whoIsAffected:
+      'Blind people: software may pick the wrong language and mispronounce the text.',
+    howToFix:
+      'Ask developers to make the two language settings on the page match, or to remove the older one.',
+    role: 'code',
+  },
+  {
+    id: 'valid-lang',
+    title: 'Language of a text part is invalid',
+    whoIsAffected:
+      'Blind people: a screen reader may read that part with the wrong pronunciation.',
+    howToFix:
+      'Ask developers to use a valid language code, such as “fr” for French, on that part of the page.',
+    role: 'code',
+  },
+  {
+    id: 'blink',
+    title: 'Blinking text is used',
+    whoIsAffected:
+      'People with attention difficulties or sensitivity to flashing: blinking text is distracting and can be harmful.',
+    howToFix:
+      'Ask developers to remove the blinking element. Use a static style to draw attention instead.',
+    role: 'code',
+  },
+  {
+    id: 'meta-refresh',
+    title: 'Page reloads or redirects by itself',
+    whoIsAffected:
+      'Screen reader and keyboard users, and anyone who needs more time: the page changes before they finish.',
+    howToFix:
+      'Ask developers to remove the automatic refresh or redirect, or to let people start it themselves.',
+    role: 'code',
+  },
+  {
+    id: 'no-autoplay-audio',
+    title: 'Audio or video starts playing by itself',
+    whoIsAffected:
+      'Blind people, whose screen reader is drowned out, and anyone who needs quiet.',
+    howToFix:
+      'Ask developers to stop the media from playing automatically, or to add a visible control that pauses it.',
+    role: 'code',
+  },
+  {
+    id: 'duplicate-id-aria',
+    title: 'Elements share an ID that labels depend on',
+    whoIsAffected:
+      'Screen reader users: a label or description may be attached to the wrong element.',
+    howToFix:
+      'Ask developers to give every element on the page its own unique ID.',
+    role: 'code',
+  },
+  {
+    id: 'marquee',
+    title: 'Scrolling text is used',
+    whoIsAffected:
+      'People with attention, reading or vision difficulties: moving text is hard to read and cannot be paused.',
+    howToFix:
+      'Ask developers to replace the scrolling text with static text.',
+    role: 'code',
+  },
+  {
+    id: 'meta-viewport',
+    title: 'Zooming is disabled',
+    whoIsAffected:
+      'People with low vision, who need to enlarge the page on a phone or tablet.',
+    howToFix:
+      'Ask developers to remove the settings that block pinch zoom from the page.',
+    role: 'code',
+  },
+  {
+    id: 'meta-viewport-large',
+    title: 'Zoom is limited to less than 500%',
+    whoIsAffected:
+      'People with low vision, who need to enlarge the page a lot on a phone.',
+    howToFix:
+      'Ask developers to remove the zoom limit from the page settings, or to raise it to at least 500%.',
+    role: 'code',
+  },
+  {
+    id: 'link-in-text-block',
+    title: 'Links in text can be told apart only by color',
+    whoIsAffected:
+      'People with color blindness or low vision: they cannot see which words are links.',
+    howToFix:
+      'Underline links inside text, or make them clearly different in another way, such as bold.',
+    role: 'design',
+  },
 ];
 
 const byId = new Map(dictionary.map((entry) => [entry.id, entry]));

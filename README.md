@@ -83,7 +83,7 @@ It is the format the Chrome Web Store requires for new extensions. It also enfor
 - Only elements with a simple selector can be highlighted on the page. Elements inside iframes and shadow DOM appear in the report but are not outlined.
 - Chrome service pages (`chrome://…`) and the Chrome Web Store cannot be checked: the browser does not let extensions in.
 - The interface, the dictionary and the report are in English only.
-- The dictionary texts cover the 10 most common rules. For other rules the axe description is shown and the role is “code”.
+- The dictionary describes every rule axe runs by default (90) plus the minimum clickable size rule (`target-size`), 91 in total. A rule that is not in the dictionary, for example after an axe-core update, is shown with the English axe description and the role “code”. The rules axe keeps off by default (experimental, deprecated and AAA ones) are not run.
 
 ## Privacy
 

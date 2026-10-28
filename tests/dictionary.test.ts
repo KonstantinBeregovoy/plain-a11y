@@ -98,6 +98,12 @@ describe('dictionary coverage by part', () => {
     ['text-alternatives', 12], // TASK-12 (9 new)
     ['name-role-value', 7], // TASK-12 (5 new)
     ['forms', 5], // TASK-12 (4 new)
+    ['tables', 4], // TASK-13
+    ['language', 4], // TASK-13 (3 new)
+    ['time-and-media', 3], // TASK-13
+    ['parsing', 2], // TASK-13
+    ['sensory-and-visual-cues', 2], // TASK-13
+    ['color', 2], // TASK-13 (1 new)
   ];
 
   for (const [category, count] of PARTS) {
@@ -126,6 +132,7 @@ describe('dictionary coverage by part', () => {
         'image-redundant-alt:content',
         'input-image-alt:content',
         'label-title-only:design',
+        'link-in-text-block:design',
         'link-name:content',
         'object-alt:content',
         'page-has-heading-one:content',
@@ -135,5 +142,18 @@ describe('dictionary coverage by part', () => {
         'video-caption:content',
       ].sort(),
     );
+  });
+
+  it('has an entry for every rule axe runs by default, plus the ones we switch on (TASK-13)', () => {
+    // When more rules are switched on later (for example the AAA rules in TASK-15),
+    // add them to EXTRA together with their dictionary entries.
+    const EXTRA = ['target-size'];
+    const enabled = axe
+      .getRules()
+      .filter((rule) => rule.enabled)
+      .map((rule) => rule.ruleId);
+    expect(enabled).toHaveLength(90);
+    const expected = [...enabled, ...EXTRA].sort();
+    expect(dictionary.map((entry) => entry.id).sort()).toEqual(expected);
   });
 });
