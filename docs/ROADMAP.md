@@ -20,9 +20,12 @@ All of these are finished. The results and deviations are at the end of each tas
 
 1. **Check a selected block of the page.** Let the person pick a part of the page and run the check only there.
 2. **Compare two checks.** Show what was fixed and what appeared between two runs. Needs the previous result to be stored.
-3. **Browser end-to-end tests in the repository.** Playwright tests that load the built extension in Chromium. Today these checks are run by hand with scripts outside the repo. This is a new dev dependency.
+3. **Toolbar badge with the issue count after a check** (a small stage). After “Check page” the icon shows the number of issues found on that tab, until the tab navigates away. It needs no new permission (`chrome.action.setBadgeText`). The badge never says “accessible”: it shows a count, and for zero it shows nothing or a neutral “0”, never a green mark, because automated checking cannot certify a page (see the limits on the website).
+4. **Browser end-to-end tests in the repository.** Playwright tests that load the built extension in Chromium. Today these checks are run by hand with scripts outside the repo. This is a new dev dependency.
 
 ## Backlog (not now)
+
+- **Automatic check on chosen sites (opt-in).** A switch “check automatically on this site” that asks for the permission for that one site at the moment it is turned on (`optional_host_permissions`), so that the badge updates by itself there. It must stay opt-in per site: checking every page would need access to all sites, which breaks the minimal-permissions promise, costs CPU on every page and would invite a misleading “accessible or not” badge. Needs a decision on the store justification for the optional permission.
 
 - **Manual checklist** for what automation cannot check (tab order, meaning of alt text, form clarity, captions). The state would be kept in `storage`. Needs more thought first.
 - **Check the content of iframes.** Same-origin frames are probably possible. Cross-origin frames likely need more than `activeTab`, which conflicts with the minimal-permissions principle. Needs a practical test.
