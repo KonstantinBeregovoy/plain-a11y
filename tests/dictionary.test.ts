@@ -14,6 +14,7 @@ const REQUIRED_IDS = [
   'html-has-lang',
   'frame-title',
   'tabindex',
+  'target-size',
 ];
 
 function sentenceCount(text: string): number {

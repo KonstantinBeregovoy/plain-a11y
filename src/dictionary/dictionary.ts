@@ -100,6 +100,15 @@ export const dictionary: readonly DictionaryEntry[] = [
     role: 'code',
   },
   {
+    id: 'target-size',
+    title: 'Clickable area is too small',
+    whoIsAffected:
+      'People with hand tremors or limited dexterity, and anyone tapping on a small screen.',
+    howToFix:
+      'Make buttons and links at least 24 by 24 pixels, or leave enough space around the small ones. Bigger targets are easier to hit.',
+    role: 'design',
+  },
+  {
     id: 'tabindex',
     title: 'Tab order has been changed',
     whoIsAffected:

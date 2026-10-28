@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { AXE_RUN_OPTIONS } from '../src/content/axeOptions';
 import config from '../wxt.config';
 
 function sourceFiles(dir: string): string[] {
@@ -50,7 +51,8 @@ describe('package constraints', () => {
 
   it('does not let axe-core download page resources (preload: false)', () => {
     const content = readFileSync('src/content/index.ts', 'utf8');
-    expect(content).toMatch(/axe\s*\.run\(document,\s*\{\s*preload:\s*false\s*\}\)/);
+    expect(content).toMatch(/axe\s*\.run\(document,\s*AXE_RUN_OPTIONS\)/);
+    expect(AXE_RUN_OPTIONS.preload).toBe(false);
   });
 
   it('pins the axe-core version to an exact number', () => {

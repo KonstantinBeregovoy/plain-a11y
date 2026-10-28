@@ -8,6 +8,7 @@ import {
   type PingResponse,
 } from '../report/messages';
 import { toViolationItems } from '../report/violations';
+import { AXE_RUN_OPTIONS } from './axeOptions';
 import { createHighlighter } from './highlight';
 
 declare global {
@@ -33,9 +34,8 @@ export default defineContentScript({
         return false;
       }
       if (hasType(message, 'run-axe')) {
-        // preload: false stops axe from downloading the page's styles and media.
         axe
-          .run(document, { preload: false })
+          .run(document, AXE_RUN_OPTIONS)
           .then((results) => {
             const response: CheckResponse = {
               ok: true,
