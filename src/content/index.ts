@@ -58,7 +58,7 @@ export default defineContentScript({
       if (isHighlightRequest(message)) {
         const response: HighlightResponse = {
           ok: true,
-          found: highlighter.show(message.targets),
+          ...highlighter.show(message.targets),
         };
         sendResponse(response);
         return false;

@@ -44,10 +44,19 @@ export function useHighlight(announce: (message: string) => void) {
         announce(`Could not highlight: ${response.error}`);
       } else if (response.found === 0) {
         setHighlightedId(null);
-        announce('Element not found on the page.');
+        announce(
+          response.notVisible
+            ? 'Cannot be outlined: the element has no visible area on the page (it is empty, hidden or in the page head).'
+            : 'Element not found on the page.',
+        );
       } else {
         setHighlightedId(key);
-        announce(`Highlighted elements: ${response.found}.`);
+        announce(
+          `Highlighted elements: ${response.found}.` +
+            (response.nearest
+              ? ' Some have no visible area, so their nearest visible parent is outlined.'
+              : ''),
+        );
       }
     } catch (error) {
       setHighlightedId(null);

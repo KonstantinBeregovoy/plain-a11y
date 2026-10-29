@@ -41,7 +41,14 @@ export type CheckResponse =
   | { ok: false; error: string };
 
 export type HighlightResponse =
-  | { ok: true; found: number }
+  | {
+      ok: true;
+      found: number;
+      /** Matches shown through their nearest visible ancestor. */
+      nearest?: number;
+      /** Matches that are not visible on the page at all. */
+      notVisible?: number;
+    }
   | { ok: false; error: string };
 
 /** Name of the port the popup keeps open while it is visible. */

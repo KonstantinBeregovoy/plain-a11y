@@ -18,9 +18,9 @@ beforeEach(() => {
 describe('createHighlighter', () => {
   it('restores the original markup after the highlight is shown and removed', () => {
     const before = document.documentElement.outerHTML;
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
 
-    expect(highlighter.show(['#pic', '.note', 'h1', 'a'])).toBe(5);
+    expect(highlighter.show(['#pic', '.note', 'h1', 'a']).found).toBe(5);
     expect(document.documentElement.outerHTML).not.toBe(before);
 
     highlighter.clear();
@@ -28,15 +28,15 @@ describe('createHighlighter', () => {
   });
 
   it('outlines the found elements and returns their count', () => {
-    const highlighter = createHighlighter(document);
-    expect(highlighter.show(['.note'])).toBe(2);
+    const highlighter = createHighlighter(document, () => true);
+    expect(highlighter.show(['.note']).found).toBe(2);
     const note = document.querySelector<HTMLElement>('.note');
     expect(note?.style.getPropertyValue('outline')).toContain('3px solid');
   });
 
   it('replaces the previous highlight with a new one', () => {
     const before = document.documentElement.outerHTML;
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
     highlighter.show(['h1']);
     highlighter.show(['#pic']);
     expect(document.querySelector<HTMLElement>('h1')?.getAttribute('style')).toBe(
@@ -48,8 +48,8 @@ describe('createHighlighter', () => {
 
   it('survives repeated clearing and unknown selectors', () => {
     const before = document.documentElement.outerHTML;
-    const highlighter = createHighlighter(document);
-    expect(highlighter.show(['#no-such-element', '###'])).toBe(0);
+    const highlighter = createHighlighter(document, () => true);
+    expect(highlighter.show(['#no-such-element', '###']).found).toBe(0);
     highlighter.clear();
     highlighter.clear();
     expect(document.documentElement.outerHTML).toBe(before);
@@ -73,7 +73,7 @@ describe('createHighlighter', () => {
       original(name);
     };
 
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
     highlighter.show(['#pic']);
     highlighter.clear();
 
@@ -125,9 +125,9 @@ describe('createHighlighter in shadow DOM', () => {
 
   it('outlines an element inside an open shadow root and restores everything afterwards', () => {
     const before = snapshot();
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
 
-    expect(highlighter.show([['#host', 'img']])).toBe(1);
+    expect(highlighter.show([['#host', 'img']]).found).toBe(1);
     const img = document.getElementById('host')!.shadowRoot!.querySelector('img')!;
     expect(img.style.getPropertyValue('outline')).toContain('3px solid');
     expect(snapshot()).not.toBe(before);
@@ -137,15 +137,15 @@ describe('createHighlighter in shadow DOM', () => {
   });
 
   it('follows a path through nested shadow roots', () => {
-    const highlighter = createHighlighter(document);
-    expect(highlighter.show([['#outer', '#inner', '.deep']])).toBe(1);
+    const highlighter = createHighlighter(document, () => true);
+    expect(highlighter.show([['#outer', '#inner', '.deep']]).found).toBe(1);
   });
 
   it('highlights simple selectors and shadow paths together and scrolls to the first element', () => {
     const before = snapshot();
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
 
-    expect(highlighter.show(['#plain', ['#host', 'button']])).toBe(2);
+    expect(highlighter.show(['#plain', ['#host', 'button']]).found).toBe(2);
     expect(scrolled).toHaveLength(1);
     expect(scrolled[0]?.id).toBe('plain');
 
@@ -154,13 +154,13 @@ describe('createHighlighter in shadow DOM', () => {
   });
 
   it('scrolls to an element inside a shadow root when it is the first one', () => {
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
     highlighter.show([['#host', 'img']]);
     expect(scrolled.map((element) => element.id)).toEqual(['pic']);
   });
 
   it('keeps the original inline style of an element inside a shadow root', () => {
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
     highlighter.show([['#host', 'button']]);
     highlighter.clear();
     const button = document.getElementById('host')!.shadowRoot!.querySelector('button')!;
@@ -174,22 +174,91 @@ describe('createHighlighter in shadow DOM', () => {
     document.body.append(closed);
 
     const before = snapshot();
-    const highlighter = createHighlighter(document);
-    expect(highlighter.show([['#missing', 'img']])).toBe(0);
-    expect(highlighter.show([['#closed', 'img']])).toBe(0);
-    expect(highlighter.show([['#host', '###']])).toBe(0);
-    expect(highlighter.show([['#plain', 'img']])).toBe(0); // host without a shadow root
+    const highlighter = createHighlighter(document, () => true);
+    expect(highlighter.show([['#missing', 'img']]).found).toBe(0);
+    expect(highlighter.show([['#closed', 'img']]).found).toBe(0);
+    expect(highlighter.show([['#host', '###']]).found).toBe(0);
+    expect(highlighter.show([['#plain', 'img']]).found).toBe(0); // host without a shadow root
     expect(snapshot()).toBe(before);
   });
 
   it('replaces a previous highlight inside a shadow root with a new one', () => {
     const before = snapshot();
-    const highlighter = createHighlighter(document);
+    const highlighter = createHighlighter(document, () => true);
     highlighter.show([['#host', 'img']]);
     highlighter.show([['#host', 'button']]);
     const img = document.getElementById('host')!.shadowRoot!.querySelector('img')!;
     expect(img.hasAttribute('style')).toBe(false);
     highlighter.clear();
     expect(snapshot()).toBe(before);
+  });
+});
+
+describe('createHighlighter with elements that have no visible area', () => {
+  // jsdom has no layout, so the visible area is decided by a stand-in for the browser check.
+  const NO_BOX = new Set(['empty-link', 'wrapper', 'meta']);
+  const hasBox = (element: Element) => !NO_BOX.has(element.id);
+  const outlined = (selector: string) =>
+    document.querySelector<HTMLElement>(selector)?.style.outline ?? '';
+
+  beforeEach(() => {
+    document.head.innerHTML = '<meta id="meta" name="viewport" content="x">';
+    document.body.innerHTML = `
+      <nav id="bar"><a id="empty-link" href="#"></a></nav>
+      <div id="shown"><p id="wrapper"><span id="inner">text</span></p></div>
+      <img id="pic" src="x.gif">`;
+  });
+
+  afterEach(() => {
+    document.head.innerHTML = '';
+  });
+
+  it('outlines the nearest visible parent of an element with no visible area', () => {
+    const highlighter = createHighlighter(document, hasBox);
+    expect(highlighter.show(['#empty-link'])).toEqual({ found: 1, nearest: 1, notVisible: 0 });
+    expect(outlined('#bar')).toContain('solid');
+    expect(outlined('#empty-link')).toBe('');
+  });
+
+  it('counts a shared parent once and the matches that moved separately', () => {
+    const highlighter = createHighlighter(document, hasBox);
+    // #wrapper has no box and moves to #shown; #inner has one; #pic has one.
+    const result = highlighter.show(['#wrapper', '#inner', '#pic']);
+    expect(result).toEqual({ found: 3, nearest: 1, notVisible: 0 });
+    expect(outlined('#shown')).toContain('solid');
+    expect(outlined('#inner')).toContain('solid');
+  });
+
+  it('does not outline anything for an element that is not in the page body', () => {
+    const highlighter = createHighlighter(document, hasBox);
+    expect(highlighter.show(['#meta'])).toEqual({ found: 0, nearest: 0, notVisible: 1 });
+    expect(document.documentElement.getAttribute('style')).toBeNull();
+    expect(document.body.getAttribute('style')).toBeNull();
+  });
+
+  it('does not move to the body when no parent inside it has a visible area', () => {
+    const highlighter = createHighlighter(document, () => false);
+    expect(highlighter.show(['#inner'])).toEqual({ found: 0, nearest: 0, notVisible: 1 });
+  });
+
+  it('outlines the page root as it is (document-level rules)', () => {
+    const highlighter = createHighlighter(document, () => false);
+    expect(highlighter.show(['html'])).toEqual({ found: 1, nearest: 0, notVisible: 0 });
+    highlighter.clear();
+    expect(document.documentElement.getAttribute('style')).toBeNull();
+  });
+
+  it('climbs out of an open shadow root to its host', () => {
+    document.body.insertAdjacentHTML('beforeend', '<div id="host"></div>');
+    const host = document.querySelector('#host');
+    const root = host?.attachShadow({ mode: 'open' });
+    if (root) root.innerHTML = '<a id="empty-link" href="#"></a>';
+    const highlighter = createHighlighter(document, hasBox);
+    expect(highlighter.show([['#host', '#empty-link']])).toEqual({
+      found: 1,
+      nearest: 1,
+      notVisible: 0,
+    });
+    expect(outlined('#host')).toContain('solid');
   });
 });

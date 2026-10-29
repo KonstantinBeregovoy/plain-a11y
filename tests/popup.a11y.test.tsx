@@ -443,3 +443,50 @@ describe('axe on the popup UI', () => {
     expect(button?.getAttribute('aria-pressed')).toBe('true');
   });
 });
+
+describe('messages after pressing Show on page', () => {
+  async function pressShow(highlightResponse: object) {
+    vi.stubGlobal('browser', {
+      runtime: {
+        connect: () => ({ disconnect: () => undefined }),
+        sendMessage: async (message: { type: string }) => {
+          if (message.type === 'run-check') return respond();
+          if (message.type === 'highlight') return highlightResponse;
+          return { ok: true, found: 0 };
+        },
+      },
+      storage: { local: { get: async () => ({}), set: async () => undefined } },
+    });
+    await mount();
+    await clickByName('Check page');
+    const button = container.querySelector<HTMLButtonElement>(
+      'button[aria-label="Show on page: Image has no text description"]',
+    );
+    await act(async () => {
+      button?.click();
+    });
+  }
+
+  it('says when the nearest visible parent was outlined', async () => {
+    await pressShow({ ok: true, found: 1, nearest: 1, notVisible: 0 });
+    expect(container.textContent).toContain(
+      'Highlighted elements: 1. Some have no visible area, so their nearest visible parent is outlined.',
+    );
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('says when the element has no visible area', async () => {
+    await pressShow({ ok: true, found: 0, nearest: 0, notVisible: 1 });
+    expect(container.textContent).toContain(
+      'Cannot be outlined: the element has no visible area on the page (it is empty, hidden or in the page head).',
+    );
+    expect(container.textContent).not.toContain('Element not found');
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('keeps the plain messages when nothing special happened', async () => {
+    await pressShow({ ok: true, found: 2 });
+    expect(container.textContent).toContain('Highlighted elements: 2.');
+    expect(container.textContent).not.toContain('nearest visible parent');
+  });
+});
