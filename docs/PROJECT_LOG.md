@@ -22,7 +22,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 3. Decide what stays in the public repository: `SPEC.md`, `AGENTS.md`, `CLAUDE.md`, `tasks/` (they are process files; they were translated into English in stage 18, the earlier Russian versions stay in the history).
 4. Website: the two placeholders (store link, GitHub link), the Install section (it says to build from source, but the repository is private, so there is nothing to download yet), headers like bereg.dev, PWA settings, GEO. Also add the contact to `store/listing.md`.
 5. Make both repositories public (the owner does it).
-6. Register in the Chrome Web Store (https://chrome.google.com/webstore/devconsole, $5, trader or non-trader, contact `contact@bereg.dev`), upload `.output/plain-a11y-0.1.0-chrome.zip`, screenshots 02 to 06, text and permission reasons from `store/listing.md`, policy address `https://a11y-ext.bereg.dev/privacy.html`.
+6. Register in the Chrome Web Store (https://chrome.google.com/webstore/devconsole, $5, trader or non-trader, contact `contact@bereg.dev`), upload `.output/plain-a11y-0.1.0-chrome.zip`, screenshots 02 to 06, text and permission reasons from `store/listing.md`, policy address `https://a11y-ext.bereg.dev/privacy`.
 7. After publishing: the owner's full manual check, the real cases of “Show on page” that still miss (page, issue, what happens), then fixes.
 8. The article and the project card (ask first: the story of the product, or the process with AI).
 9. Next stages in the roadmap: toolbar badge, selected block, compare two checks, Playwright tests in the repository, Firefox.
