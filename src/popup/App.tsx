@@ -59,7 +59,10 @@ export function App() {
 
   return (
     <main>
-      <h1>Plain A11y</h1>
+      <h1>
+        <img src="/icon/48.png" alt="" width="28" height="28" />
+        Plain A11y
+      </h1>
       {/* aria-disabled instead of disabled keeps keyboard focus on the button. */}
       <button
         type="button"

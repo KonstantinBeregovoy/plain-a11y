@@ -115,6 +115,15 @@ describe('axe on the popup UI', () => {
     expect(await violationsOf()).toEqual([]);
   });
 
+  it('shows the AA logo as a decorative image next to the title', async () => {
+    await mount();
+    const heading = container.querySelector('h1');
+    expect(heading?.textContent).toBe('Plain A11y');
+    const logo = heading?.querySelector('img');
+    expect(logo?.getAttribute('src')).toBe('/icon/48.png');
+    expect(logo?.getAttribute('alt')).toBe('');
+  });
+
   it('loading state', async () => {
     respond = () => new Promise(() => undefined);
     await mount();
