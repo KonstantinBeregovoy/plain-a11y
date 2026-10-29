@@ -1,25 +1,37 @@
 # Project log
 
-State of the project on 28 October 2026, the decisions behind it, and verifiable facts for writing about it. Facts come from the repository and from checks that can be run again; where a number was measured by a script outside the repository, the script is named.
+State of the project on 29 October 2026, the decisions behind it, and verifiable facts for writing about it. Facts come from the repository and from checks that can be run again; where a number was measured by a script outside the repository, the script is named.
 
 ## Where things stand
 
 | Part | State |
 | --- | --- |
-| Extension (this repository) | Stages 1 to 16 are done. All commits are authored by the owner. |
-| Website (`plain-a11y-site` repository) | Built in the style of bereg.dev, tested, not deployed yet. |
-| GitHub | Both repositories exist and are private. |
-| Chrome Web Store | Not registered yet. The package (`npm run zip`), the listing text and 8 screenshots are ready. |
+| Extension (this repository) | Stages 1 to 17 are done. 131 tests. The popup header shows the AA logo. All commits are authored by the owner with the GitHub noreply address. |
+| Website (`plain-a11y-site` repository) | Deployed on Cloudflare Workers at `a11y-ext.bereg.dev`. Pushes to `main` deploy by themselves. `workers.dev` and preview URLs are switched off in `wrangler.jsonc`. 45 tests. |
+| GitHub | Both repositories exist and are private. The history was rewritten on 29 October 2026: every commit now uses `16078757+KonstantinBeregovoy@users.noreply.github.com`, no personal email is left in the history. |
+| Name | “Plain A11y” checked by search: no exact match in Chrome Web Store, Firefox Add-ons, npm, PyPI. Close names: Plainwork (Accessibility Report), Omi A11Y, A11Y Audit, A11yTrail. The mark “A11Y” exists in the US (class 42), see the log below. WIPO and USPTO were not searched directly. |
+| Contact | `contact@bereg.dev` (Cloudflare Email Routing to the owner's mailbox, tested). It is in the privacy policy (`PRIVACY.md` and the website). Not yet in `store/listing.md`. |
+| Chrome Web Store | Not registered yet. The package (`npm run zip`, 280 KB), the listing text and 8 screenshots are ready. |
 | Firefox | Not started. It is in the roadmap. |
-| Testing by a person with a screen reader and a keyboard | Not done. The checklist is `docs/a11y-checklist.md`. |
+| Testing by a person with a screen reader and a keyboard | First short run done on 29 October (logo, check, highlight). The full list in `docs/a11y-checklist.md` is not done. It is planned after publishing. |
+
+### What is left, in order
+
+1. Push stage 17 (a local commit may still wait for the owner's yes).
+2. GitHub, Settings, Emails: turn on “Keep my email addresses private” and “Block command line pushes that expose my email”.
+3. Decide what stays in the public repository: `SPEC.md`, `AGENTS.md`, `CLAUDE.md`, `tasks/` (they are process files, partly in Russian).
+4. Website: the two placeholders (store link, GitHub link), the Install section (it says to build from source, but the repository is private, so there is nothing to download yet), headers like bereg.dev, PWA settings, GEO. Also add the contact to `store/listing.md`.
+5. Make both repositories public (the owner does it).
+6. Register in the Chrome Web Store (https://chrome.google.com/webstore/devconsole, $5, trader or non-trader, contact `contact@bereg.dev`), upload `.output/plain-a11y-0.1.0-chrome.zip`, screenshots 02 to 06, text and permission reasons from `store/listing.md`, policy address `https://a11y-ext.bereg.dev/privacy.html`.
+7. After publishing: the owner's full manual check, the real cases of “Show on page” that still miss (page, issue, what happens), then fixes.
+8. The article and the project card (ask first: the story of the product, or the process with AI).
+9. Next stages in the roadmap: toolbar badge, selected block, compare two checks, Playwright tests in the repository, Firefox.
 
 ### What only the owner can do
 
-1. Check the built extension by hand: keyboard, NVDA, VoiceOver, 5 to 10 real sites (`docs/a11y-checklist.md`).
-2. Deploy the website to Cloudflare (the steps are in the README of the website repository).
-3. Check that the name is free: search the Chrome Web Store, Firefox Add-ons, Google, GitHub and the trademark databases (WIPO Global Brand Database, USPTO, EUIPO). Two similar products were found and are worth a look: A11Y Audit and A11yTrail.
-4. Register in the Chrome Web Store ($5 once, trader or non-trader declaration) and submit the package.
-5. Before making the repositories public: replace the commit email with the GitHub noreply address (history rewrite), decide what to do with `SPEC.md`, `AGENTS.md`, `CLAUDE.md` and `tasks/`, and replace the two placeholders on the website (store link, GitHub link).
+1. Settings on GitHub and Cloudflare, the Chrome Web Store account, making the repositories public.
+2. The full manual check with a keyboard, NVDA and VoiceOver.
+3. A direct search of the name in WIPO and USPTO (optional).
 
 ## Decisions and why
 
@@ -41,11 +53,11 @@ State of the project on 28 October 2026, the decisions behind it, and verifiable
 | Axe-core version and rules | 4.14.0, 105 rules, 90 on by default | `node -e "const a=require('axe-core');console.log(a.getRules().length)"` |
 | Rules with a plain-language entry | 94 (90 by default, `target-size`, and 3 AAA rules) | `tests/dictionary.test.ts` |
 | Source | 23 files, about 2,300 lines of TypeScript, TSX and CSS | `git ls-files src` |
-| Tests | 121 in 13 files (about 1,600 lines), 44 more in the website repository | `npm run test` |
+| Tests | 131 (about 1,700 lines), 45 more in the website repository | `npm run test` |
 | Package size | 272 KB zip, of which the axe-core content script is 653 KB unpacked | `npm run zip` |
 | Permissions | `activeTab`, `scripting`, `storage`; no host permissions | `.output/chrome-mv3/manifest.json` |
 | Runtime dependencies | axe-core, react, react-dom | `package.json` |
-| Stages | 16 task files with acceptance criteria; the later ones end with a results section | `tasks/` |
+| Stages | 17 task files with acceptance criteria; the later ones end with a results section | `tasks/` |
 | Popup states audited with axe in a real browser | 14 (7 states, light and dark), plus 4 for manual review, 4 for the AAA block and 2 for the frame note: 0 violations | scripts outside the repository, see below |
 | Website audit | 4 pages, widths 1280 and 320, 16 runs: 0 violations, no horizontal scroll, no policy violations | script outside the repository |
 | Network requests of the extension | 0 | `tests/package.test.ts` forbids `fetch`, XHR and friends; a browser run showed no external requests |
@@ -65,6 +77,12 @@ These are the useful stories: each one was found by a check, not by reading the 
 7. **Documents that were not true any more.** After a feature the privacy policy still said that only one setting is saved; the README still said the dictionary covers 10 rules. Found while writing the next document.
 8. **White text on a white button.** On the website the hero button had a white label on a white background. Axe could only say “incomplete”, because of a background gradient; the thumbnail of the page showed it. Fixed, and the gradient was replaced by a flat color so that contrast can be measured.
 9. **Colors outside the brand.** The first screenshots and icon used a blue that is not in the owner's palette. Re-made in the palette of bereg.dev and of the posts.
+
+10. **Highlight that points at nothing.** The first manual run showed that “Show on page” did not outline every element. A test page with 12 typical problems, run in Chromium with the built extension, showed why: elements with no visible area (an empty icon link is 0 by 0 px, the elements in the page head are not drawn) get no visible outline. Stage 17 outlines the nearest visible parent, or says that nothing can be outlined. The same run showed a false alarm: a leftover `style=""` that looked like a defect came from the screenshot taken with Playwright during the highlight, not from the extension. Without the screenshot the markup matched.
+
+## About the name
+
+The mark “A11Y” is registered in the US (Reg. 4824150, class 42, owner AudioEye according to TMview, on the Supplemental Register). That register is for descriptive marks, so the protection is weak, but it is not legal advice. “Plain” and “A11y” are both descriptive, so “Plain A11y” will be hard to protect as a mark.
 
 ## How the work was organized
 
