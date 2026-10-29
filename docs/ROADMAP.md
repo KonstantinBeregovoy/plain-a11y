@@ -16,6 +16,10 @@ All of these are finished. The results and deviations are at the end of each tas
 | 15 | “AAA recommendations” block, hideable |
 | 16 | “Show on page” for elements inside open shadow DOM |
 
+## Next: fix found in the first manual run (29 October 2026)
+
+- **“Show on page” does not outline every element.** Found by the owner when trying the built extension by hand. Still to collect: the page, the issue, and what happens (no button, no outline, or the wrong element). Likely causes to rule out first: an issue about the whole page (no element), an element in a closed shadow root or an iframe, a hidden element or one outside the visible area. Anything else is a defect: fix it with a regression test and a check in real Chromium. Make it a task file (`tasks/TASK-17.md`) before the features below.
+
 ## Next: important features (in this order)
 
 1. **Check a selected block of the page.** Let the person pick a part of the page and run the check only there.
