@@ -30,4 +30,4 @@ The extension does not request access to all sites.
 
 ## Questions
 
-You can ask a question or report a problem through the Issues section of the project repository.
+You can ask a question or report a problem by email to contact@bereg.dev, or through the Issues section of the project repository.
