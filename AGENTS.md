@@ -1,11 +1,11 @@
-# Правила для агента
+# Rules for the agent
 
-1. Перед работой прочитай SPEC.md и файл задания, который тебе указали. Делай только этот этап.
-2. Не добавляй функции, зависимости и файлы сверх задания. Если чего-то не хватает, запиши вопрос в конец файла задания и выбери самое простое разумное решение.
-3. Не выдумывай API Chrome и axe-core. Если не уверен, что метод существует, найди его в документации или в node_modules.
-4. Пиши тесты вместе с кодом. Этап не завершён, пока все критерии приёмки выполнены и команды npm run typecheck, npm run test и npm run build проходят без ошибок.
-5. TypeScript строгий: без any, без @ts-ignore.
-6. Маленькие коммиты с понятными сообщениями. Один этап, один набор коммитов.
-7. Интерфейс должен быть доступным: семантические теги, подписи у всех полей, управление с клавиатуры, видимый фокус.
-8. В конце ответа кратко перечисли: что сделано, какие команды запускались и их результат, что осталось нерешённым.
-9. Не меняй стек, структуру папок и закреплённые версии без явной просьбы.
+1. Before you start, read SPEC.md and the task file you were pointed to. Do only that stage.
+2. Do not add features, dependencies or files beyond the task. If something is missing, write the question at the end of the task file and pick the simplest reasonable solution.
+3. Do not invent Chrome or axe-core APIs. If you are not sure a method exists, find it in the documentation or in node_modules.
+4. Write tests together with the code. A stage is not finished until all acceptance criteria are met and `npm run typecheck`, `npm run test` and `npm run build` pass without errors.
+5. TypeScript is strict: no `any`, no `@ts-ignore`.
+6. Small commits with clear messages. One stage, one set of commits.
+7. The interface must be accessible: semantic tags, labels on all fields, keyboard control, visible focus.
+8. At the end of the answer, list briefly: what was done, which commands were run and their result, what is still unresolved.
+9. Do not change the stack, the folder structure or the pinned versions without an explicit request.

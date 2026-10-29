@@ -1,21 +1,21 @@
-# TASK-1: Основа
+# TASK-1: Foundation
 
-Цель: проект собирается, расширение по кнопке запускает axe-core на текущей вкладке и показывает список нарушений.
+Goal: the project builds, and the extension runs axe-core on the current tab on a button press and shows a list of violations.
 
-## Сделать
-1. Создать проект WXT + React + TypeScript (strict). Настроить Vitest и npm-скрипты typecheck, test, build.
-2. Manifest V3 с permissions activeTab, scripting, storage.
-3. Popup с кнопкой «Проверить страницу».
-4. По клику service worker внедряет content script через chrome.scripting.executeScript. Content script запускает axe-core на странице и возвращает violations.
-5. Popup показывает для каждого нарушения: id правила, impact, число затронутых элементов.
-6. Закрепить версию axe-core точным номером в package.json.
-7. Создать tests/fixtures/basic.html с заведомыми проблемами: img без alt, input без подписи, текст с низким контрастом, ссылка без текста.
+## Steps
+1. Create a WXT + React + TypeScript (strict) project. Set up Vitest and the npm scripts typecheck, test, build.
+2. Manifest V3 with the permissions activeTab, scripting, storage.
+3. A popup with a “Check page” button.
+4. On click, the service worker injects a content script with chrome.scripting.executeScript. The content script runs axe-core on the page and returns the violations.
+5. For every violation the popup shows: the rule id, the impact and the number of affected elements.
+6. Pin the axe-core version to an exact number in package.json.
+7. Create tests/fixtures/basic.html with deliberate problems: an img without alt, an input without a label, text with low contrast, a link without text.
 
-## Критерии приёмки
-- npm run typecheck, npm run test, npm run build проходят без ошибок.
-- Собранное расширение загружается в chrome://extensions без ошибок.
-- Проверка basic.html показывает минимум правила image-alt, label, color-contrast, link-name.
-- Есть unit-тест функции, которая превращает результат axe в список для popup.
+## Acceptance criteria
+- npm run typecheck, npm run test and npm run build pass without errors.
+- The built extension loads in chrome://extensions without errors.
+- Checking basic.html shows at least the rules image-alt, label, color-contrast, link-name.
+- There is a unit test of the function that turns an axe result into the list for the popup.
 
-## Не делать
-Словарь, группировку, подсветку, экспорт.
+## Do not
+A dictionary, grouping, highlighting, export.

@@ -1,37 +1,37 @@
-# TASK-10: Словарь, часть 1 из 4
+# TASK-10: Dictionary, part 1 of 4
 
-Цель: описать простым языком: aria (24 правила).
+Goal: describe in plain language: aria (24 rules).
 
-## Сделать
-1. Добавить в словарь записи для всех правил: все правила категории aria, которые включены по умолчанию и ещё не описаны. Список бери из axe.getRules() и по категориям (теги cat.*), а не из памяти.
-2. Поля и тексты по правилам TASK-2: простыми словами, без терминов WCAG и ARIA, не длиннее двух предложений в каждом поле, всё на английском.
-3. Роль выбирай по тому, кто обычно это исправляет. Для чисто технических правил роль code. Если роль спорная, выбери самую вероятную и запиши правило в конец этого файла в список «Роли на проверку».
+## Steps
+1. Add dictionary entries for all rules: all rules of the aria category that are on by default and not yet described. Take the list from axe.getRules() and from the categories (cat.* tags), not from memory.
+2. Fields and texts by the rules of TASK-2: in simple words, without WCAG and ARIA terms, no longer than two sentences in each field, all in English.
+3. Choose the role by who usually fixes the problem. For purely technical rules the role is code. If the role is disputable, pick the most likely one and write the rule at the end of this file in the list “Roles to review”.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Unit-тест: у каждой новой записи заполнены все поля, id существует в axe.getRules(), тексты проходят существующие проверки простоты.
-- Unit-тест: все правила этой части присутствуют в словаре.
-- В конце файла есть список «Роли на проверку».
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Unit test: every new entry has all fields filled, the id exists in axe.getRules(), the texts pass the existing simplicity checks.
+- Unit test: all rules of this part are present in the dictionary.
+- The end of the file has the list “Roles to review”.
 
-## Не делать
-Правила из других частей, выключенные по умолчанию правила, изменение уже написанных записей.
+## Do not
+Rules from other parts, rules that are off by default, changing entries that are already written.
 
-## Результаты агента
+## Agent results
 
-1. Добавлены записи для 24 правил категории aria, которые axe запускает по умолчанию (список взят из axe.getRules() по тегу cat.aria). Тексты на английском, без слов WCAG и ARIA, не длиннее двух предложений в поле, все роли code. Словарь теперь содержит 35 записей.
-2. Тест «словарь содержит ровно правила из заданий» заменён тестом «содержит правила из прошлых заданий», потому что словарь растёт. Добавлены тесты: все 24 правила категории aria описаны, у всех роль code. Всего 64 теста, все проходят.
-3. Проверено в Chromium на странице с 10 нарушениями этой категории: у всех показаны наши названия и тексты, запасного варианта нет. Аудит axe по 14 состояниям popup: 0 нарушений.
+1. Entries are added for 24 rules of the aria category that axe runs by default (the list is taken from axe.getRules() by the tag cat.aria). The texts are in English, without the words WCAG and ARIA, no longer than two sentences per field, all roles code. The dictionary now has 35 entries.
+2. The test “the dictionary contains exactly the rules from the tasks” is replaced by the test “contains the rules from earlier tasks”, because the dictionary grows. Tests added: all 24 rules of the aria category are described, all have the role code. 64 tests in all, all pass.
+3. Checked in Chromium on a page with 10 violations of this category: all show our titles and texts, there is no fallback. The axe audit over 14 popup states: 0 violations.
 
-### Роли на проверку
+### Roles to review
 
-Все 24 записи получили роль code, потому что исправляют их разработчики. Для этих правил вопрос «code или content» спорный, потому что нужный текст (название, подпись) обычно придумывает контент-менеджер, а в разметку его вносит разработчик:
+All 24 entries got the role code, because developers fix them. For these rules the question “code or content” is disputable, because the needed text (a name, a label) is usually thought up by a content manager, and a developer puts it into the markup:
 
-- aria-command-name, aria-input-field-name, aria-toggle-field-name: название управляющего элемента (кнопки, поля, переключателя).
-- aria-dialog-name, aria-tab-name, aria-treeitem-name: название диалога, вкладки, пункта дерева.
-- aria-meter-name, aria-progressbar-name: название индикатора.
-- aria-tooltip-name: текст всплывающей подсказки.
-- aria-braille-equivalent: обычный текст рядом с брайлевской подписью.
+- aria-command-name, aria-input-field-name, aria-toggle-field-name: the name of a control (a button, a field, a switch).
+- aria-dialog-name, aria-tab-name, aria-treeitem-name: the name of a dialog, a tab, a tree item.
+- aria-meter-name, aria-progressbar-name: the name of an indicator.
+- aria-tooltip-name: the text of a tooltip.
+- aria-braille-equivalent: plain text next to a braille label.
 
-Остальные 14 правил (aria-allowed-attr, aria-allowed-role, aria-conditional-attr, aria-deprecated-role, aria-hidden-body, aria-prohibited-attr, aria-required-attr, aria-required-children, aria-required-parent, aria-roles, aria-text, aria-valid-attr, aria-valid-attr-value, presentation-role-conflict) чисто технические, роль code уверенная.
+The other 14 rules (aria-allowed-attr, aria-allowed-role, aria-conditional-attr, aria-deprecated-role, aria-hidden-body, aria-prohibited-attr, aria-required-attr, aria-required-children, aria-required-parent, aria-roles, aria-text, aria-valid-attr, aria-valid-attr-value, presentation-role-conflict) are purely technical, and the role code is certain.
 
-Если хотите, чтобы для первой группы отчёт передавал задачу в Content, скажите: это замена роли в 10 записях.
+If you want the report to hand the task to Content for the first group, say so: it is a role replacement in 10 entries.

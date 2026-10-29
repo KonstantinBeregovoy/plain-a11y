@@ -1,31 +1,31 @@
-# TASK-12: Словарь, часть 3 из 4
+# TASK-12: Dictionary, part 3 of 4
 
-Цель: описать простым языком: text-alternatives, name-role-value и forms (18 правил).
+Goal: describe in plain language: text-alternatives, name-role-value and forms (18 rules).
 
-## Сделать
-1. Добавить в словарь записи для всех правил: правила категорий text-alternatives, name-role-value и forms, включённые по умолчанию и ещё не описанные. Список бери из axe.getRules() и по категориям (теги cat.*), а не из памяти.
-2. Поля и тексты по правилам TASK-2: простыми словами, без терминов WCAG и ARIA, не длиннее двух предложений в каждом поле, всё на английском.
-3. Роль выбирай по тому, кто обычно это исправляет. Для чисто технических правил роль code. Если роль спорная, выбери самую вероятную и запиши правило в конец этого файла в список «Роли на проверку».
+## Steps
+1. Add dictionary entries for all rules: the rules of the categories text-alternatives, name-role-value and forms that are on by default and not yet described. Take the list from axe.getRules() and from the categories (cat.* tags), not from memory.
+2. Fields and texts by the rules of TASK-2: in simple words, without WCAG and ARIA terms, no longer than two sentences in each field, all in English.
+3. Choose the role by who usually fixes the problem. For purely technical rules the role is code. If the role is disputable, pick the most likely one and write the rule at the end of this file in the list “Roles to review”.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Unit-тест: у каждой новой записи заполнены все поля, id существует в axe.getRules(), тексты проходят существующие проверки простоты.
-- Unit-тест: все правила этой части присутствуют в словаре.
-- В конце файла есть список «Роли на проверку».
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Unit test: every new entry has all fields filled, the id exists in axe.getRules(), the texts pass the existing simplicity checks.
+- Unit test: all rules of this part are present in the dictionary.
+- The end of the file has the list “Roles to review”.
 
-## Не делать
-Правила из других частей, выключенные по умолчанию правила, изменение уже написанных записей.
+## Do not
+Rules from other parts, rules that are off by default, changing entries that are already written.
 
-## Результаты агента
+## Agent results
 
-1. Добавлены записи для 18 правил: text-alternatives (9), name-role-value (5), forms (4). Список взят из axe.getRules() по тегам cat.* среди включённых по умолчанию и ещё не описанных. Технические термины заменены понятными словами («vector graphic» вместо SVG, «clickable picture» вместо image map). Словарь теперь содержит 76 записей.
-2. Тесты (70, все проходят): coverage-тест расширен категориями text-alternatives (12), name-role-value (7) и forms (5), считая записи прежних этапов. Тест ролей обновлён: не code роли получили только правила про тексты (content) и label-title-only (design).
-3. Проверено в Chromium на странице с нарушениями: сработало 14 из 18 новых правил, у всех наши тексты, запасного варианта нет. Не сработали: frame-title-unique и form-field-multiple-labels (скорее всего, axe относит их к случаям «нужно проверить вручную»), video-caption (axe не может сам знать, есть ли субтитры) и server-side-image-map (нужна особая разметка). Для них проверено только тестами словаря. Аудит axe по 14 состояниям popup: 0 нарушений.
+1. Entries are added for 18 rules: text-alternatives (9), name-role-value (5), forms (4). The list is taken from axe.getRules() by the cat.* tags among the rules that are on by default and not yet described. Technical terms are replaced by understandable words (“vector graphic” instead of SVG, “clickable picture” instead of image map). The dictionary now has 76 entries.
+2. Tests (70, all pass): the coverage test is extended with the categories text-alternatives (12), name-role-value (7) and forms (5), counting the entries of earlier stages. The role test is updated: a role other than code went only to the rules about texts (content) and label-title-only (design).
+3. Checked in Chromium on a page with violations: 14 of the 18 new rules fired, all have our texts, there is no fallback. Did not fire: frame-title-unique and form-field-multiple-labels (most likely axe treats them as “needs a manual check” cases), video-caption (axe cannot know by itself whether there are captions) and server-side-image-map (needs special markup). For them only the dictionary tests were checked. The axe audit over 14 popup states: 0 violations.
 
-### Роли на проверку
+### Roles to review
 
-- Роль content получили правила про текстовые описания и подписи: area-alt, image-redundant-alt, input-image-alt, object-alt, role-img-alt, svg-img-alt, empty-heading, empty-table-header, video-caption. Описание придумывает контент-менеджер, а вносит в разметку, как правило, разработчик. Это та же логика, что у уже существующего image-alt.
-- input-button-name и summary-name: роль code. Текст кнопки или заголовка раздела придумывает контент, но задача в разметке, как у button-name. Если хотите, чтобы все три правила шли в content, это замена роли в трёх записях.
-- label-title-only: роль design, потому что вопрос в том, показывать ли подпись видимой (решение макета). Исправляет это чаще разработчик по макету дизайнера.
-- video-caption: роль content (субтитры готовит контент), но настройка плеера может потребовать разработчика.
-- server-side-image-map, frame-title-unique, aria-hidden-focus, autocomplete-valid, form-field-multiple-labels, select-name: роль code, уверенная.
+- The role content went to the rules about text descriptions and labels: area-alt, image-redundant-alt, input-image-alt, object-alt, role-img-alt, svg-img-alt, empty-heading, empty-table-header, video-caption. A content manager thinks up the description, and a developer, as a rule, puts it into the markup. It is the same logic as in the existing image-alt.
+- input-button-name and summary-name: the role code. The text of a button or of a section heading is thought up by content, but the task is in the markup, like button-name. If you want all three rules to go to content, it is a role replacement in three entries.
+- label-title-only: the role design, because the question is whether to show the label visibly (a layout decision). A developer more often fixes it, following the designer's layout.
+- video-caption: the role content (content prepares the captions), but setting up the player may need a developer.
+- server-side-image-map, frame-title-unique, aria-hidden-focus, autocomplete-valid, form-field-multiple-labels, select-name: the role code, certain.

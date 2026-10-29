@@ -1,13 +1,13 @@
-# TASK-5: Доступность самого расширения
+# TASK-5: Accessibility of the extension itself
 
-Цель: интерфейс расширения проходит автоматическую проверку и ручной чек-лист.
+Goal: the extension's interface passes an automated check and a manual checklist.
 
-## Сделать
-1. Добавить тест, который рендерит popup (все состояния: пустой, загрузка, результат, ошибка) и запускает на нём axe-core. Допустимо ноль нарушений.
-2. Создать docs/a11y-checklist.md с ручными проверками: порядок Tab, видимый фокус, объявление результата через aria-live, контраст не ниже 4.5:1, цели клика не меньше 24x24 px, поведение при prefers-reduced-motion и prefers-color-scheme.
-3. Исправить найденные проблемы.
+## Steps
+1. Add a test that renders the popup (all states: empty, loading, result, error) and runs axe-core on it. Zero violations is allowed.
+2. Create docs/a11y-checklist.md with manual checks: Tab order, visible focus, announcing the result through aria-live, contrast of at least 4.5:1, click targets of at least 24x24 px, behavior with prefers-reduced-motion and prefers-color-scheme.
+3. Fix the problems found.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Тест axe на всех состояниях popup проходит без нарушений.
-- Чек-лист создан, в нём отмечено, что выполнено агентом, а что требует проверки человеком со screen reader.
+## Acceptance criteria
+- All checks from earlier stages pass.
+- The axe test on all popup states passes without violations.
+- The checklist is created and marks what the agent did and what needs a person with a screen reader.

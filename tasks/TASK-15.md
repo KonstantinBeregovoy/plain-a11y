@@ -1,33 +1,33 @@
-# TASK-15: Блок «AAA recommendations»
+# TASK-15: The “AAA recommendations” block
 
-Цель: рекомендации уровня AAA показываются отдельно от проблем уровня AA и не считаются нарушениями.
+Goal: recommendations of the AAA level are shown separately from the problems of the AA level and are not counted as violations.
 
-## Сделать
-1. Включить при запуске axe три правила: color-contrast-enhanced, identical-links-same-purpose, meta-refresh-no-exceptions.
-2. Словарь: записи для этих трёх правил по правилам TASK-2.
-3. Popup: блок «AAA recommendations» всегда внизу списка, с пометкой, что это необязательные рекомендации. Их нет в счётчике «Issues found» и в группах по важности.
-4. Блок можно скрыть. Когда он скрыт, на его месте строка с кнопкой «Show AAA recommendations (N)». Выбор сохраняется в chrome.storage.local и восстанавливается.
-5. Markdown-отчёт: отдельная секция «AAA recommendations» в конце, только если блок сейчас показан.
+## Steps
+1. Turn on three rules when axe runs: color-contrast-enhanced, identical-links-same-purpose, meta-refresh-no-exceptions.
+2. Dictionary: entries for these three rules by the rules of TASK-2.
+3. Popup: an “AAA recommendations” block always at the bottom of the list, with a note that these are optional recommendations. They are not in the “Issues found” counter and not in the groups by severity.
+4. The block can be hidden. When it is hidden, in its place there is a line with a “Show AAA recommendations (N)” button. The choice is saved in chrome.storage.local and restored.
+5. Markdown report: a separate “AAA recommendations” section at the end, only if the block is currently shown.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Unit-тесты: разделение результатов AA и AAA, сохранение и чтение настройки, секция в отчёте.
-- Тест axe на popup включает состояния «блок показан» и «блок скрыт».
-- Агент проверяет в Chromium, что кнопка скрытия и возврата доступна с клавиатуры.
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Unit tests: splitting the AA and AAA results, saving and reading the setting, the section in the report.
+- The axe test on the popup includes the states “block shown” and “block hidden”.
+- The agent checks in Chromium that the hide and show button is reachable from the keyboard.
 
-## Не делать
-Другие AAA-правила, настройки уровня соответствия.
+## Do not
+Other AAA rules, settings for the conformance level.
 
-## Результаты агента
+## Agent results
 
-1. Три правила (color-contrast-enhanced, identical-links-same-purpose, meta-refresh-no-exceptions) включены при запуске axe. Их список AAA_RULE_IDS и опции запуска лежат в src/content/axeOptions.ts. Разбор результата вынесен в чистую функцию buildCheckResult (src/report/violations.ts): нарушения AAA идут в отдельный список aaa, а ни они, ни их «неясные» случаи не попадают ни в основной список, ни в раздел «Needs manual review». Неясные случаи AAA я сознательно отбрасываю: иначе enhanced contrast на любой странице с текстом на картинке засорял бы раздел ручной проверки необязательными пунктами.
-2. Словарь: три записи (color-contrast-enhanced: design, identical-links-same-purpose: content, meta-refresh-no-exceptions: code), всего 94. В итоговом тесте на покрытие список EXTRA теперь включает target-size и три AAA-правила.
-3. Popup: блок «AAA recommendations: N» всегда внизу, с пояснением «Optional recommendations beyond the standard level. They are not counted as issues.». Не входит в «Issues found». Блок скрывается одной кнопкой «Hide AAA recommendations»; когда он скрыт, на его месте строка «Hidden. These are optional recommendations beyond the standard level.» и та же кнопка «Show AAA recommendations (N)». Кнопка остаётся на месте и сохраняет фокус клавиатуры (при скрытом списке она иначе исчезла бы). Выбор запоминается в chrome.storage.local (ключ showAaa, по умолчанию блок показан). Смена состояния объявляется через aria-live («AAA recommendations hidden/shown.»). Фильтр роли действует и на блок. Если AAA-проблем нет, блок не показывается.
-4. Markdown: секция «## AAA recommendations» в самом конце, после раздела ручной проверки, только когда блок показан (скрытый блок в отчёт не попадает). Пустой список проблем при наличии только AAA пишет старое «found no issues».
-5. Тесты: 107, все проходят (параметры axe, разделение результатов, настройка showAaa, секция отчёта, шесть тестов popup: блок внизу, скрытие с сохранением фокуса, запоминание выбора, только AAA, фильтр, блок отсутствует без AAA-проблем). Тестовая страница tests/fixtures/aaa.html.
-6. Проверено в Chromium: на aaa.html «Issues found: 2» (image-alt, meta-refresh), блок «AAA recommendations: 1» (color-contrast-enhanced) внизу, подсветка обводит абзац и после снятия разметка совпадает с исходной, скрытие клавишей Enter оставляет фокус на кнопке, скрытый блок не попадает в отчёт, после закрытия и повторного открытия popup выбор сохранился. Аудит axe: 14 прежних состояний, 4 состояния раздела ручной проверки и 4 состояния блока AAA (показан и скрыт, обе схемы): 0 нарушений.
-7. README и чек-лист обновлены; в README исправлены две устаревшие фразы (число записей словаря и «AAA не запускаются»).
+1. Three rules (color-contrast-enhanced, identical-links-same-purpose, meta-refresh-no-exceptions) are turned on when axe runs. Their list AAA_RULE_IDS and the run options are in src/content/axeOptions.ts. The parsing of the result is moved into the pure function buildCheckResult (src/report/violations.ts): the AAA violations go into a separate list aaa, and neither they nor their “unclear” cases land in the main list or in the “Needs manual review” section. I deliberately drop the unclear AAA cases: otherwise enhanced contrast on any page with text on a picture would clutter the manual review section with optional items.
+2. Dictionary: three entries (color-contrast-enhanced: design, identical-links-same-purpose: content, meta-refresh-no-exceptions: code), 94 in all. In the final coverage test the EXTRA list now includes target-size and the three AAA rules.
+3. Popup: the block “AAA recommendations: N” is always at the bottom, with the explanation “Optional recommendations beyond the standard level. They are not counted as issues.”. It is not part of “Issues found”. The block is hidden with one button “Hide AAA recommendations”; when it is hidden, in its place there is the line “Hidden. These are optional recommendations beyond the standard level.” and the same button “Show AAA recommendations (N)”. The button stays in place and keeps the keyboard focus (with the list hidden it would otherwise disappear). The choice is remembered in chrome.storage.local (the key showAaa, the block is shown by default). The change of state is announced through aria-live (“AAA recommendations hidden/shown.”). The role filter also acts on the block. If there are no AAA problems, the block is not shown.
+4. Markdown: the section “## AAA recommendations” at the very end, after the manual review section, only when the block is shown (a hidden block does not get into the report). An empty list of problems with only AAA items writes the old “found no issues”.
+5. Tests: 107, all pass (the axe options, splitting the results, the showAaa setting, the report section, six popup tests: the block at the bottom, hiding with focus kept, remembering the choice, only AAA, the filter, the block absent without AAA problems). A test page tests/fixtures/aaa.html.
+6. Checked in Chromium: on aaa.html “Issues found: 2” (image-alt, meta-refresh), the block “AAA recommendations: 1” (color-contrast-enhanced) at the bottom, the highlight outlines the paragraph and after removal the markup equals the original, hiding with the Enter key leaves the focus on the button, the hidden block does not get into the report, after closing and reopening the popup the choice was kept. The axe audit: the 14 earlier states, 4 states of the manual review section and 4 states of the AAA block (shown and hidden, both schemes): 0 violations.
+7. The README and the checklist are updated; in the README two outdated phrases are fixed (the number of dictionary entries and “AAA are not run”).
 
-### Что не удалось вызвать в браузере
+### What could not be triggered in the browser
 
-meta-refresh-no-exceptions: axe считает пройденным правило для задержки в час (проверено сырым запуском axe, без расширения), поэтому на тестовой странице оно не срабатывает. identical-links-same-purpose axe относит к «неясным» случаям (проверено так же), поэтому по замыслу пункта оно в AAA-блок не попадает. Для обоих правил проверены только записи словаря и логика разбора.
+meta-refresh-no-exceptions: axe counts the rule as passed for a delay of an hour (checked with a raw axe run, without the extension), so it does not fire on the test page. identical-links-same-purpose is classified by axe as an “unclear” case (checked the same way), so by the design of the item it does not go into the AAA block. For both rules only the dictionary entries and the parsing logic were checked.

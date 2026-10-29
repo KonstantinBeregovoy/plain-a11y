@@ -1,33 +1,33 @@
-# TASK-11: Словарь, часть 2 из 4
+# TASK-11: Dictionary, part 2 of 4
 
-Цель: описать простым языком: semantics, keyboard и structure (23 правила).
+Goal: describe in plain language: semantics, keyboard and structure (23 rules).
 
-## Сделать
-1. Добавить в словарь записи для всех правил: правила категорий semantics, keyboard и structure, включённые по умолчанию и ещё не описанные. Список бери из axe.getRules() и по категориям (теги cat.*), а не из памяти.
-2. Поля и тексты по правилам TASK-2: простыми словами, без терминов WCAG и ARIA, не длиннее двух предложений в каждом поле, всё на английском.
-3. Роль выбирай по тому, кто обычно это исправляет. Для чисто технических правил роль code. Если роль спорная, выбери самую вероятную и запиши правило в конец этого файла в список «Роли на проверку».
+## Steps
+1. Add dictionary entries for all rules: the rules of the categories semantics, keyboard and structure that are on by default and not yet described. Take the list from axe.getRules() and from the categories (cat.* tags), not from memory.
+2. Fields and texts by the rules of TASK-2: in simple words, without WCAG and ARIA terms, no longer than two sentences in each field, all in English.
+3. Choose the role by who usually fixes the problem. For purely technical rules the role is code. If the role is disputable, pick the most likely one and write the rule at the end of this file in the list “Roles to review”.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Unit-тест: у каждой новой записи заполнены все поля, id существует в axe.getRules(), тексты проходят существующие проверки простоты.
-- Unit-тест: все правила этой части присутствуют в словаре.
-- В конце файла есть список «Роли на проверку».
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Unit test: every new entry has all fields filled, the id exists in axe.getRules(), the texts pass the existing simplicity checks.
+- Unit test: all rules of this part are present in the dictionary.
+- The end of the file has the list “Roles to review”.
 
-## Не делать
-Правила из других частей, выключенные по умолчанию правила, изменение уже написанных записей.
+## Do not
+Rules from other parts, rules that are off by default, changing entries that are already written.
 
-## Результаты агента
+## Agent results
 
-1. Добавлены записи для 23 правил: semantics (10), keyboard (7), structure (6). Список взят из axe.getRules() по тегам cat.* среди включённых по умолчанию и ещё не описанных. Слово «landmark» в текстах заменено на «page area», как более понятное. Словарь теперь содержит 58 записей.
-2. Тесты (67, все проходят): coverage-тест по категориям aria, semantics, keyboard, structure (в категориях считаются и записи из прежних этапов, поэтому числа 24, 11, 8, 6) и тест на роли: кроме code роль не code только у color-contrast, target-size (design) и document-title, heading-order, image-alt, link-name, page-has-heading-one (content). Тексты проходят проверки простоты (без WCAG и ARIA, не больше двух предложений).
-3. Проверено в Chromium на трёх тестовых страницах: сработало 18 из 23 новых правил, у всех показаны наши тексты, запасного варианта нет, page-has-heading-one попал в роль Content. Не удалось вызвать в браузере: bypass, skip-link, avoid-inline-spacing, frame-focusable-content, frame-tested (нужна особая разметка или проверка внутри iframe). Для них проверено только тестами словаря. Аудит axe по 14 состояниям popup: 0 нарушений.
-4. frame-tested означает, что axe не смог проверить содержимое iframe. Это связано с известным ограничением (содержимое iframe не проверяется, см. docs/ROADMAP.md). Скорее всего, такие случаи будут попадать в раздел «Needs manual review» после TASK-14, а не в нарушения.
+1. Entries are added for 23 rules: semantics (10), keyboard (7), structure (6). The list is taken from axe.getRules() by the cat.* tags among the rules that are on by default and not yet described. The word “landmark” in the texts is replaced by “page area”, as clearer. The dictionary now has 58 entries.
+2. Tests (67, all pass): a coverage test by the categories aria, semantics, keyboard, structure (the categories also count the entries from earlier stages, so the numbers are 24, 11, 8, 6) and a test on roles: apart from code, the role is not code only for color-contrast, target-size (design) and document-title, heading-order, image-alt, link-name, page-has-heading-one (content). The texts pass the simplicity checks (no WCAG and ARIA, no more than two sentences).
+3. Checked in Chromium on three test pages: 18 of the 23 new rules fired, all show our texts, there is no fallback, page-has-heading-one went to the Content role. Could not be triggered in the browser: bypass, skip-link, avoid-inline-spacing, frame-focusable-content, frame-tested (they need special markup or a check inside an iframe). For them only the dictionary tests were checked. The axe audit over 14 popup states: 0 violations.
+4. frame-tested means that axe could not check the content of an iframe. This relates to a known limit (the content of an iframe is not checked, see docs/ROADMAP.md). Most likely such cases will land in the “Needs manual review” section after TASK-14, and not in the violations.
 
-### Роли на проверку
+### Roles to review
 
-- page-has-heading-one: поставлена роль content (главный заголовок пишет редактор), но вставить его в разметку может и разработчик.
-- label-content-name-mismatch: роль code. Исправление в разметке, но текст кнопки (который контент меняет) может быть причиной.
-- list, listitem, definition-list, dlitem: роль code. Если список собрал визуальный редактор в CMS, сломанную структуру нередко создаёт контент-менеджер.
-- nested-interactive: роль code. Часто это решение дизайна (кнопка внутри карточки-ссылки), и менять его придётся вместе с дизайнером.
-- bypass, skip-link: роль code. Ссылку «Skip to content» иногда заказывает дизайн.
-- avoid-inline-spacing: роль code. Если интервалы заданы для вёрстки макета, решает дизайнер.
+- page-has-heading-one: the role content is set (an editor writes the main heading), but a developer can also put it into the markup.
+- label-content-name-mismatch: the role code. The fix is in the markup, but the button text (which content changes) can be the cause.
+- list, listitem, definition-list, dlitem: the role code. If a list was built by a visual editor in a CMS, the broken structure is often created by a content manager.
+- nested-interactive: the role code. This is often a design decision (a button inside a link card), and changing it has to be done together with the designer.
+- bypass, skip-link: the role code. A “Skip to content” link is sometimes ordered by design.
+- avoid-inline-spacing: the role code. If the spacing is set for the layout, the designer decides.

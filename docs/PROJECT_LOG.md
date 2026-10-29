@@ -19,7 +19,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 
 1. Push stage 17 (a local commit may still wait for the owner's yes).
 2. GitHub, Settings, Emails: turn on “Keep my email addresses private” and “Block command line pushes that expose my email”.
-3. Decide what stays in the public repository: `SPEC.md`, `AGENTS.md`, `CLAUDE.md`, `tasks/` (they are process files, partly in Russian).
+3. Decide what stays in the public repository: `SPEC.md`, `AGENTS.md`, `CLAUDE.md`, `tasks/` (they are process files; they were translated into English in stage 18, the earlier Russian versions stay in the history).
 4. Website: the two placeholders (store link, GitHub link), the Install section (it says to build from source, but the repository is private, so there is nothing to download yet), headers like bereg.dev, PWA settings, GEO. Also add the contact to `store/listing.md`.
 5. Make both repositories public (the owner does it).
 6. Register in the Chrome Web Store (https://chrome.google.com/webstore/devconsole, $5, trader or non-trader, contact `contact@bereg.dev`), upload `.output/plain-a11y-0.1.0-chrome.zip`, screenshots 02 to 06, text and permission reasons from `store/listing.md`, policy address `https://a11y-ext.bereg.dev/privacy.html`.
@@ -41,7 +41,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 4. **Plain language for every rule.** All 94 rules the extension runs have a title, who is affected and how to fix it, and a role (Design, Content or Code). A test compares the dictionary with the rules of the installed axe-core, so a missing or extra entry fails.
 5. **Honest limits.** An empty result says that automation covers only part of the requirements. Unclear cases go to “Needs manual review” and are not counted as issues. The icon has no check mark, because a check mark means “passed”.
 6. **No automatic “accessible or not” badge.** Checking every page needs access to all sites, costs CPU, and a green badge would claim more than automation can. A badge with an issue count after a check, and an opt-in per-site auto check, are in the roadmap.
-7. **English only.** The interface, the dictionary, the report and the documents. The task files of the original package stay in Russian.
+7. **English only.** The interface, the dictionary, the report and the documents. This includes the process files (`SPEC.md`, `AGENTS.md`, `tasks/`), translated in stage 18; the earlier Russian versions stay in the git history.
 8. **MIT license.** Axe-core is MPL-2.0 and stays unchanged; its license and source link ship inside the package.
 9. **The website is a separate static repository.** Plain HTML and CSS, no scripts, a strict Content Security Policy, meant to be deployed as Cloudflare Workers static assets like bereg.dev. Its design follows bereg.dev (dark “Engineering Blueprint”, IBM Plex).
 10. **The icon is the letters AA** on the paper color of the owner's posts (`#f2eee3`) in near-black ink (`#17181a`), contrast 15.3:1.
@@ -57,7 +57,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 | Package size | 272 KB zip, of which the axe-core content script is 653 KB unpacked | `npm run zip` |
 | Permissions | `activeTab`, `scripting`, `storage`; no host permissions | `.output/chrome-mv3/manifest.json` |
 | Runtime dependencies | axe-core, react, react-dom | `package.json` |
-| Stages | 17 task files with acceptance criteria; the later ones end with a results section | `tasks/` |
+| Stages | 18 task files with acceptance criteria; the later ones end with a results section | `tasks/` |
 | Popup states audited with axe in a real browser | 14 (7 states, light and dark), plus 4 for manual review, 4 for the AAA block and 2 for the frame note: 0 violations | scripts outside the repository, see below |
 | Website audit | 4 pages, widths 1280 and 320, 16 runs: 0 violations, no horizontal scroll, no policy violations | script outside the repository |
 | Network requests of the extension | 0 | `tests/package.test.ts` forbids `fetch`, XHR and friends; a browser run showed no external requests |

@@ -1,18 +1,18 @@
-# TASK-3: Роли и важность
+# TASK-3: Roles and severity
 
-Цель: отчёт сгруппирован по важности и роли, элемент можно подсветить на странице.
+Goal: the report is grouped by severity and role, and an element can be highlighted on the page.
 
-## Сделать
-1. В src/report написать функцию groupReport: группы по важности (critical, serious, minor; moderate и minor объединяются в minor) и внутри по роли (design, content, code).
-2. Popup показывает группы с заголовками и количеством проблем. Есть фильтр по роли.
-3. У каждой проблемы кнопка «Показать на странице»: content script находит элемент по селектору из axe, прокручивает к нему и временно обводит рамкой.
-4. Подсветка снимается повторным нажатием или при закрытии popup. После снятия DOM страницы остаётся таким, как был.
-5. Фильтр и кнопки полностью доступны с клавиатуры, у фокуса видимая рамка.
+## Steps
+1. In src/report write the function groupReport: groups by severity (critical, serious, minor; moderate and minor are merged into minor) and inside them by role (design, content, code).
+2. The popup shows the groups with headings and the number of problems. There is a role filter.
+3. Every problem has a “Show on page” button: the content script finds the element by the selector from axe, scrolls to it and outlines it with a frame for a while.
+4. The highlight is removed by pressing the button again or when the popup closes. After removal the page DOM is the same as it was.
+5. The filter and the buttons are fully accessible from the keyboard, and focus has a visible frame.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Unit-тесты groupReport: порядок групп, объединение moderate и minor, пустой результат.
-- Тест: после включения и снятия подсветки разметка страницы совпадает с исходной.
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Unit tests of groupReport: the order of groups, merging moderate with minor, an empty result.
+- Test: after turning the highlight on and off, the page markup equals the original.
 
-## Не делать
-Экспорт, настройки.
+## Do not
+Export, settings.

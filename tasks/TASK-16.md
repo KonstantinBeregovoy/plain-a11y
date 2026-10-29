@@ -1,32 +1,32 @@
-# TASK-16: Подсветка элементов в shadow DOM
+# TASK-16: Highlighting elements in shadow DOM
 
-Цель: кнопка «Show on page» работает для элементов внутри shadow DOM.
+Goal: the “Show on page” button works for elements inside shadow DOM.
 
-## Сделать
-1. Научить подсветку находить элементы по селекторам axe для shadow DOM (цепочки вида [['#host', 'img']]) и прокручивать к первому найденному.
-2. В тип ViolationItem попадают и такие селекторы, а не только простые.
-3. Элементы внутри iframe по-прежнему не подсвечиваются: у таких проблем кнопка остаётся отключённой, и рядом короткое пояснение почему (текстом, а не только цветом).
-4. Разметка страницы после снятия подсветки совпадает с исходной, как и раньше.
+## Steps
+1. Teach the highlight to find elements by the axe selectors for shadow DOM (chains like [['#host', 'img']]) and to scroll to the first one found.
+2. The ViolationItem type also accepts such selectors, and not only simple ones.
+3. Elements inside an iframe are still not highlighted: for such problems the button stays disabled, and next to it is a short explanation why (in text, not only by color).
+4. The page markup after the highlight is removed equals the original, as before.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Unit-тест (jsdom): подсветка и снятие в открытом shadow root возвращают разметку к исходной.
-- Тест axe на popup с проблемой в iframe: пояснение есть, нарушений нет.
-- Агент проверяет в Chromium страницу с shadow DOM: элемент обведён, страница прокручена к нему.
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Unit test (jsdom): highlighting and removing in an open shadow root returns the markup to the original.
+- An axe test on the popup with a problem in an iframe: the explanation is there, no violations.
+- The agent checks in Chromium a page with shadow DOM: the element is outlined, the page is scrolled to it.
 
-## Не делать
-Проверку содержимого iframe, закрытые (closed) shadow root.
+## Do not
+Checking the content of iframes, closed shadow roots.
 
-## Результаты агента
+## Agent results
 
-1. Новый тип HighlightTarget (src/report/violations.ts): строка (простой селектор) или массив строк (путь через открытые shadow root: первый селектор ищется в документе, каждый следующий внутри shadow root найденного элемента). Разбор целей axe: простой селектор и путь через shadow root попадают в ViolationItem.targets, цели с несколькими записями (iframe, в том числе вместе с shadow DOM) и некорректные цели пропускаются. Тип сообщения highlight и его проверка в messages.ts обновлены.
-2. Подсветка (src/content/highlight.ts) ищет элементы по пути через shadow root, поддерживает вложенные shadow root, прокручивает к первому найденному (в том числе внутри shadow root) и возвращает страницу к исходной разметке. Закрытые shadow root недоступны, такие пути дают «ничего не найдено» без ошибки.
-3. У проблем без целей (элементы внутри iframe) кнопка «Show on page» остаётся отключённой, а рядом текстом: «Cannot be shown on the page: the elements are inside an embedded frame.» Кнопка связана с пояснением через aria-describedby. Сейчас это состояние на реальной странице не возникает: мы проверяем только верхнюю страницу, и содержимое iframe в отчёт не попадает (см. docs/ROADMAP.md, бэклог). Состояние проверено тестом и в Chromium с подставленным ответом.
-4. Тесты: 117, все проходят. Новые: разбор целей axe (простые, shadow, вложенные shadow, iframe, некорректные), проверка сообщения highlight, 7 тестов подсветки в shadow DOM (подсветка и восстановление, вложенные пути, смесь простых и shadow, прокрутка к первому, исходный style внутри shadow root, закрытые и отсутствующие хосты, замена прежней подсветки), 2 теста popup (пояснение для iframe, отправка пути на страницу). Разметка при сравнении включает содержимое открытых shadow root, потому что outerHTML его не показывает.
-5. Тестовая страница tests/fixtures/shadow.html: проблемы в открытом shadow root и во вложенном, далеко за пределами первого экрана (1800 px).
-6. Проверено в Chromium: image-alt (2 элемента, один во вложенном shadow root) и button-name находятся, кнопка включена; нажатие обводит оба изображения, страница прокручена с 0 до 1310 px; после снятия и после закрытия popup разметка вместе с содержимым shadow root совпадает с исходной. Аудит axe: основные 14 состояний, 4 состояния ручной проверки, 4 состояния блока AAA и состояние с пояснением про iframe в обеих схемах: 0 нарушений. Регрессия подсветки на basic.html (включение и снятие для всех проблем, закрытие popup): разметка совпадает.
-7. В README, docs/a11y-checklist.md и docs/ROADMAP.md обновлены устаревшие формулировки. Этапы 7–16 в роадмапе помечены выполненными.
+1. The new type HighlightTarget (src/report/violations.ts): a string (a simple selector) or an array of strings (a path through open shadow roots: the first selector is searched in the document, each next one inside the shadow root of the element found). The parsing of axe targets: a simple selector and a path through a shadow root go to ViolationItem.targets, targets with several records (an iframe, including together with shadow DOM) and invalid targets are skipped. The type of the highlight message and its check in messages.ts are updated.
+2. The highlight (src/content/highlight.ts) finds elements by a path through shadow roots, supports nested shadow roots, scrolls to the first one found (including one inside a shadow root) and returns the page to the original markup. Closed shadow roots are not accessible, and such paths give “nothing found” without an error.
+3. For problems without targets (elements inside an iframe) the “Show on page” button stays disabled, and next to it the text: “Cannot be shown on the page: the elements are inside an embedded frame.” The button is linked with the explanation through aria-describedby. Right now this state does not occur on a real page: we check only the top page, and the content of iframes does not get into the report (see docs/ROADMAP.md, the backlog). The state is checked by a test and in Chromium with a substituted answer.
+4. Tests: 117, all pass. New ones: parsing axe targets (simple, shadow, nested shadow, iframe, invalid), the check of the highlight message, 7 tests of the highlight in shadow DOM (highlight and restoring, nested paths, a mix of simple and shadow, scrolling to the first, the original style inside a shadow root, closed and missing hosts, replacing the previous highlight), 2 popup tests (the explanation for an iframe, sending the path to the page). The markup comparison includes the content of open shadow roots, because outerHTML does not show it.
+5. A test page tests/fixtures/shadow.html: problems in an open shadow root and in a nested one, far beyond the first screen (1800 px).
+6. Checked in Chromium: image-alt (2 elements, one in a nested shadow root) and button-name are found, the button is enabled; pressing outlines both images, the page is scrolled from 0 to 1310 px; after removal and after closing the popup the markup together with the content of the shadow roots equals the original. The axe audit: the main 14 states, 4 states of the manual review, 4 states of the AAA block and the state with the explanation about an iframe in both schemes: 0 violations. A regression of the highlight on basic.html (turning on and off for all problems, closing the popup): the markup matches.
+7. In the README, docs/a11y-checklist.md and docs/ROADMAP.md the outdated wordings are updated. Stages 7–16 in the roadmap are marked as done.
 
-### Замечание
+### Note
 
-Закрытые (closed) shadow root в принципе недоступны из страницы расширения, это ограничение браузера. axe тоже не видит их содержимое, поэтому проблем из закрытых shadow root в отчёте не будет.
+Closed shadow roots are in principle not accessible from the page of the extension; this is a browser limit. axe does not see their content either, so there will be no problems from closed shadow roots in the report.

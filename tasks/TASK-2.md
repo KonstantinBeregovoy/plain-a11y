@@ -1,20 +1,20 @@
-# TASK-2: Простой язык
+# TASK-2: Plain language
 
-Цель: вместо технических id правил popup показывает понятные описания.
+Goal: instead of technical rule ids the popup shows understandable descriptions.
 
-## Сделать
-1. В src/dictionary создать словарь. Поля записи: id (правило axe), title, whoIsAffected, howToFix, role (design, content или code).
-2. Покрыть правила: color-contrast, image-alt, label, link-name, button-name, heading-order, document-title, html-has-lang, frame-title, tabindex.
-3. Для правила, которого нет в словаре, показывать описание help из axe и роль code.
-4. Popup показывает title, whoIsAffected и howToFix вместо id. Технический id остаётся в виде мелкой подписи.
-5. Тексты писать простыми словами, без терминов WCAG и ARIA, не длиннее двух предложений в каждом поле.
+## Steps
+1. Create a dictionary in src/dictionary. The fields of an entry: id (the axe rule), title, whoIsAffected, howToFix, role (design, content or code).
+2. Cover the rules: color-contrast, image-alt, label, link-name, button-name, heading-order, document-title, html-has-lang, frame-title, tabindex.
+3. For a rule that is not in the dictionary, show the help text from axe and the role code.
+4. The popup shows title, whoIsAffected and howToFix instead of the id. The technical id stays as a small caption.
+5. Write the texts in simple words, without WCAG and ARIA terms, no longer than two sentences in each field.
 
-## Критерии приёмки
-- Все проверки из TASK-1 проходят.
-- Unit-тест: у каждой записи словаря заполнены все поля.
-- Unit-тест: каждый id из словаря существует в списке правил, который возвращает axe.getRules().
-- Unit-тест: для неизвестного правила работает запасной вариант.
-- На basic.html для четырёх ожидаемых нарушений показываются понятные описания.
+## Acceptance criteria
+- All checks from TASK-1 pass.
+- Unit test: every dictionary entry has all fields filled.
+- Unit test: every id in the dictionary exists in the list of rules that axe.getRules() returns.
+- Unit test: the fallback works for an unknown rule.
+- On basic.html the four expected violations are shown with understandable descriptions.
 
-## Не делать
-Группировку, подсветку, экспорт.
+## Do not
+Grouping, highlighting, export.

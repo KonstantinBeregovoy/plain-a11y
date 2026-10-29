@@ -1,17 +1,17 @@
-# TASK-4: Экспорт и настройки
+# TASK-4: Export and settings
 
-Цель: отчёт копируется в Markdown для тикета, выбранный фильтр запоминается.
+Goal: the report is copied as Markdown for a ticket, and the chosen filter is remembered.
 
-## Сделать
-1. В src/report функция toMarkdown. Формат: заголовок с адресом страницы и датой, затем секции по ролям, в каждой пункты-чекбоксы вида «- [ ] важность: описание. Как исправить: ...».
-2. Кнопка «Скопировать отчёт». После копирования сообщение для screen reader через aria-live.
-3. Выбранный фильтр роли сохраняется в chrome.storage.local и восстанавливается при открытии popup.
+## Steps
+1. In src/report add the function toMarkdown. Format: a heading with the page address and the date, then sections by role, each with checkbox items of the form “- [ ] severity: description. How to fix: ...”.
+2. A “Copy report” button. After copying, a message for the screen reader through aria-live.
+3. The chosen role filter is saved in chrome.storage.local and restored when the popup opens.
 
-## Критерии приёмки
-- Все проверки прошлых этапов проходят.
-- Snapshot-тест toMarkdown на фиксированном входе.
-- Тест: настройки сохраняются и читаются.
-- Для пустого результата отчёт говорит, что автоматическая проверка проблем не нашла, и напоминает, что она покрывает только часть требований.
+## Acceptance criteria
+- All checks from earlier stages pass.
+- Snapshot test of toMarkdown on a fixed input.
+- Test: the settings are saved and read.
+- For an empty result the report says that the automated check found no problems, and reminds that it covers only part of the requirements.
 
-## Не делать
-Перевод интерфейса, собственные правила.
+## Do not
+Interface translation, own rules.

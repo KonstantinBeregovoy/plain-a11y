@@ -68,7 +68,8 @@ Repository layout:
 | `tests` | Unit tests, an axe test of the popup itself, a page fixture |
 | `docs` | Accessibility checklist of the extension itself |
 | `store` | Chrome Web Store materials |
-| `tasks` | Development task files, stage by stage |
+| `tasks` | Task files, one per stage: goal, steps, acceptance criteria, what not to do, and the results |
+| `SPEC.md`, `AGENTS.md` | The specification and the rules for the coding agent. `CLAUDE.md` points to `AGENTS.md` |
 
 ### Why axe-core
 

@@ -1,41 +1,41 @@
-# Plain A11y: спецификация
+# Plain A11y: specification
 
-## Что строим
-Расширение для Chrome (Manifest V3), которое проверяет открытую страницу на проблемы доступности и показывает результат простым языком для людей без знания WCAG: дизайнеров, контент-менеджеров, PM.
+## What we build
+A Chrome extension (Manifest V3) that checks the open page for accessibility problems and shows the result in plain language for people who do not know WCAG: designers, content managers, product managers.
 
-## Для каждой найденной проблемы показываем
-- что не так, простыми словами;
-- кого это затрагивает;
-- как исправить;
-- роль, которой передать задачу: design, content или code;
-- важность: critical, serious или minor.
+## For every problem found we show
+- what is wrong, in simple words;
+- who it affects;
+- how to fix it;
+- the role to hand the task to: design, content or code;
+- the severity: critical, serious or minor.
 
-## Стек (не менять без запроса)
+## Stack (do not change without a request)
 - Chrome, Manifest V3
-- TypeScript в strict-режиме
-- React для popup
-- WXT как сборщик
-- axe-core для проверки, свои правила на этапах 1-4 не писать
-- Vitest для тестов
+- TypeScript in strict mode
+- React for the popup
+- WXT as the build tool
+- axe-core for the check; do not write own rules in stages 1-4
+- Vitest for tests
 
-## Жёсткие ограничения
-- Никакого бэкенда, аккаунтов, аналитики и сетевых запросов.
-- Permissions только: activeTab, scripting, storage.
-- Весь код внутри пакета, без удалённо загружаемых скриптов.
-- Версию axe-core закрепить точным номером в package.json.
-- Интерфейс расширения сам соответствует WCAG 2.2 AA: управление с клавиатуры, видимый фокус, контраст не ниже 4.5:1, цель клика не меньше 24x24 px.
+## Hard limits
+- No backend, accounts, analytics or network requests.
+- Permissions only: activeTab, scripting, storage.
+- All code lives inside the package, no remotely loaded scripts.
+- Pin the axe-core version to an exact number in package.json.
+- The extension's own interface meets WCAG 2.2 AA: keyboard control, visible focus, contrast of at least 4.5:1, click targets of at least 24x24 px.
 
-## Структура репозитория
-- src/popup: React-интерфейс
+## Repository structure
+- src/popup: React interface
 - src/background: service worker
-- src/content: запуск axe-core на странице
-- src/dictionary: словарь правил (id правила axe, простое описание, роль, совет)
-- src/report: группировка и экспорт в Markdown
-- tests: unit-тесты и фикстуры страниц
-- tasks: файлы заданий
+- src/content: running axe-core on the page
+- src/dictionary: the rule dictionary (axe rule id, plain description, role, advice)
+- src/report: grouping and export to Markdown
+- tests: unit tests and page fixtures
+- tasks: task files
 
-## Формат записи словаря
-id правила axe, title, whoIsAffected, howToFix, role (design, content или code).
+## Dictionary entry format
+axe rule id, title, whoIsAffected, howToFix, role (design, content or code).
 
-## Вне рамок
-Собственные проверки сверх axe-core, перевод интерфейса, облачная синхронизация. Это отдельные этапы после базы.
+## Out of scope
+Own checks beyond axe-core, interface translation, cloud sync. These are separate stages after the base.

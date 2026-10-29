@@ -1,30 +1,30 @@
-# TASK-7: Исправления и рефакторинг
+# TASK-7: Fixes and refactor
 
-Цель: убрать дефекты, найденные при архитектурной проверке, не меняя поведение для пользователя.
+Goal: remove the defects found in the architecture review without changing the behavior for the user.
 
-## Сделать
-1. Устаревший content script. После обновления или перезагрузки расширения проверка должна работать на уже открытой вкладке без перезагрузки страницы. При внедрении нового скрипта снимается слушатель старого (учти, что контекст старого скрипта может быть недействителен и вызов может бросить исключение).
-2. Не внедрять скрипт заново, если он уже отвечает: service worker сначала отправляет скрипту короткое сообщение-пинг и внедряет только при отсутствии ответа.
-3. Адрес страницы в Markdown-отчёте без параметров запроса и хэша: остаются схема, хост и путь.
-4. Один общий хелпер errorMessage вместо трёх копий.
-5. Разделить src/popup/App.tsx: логика проверки и подсветки уходит в хуки, список проблем и фильтр роли в отдельные компоненты. Разметка и поведение не меняются.
+## Steps
+1. A stale content script. After the extension is updated or reloaded, the check must work on an already open tab without reloading the page. When a new script is injected, the listener of the old one is removed (keep in mind that the context of the old script may be invalid and the call may throw).
+2. Do not inject the script again if it already answers: the service worker first sends the script a short ping message and injects only when there is no answer.
+3. The page address in the Markdown report has no query parameters and no hash: the scheme, the host and the path stay.
+4. One shared errorMessage helper instead of three copies.
+5. Split src/popup/App.tsx: the check and highlight logic moves into hooks, the list of problems and the role filter into separate components. The markup and the behavior do not change.
 
-## Критерии приёмки
-- npm run typecheck, npm run test, npm run build, npm run zip проходят без ошибок.
-- Unit-тест установки скрипта: повторная установка снимает предыдущий слушатель, слушатель всегда один.
-- Unit-тест адреса в отчёте: с параметрами, с хэшем, без них, нераспознаваемый адрес.
-- App.tsx короче 130 строк, снапшот и тесты axe на popup проходят без изменения ожиданий.
-- Агент проверяет в Chromium (скриптом вне репозитория), что после chrome.runtime.reload() проверка работает на открытой вкладке без её перезагрузки.
+## Acceptance criteria
+- npm run typecheck, npm run test, npm run build and npm run zip pass without errors.
+- Unit test of the script installation: installing again removes the previous listener, and there is always exactly one listener.
+- Unit test of the address in the report: with parameters, with a hash, without them, an unrecognizable address.
+- App.tsx is shorter than 130 lines; the snapshot and the axe tests on the popup pass without changing their expectations.
+- The agent checks in Chromium (with a script outside the repository) that after chrome.runtime.reload() the check works on an open tab without reloading it.
 
-## Не делать
-Новые функции, смену структуры папок, добавление Playwright в репозиторий.
+## Do not
+New features, a change of the folder structure, adding Playwright to the repository.
 
-## Результаты и отклонения агента
+## Agent results and deviations
 
-1. **Пункт 1 (устаревший скрипт) не воспроизвёлся, код не менялся.** В архитектурной проверке я назвал это дефектом, не проверив. Эксперимент в Chromium: проверка, затем выключение и включение расширения на странице chrome://extensions, затем проверка на той же вкладке без её перезагрузки. На сборке без изменений проверка работает (OK, 4 проблемы): после перезагрузки расширения страница получает свежий изолированный мир, и флаг защиты от повторного внедрения не остаётся. Защиту «снять слушатель старого скрипта» не добавлял, чтобы не усложнять код без причины. chrome.runtime.reload() в автоматизации не подходит: расширение, загруженное флагом командной строки, после него блокируется. Рекомендую вам проверить вручную: нажать значок обновления на карточке расширения и снова нажать «Check page» на уже открытой вкладке.
-2. **Пункт 2 (пинг)** сделан: функция ensureContentScript (src/background/inject.ts) внедряет скрипт, только если он не отвечает. В Chromium повторная проверка идёт без внедрения. Вместо критерия про «установку скрипта» есть unit-тесты ensureContentScript (4 случая).
-3. **Пункт 3** сделан: formatPageUrl оставляет схему, хост и путь, убирает параметры, хэш и логин с паролем. 6 тестов.
-4. **Пункт 4** сделан: errorMessage теперь один, в src/report/messages.ts.
-5. **Пункт 5** сделан: App.tsx стал 86 строк. Появились useCheck, useHighlight, useRoleFilter, RoleFilterField и IssueGroups в src/popup.
-6. **Найден и исправлен дефект подсветки из TASK-3.** После включения и снятия подсветки на элементах без атрибута style оставался пустой style="" (Chrome так делает, если атрибут не читали между изменением через CSSOM и удалением). Разметка страницы не совпадала с исходной, хотя критерий TASK-3 требует обратного. Прежние проверки не ловили это, потому что читали атрибут между шагами, а jsdom ведёт себя иначе. Исправление в src/content/highlight.ts, тест имитирует поведение Chrome (падает без исправления). В Chromium без чтения между шагами: старая сборка даёт разные разметки, исправленная нет.
-7. Проверено в Chromium скриптами вне репозитория: рабочий цикл popup, адрес в отчёте без параметров, 14 прогонов axe (светлая и тёмная схемы, 7 состояний), 0 нарушений.
+1. **Item 1 (stale script) did not reproduce, the code was not changed.** In the architecture review I called it a defect without checking. The experiment in Chromium: a check, then switching the extension off and on on the chrome://extensions page, then a check on the same tab without reloading it. On the unchanged build the check works (OK, 4 problems): after the extension reloads, the page gets a fresh isolated world, and the guard flag against double injection does not survive. I did not add the “remove the listener of the old script” protection, so as not to complicate the code without a reason. chrome.runtime.reload() is not suitable for automation: an extension loaded with a command-line flag is blocked after it. I recommend that you check by hand: press the reload icon on the extension card and press “Check page” again on an already open tab.
+2. **Item 2 (ping)** is done: the function ensureContentScript (src/background/inject.ts) injects the script only if it does not answer. In Chromium a repeated check runs without injection. Instead of the criterion about “script installation” there are unit tests of ensureContentScript (4 cases).
+3. **Item 3** is done: formatPageUrl keeps the scheme, the host and the path, and removes the parameters, the hash and the login with the password. 6 tests.
+4. **Item 4** is done: there is now one errorMessage, in src/report/messages.ts.
+5. **Item 5** is done: App.tsx became 86 lines. useCheck, useHighlight, useRoleFilter, RoleFilterField and IssueGroups appeared in src/popup.
+6. **A highlight defect from TASK-3 was found and fixed.** After turning the highlight on and off, elements without a style attribute were left with an empty style="" (Chrome does this if the attribute was not read between the change through the CSSOM and the removal). The page markup did not match the original, although the TASK-3 criterion requires the opposite. The earlier checks did not catch it, because they read the attribute between the steps, and jsdom behaves differently. The fix is in src/content/highlight.ts, and the test imitates the Chrome behavior (it fails without the fix). In Chromium without reading between the steps: the old build gives different markup, the fixed one does not.
+7. Checked in Chromium with scripts outside the repository: the popup working cycle, the address in the report without parameters, 14 axe runs (light and dark scheme, 7 states), 0 violations.
