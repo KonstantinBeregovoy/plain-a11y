@@ -44,7 +44,7 @@ Host access (`host_permissions`) is not requested. There is no remotely loaded c
 - The extension does not collect or transmit user data.
 - Data is not sold or shared with third parties.
 - Data is not used for purposes unrelated to the single purpose of the extension.
-- Privacy policy: https://a11y-ext.bereg.dev/privacy.html (the same text as `PRIVACY.md`).
+- Privacy policy: https://a11y-ext.bereg.dev/privacy (the same text as `PRIVACY.md`).
 - Contact for the store form: contact@bereg.dev.
 
 ## Graphics
