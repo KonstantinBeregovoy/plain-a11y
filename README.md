@@ -14,7 +14,11 @@ Who it is for: designers, content editors, PMs and QA people without deep knowle
 - The “Show on page” button outlines the problem elements and scrolls to the first one. The highlight is removed by pressing the button again or by closing the popup, and the page markup returns to its original state.
 - The “Copy report” button puts a Markdown report with checkboxes on the clipboard, ready to paste into a ticket.
 
-## Install from source
+## Install
+
+The easy way: add Plain A11y from the [Chrome Web Store](https://chromewebstore.google.com/detail/plain-a11y/cnldihaficjignkhpgodanceilllbjfb). It is free and needs no account.
+
+## Build from source
 
 You need Node.js and npm (tested on Node.js 22).
 
@@ -90,7 +94,7 @@ It is the format the Chrome Web Store requires for new extensions. It also enfor
 
 ## Website
 
-The website of the project is a separate static site in its own repository (plain HTML and CSS, deployed to Cloudflare Pages). Its images are made from `store/screenshots` with `npm run site-assets -- <path to the site repository>/assets`. The site repeats `PRIVACY.md` and `LICENSE` as web pages, so change them together.
+The website of the project is a separate static site in its own repository (plain HTML and CSS, deployed to Cloudflare Workers). Its images are made from `store/screenshots` with `npm run site-assets -- <path to the site repository>/assets`. The site repeats `PRIVACY.md` and `LICENSE` as web pages, so change them together.
 
 ## Privacy
 

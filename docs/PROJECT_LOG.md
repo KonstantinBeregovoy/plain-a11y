@@ -6,26 +6,21 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 
 | Part | State |
 | --- | --- |
-| Extension (this repository) | Stages 1 to 17 are done. 131 tests. The popup header shows the AA logo. All commits are authored by the owner with the GitHub noreply address. |
+| Extension (this repository) | Stages 1 to 18 are done. 131 tests. The popup header shows the AA logo. All commits are authored by the owner with the GitHub noreply address. |
 | Website (`plain-a11y-site` repository) | Deployed on Cloudflare Workers at `a11y-ext.bereg.dev`. Pushes to `main` deploy by themselves. `workers.dev` and preview URLs are switched off in `wrangler.jsonc`. 45 tests. |
-| GitHub | Both repositories exist and are private. The history was rewritten on 29 October 2026: every commit now uses `16078757+KonstantinBeregovoy@users.noreply.github.com`, no personal email is left in the history. |
+| GitHub | Both repositories are public (made public on 29 October 2026). The history was rewritten on 29 October 2026: every commit now uses `16078757+KonstantinBeregovoy@users.noreply.github.com`, no personal email is left in the history. |
 | Name | “Plain A11y” checked by search: no exact match in Chrome Web Store, Firefox Add-ons, npm, PyPI. Close names: Plainwork (Accessibility Report), Omi A11Y, A11Y Audit, A11yTrail. The mark “A11Y” exists in the US (class 42), see the log below. WIPO and USPTO were not searched directly. |
-| Contact | `contact@bereg.dev` (Cloudflare Email Routing to the owner's mailbox, tested). It is in the privacy policy (`PRIVACY.md` and the website). Not yet in `store/listing.md`. |
-| Chrome Web Store | Not registered yet. The package (`npm run zip`, 280 KB), the listing text and 8 screenshots are ready. |
+| Contact | `contact@bereg.dev` (Cloudflare Email Routing to the owner's mailbox, tested). It is in the privacy policy (`PRIVACY.md` and the website) and in `store/listing.md`. |
+| Chrome Web Store | Live in the store on 30 October 2026: https://chromewebstore.google.com/detail/plain-a11y/cnldihaficjignkhpgodanceilllbjfb . The website links to it. |
 | Firefox | Not started. It is in the roadmap. |
 | Testing by a person with a screen reader and a keyboard | First short run done on 29 October (logo, check, highlight). The full list in `docs/a11y-checklist.md` is not done. It is planned after publishing. |
 
 ### What is left, in order
 
-1. Push stage 17 (a local commit may still wait for the owner's yes).
-2. GitHub, Settings, Emails: turn on “Keep my email addresses private” and “Block command line pushes that expose my email”.
-3. Decide what stays in the public repository: `SPEC.md`, `AGENTS.md`, `CLAUDE.md`, `tasks/` (they are process files; they were translated into English in stage 18, the earlier Russian versions stay in the history).
-4. Website: the two placeholders (store link, GitHub link), the Install section (it says to build from source, but the repository is private, so there is nothing to download yet), headers like bereg.dev, PWA settings, GEO. Also add the contact to `store/listing.md`.
-5. Make both repositories public (the owner does it).
-6. Register in the Chrome Web Store (https://chrome.google.com/webstore/devconsole, $5, trader or non-trader, contact `contact@bereg.dev`), upload `.output/plain-a11y-0.1.0-chrome.zip`, screenshots 02 to 06, text and permission reasons from `store/listing.md`, policy address `https://a11y-ext.bereg.dev/privacy`.
-7. After publishing: the owner's full manual check, the real cases of “Show on page” that still miss (page, issue, what happens), then fixes.
-8. The article and the project card (ask first: the story of the product, or the process with AI).
-9. Next stages in the roadmap: toolbar badge, selected block, compare two checks, Playwright tests in the repository, Firefox.
+1. Cloudflare: turn off the automatic Web Analytics script for `a11y-ext.bereg.dev`. The Content Security Policy blocks it and logs an error on every page, and the site says it has no analytics (the owner does it).
+2. The owner's full manual check with a keyboard, NVDA and VoiceOver, and the real cases of “Show on page” that still miss (page, issue, what happens), then fixes.
+3. The article and the project card (ask first: the story of the product, or the process with AI).
+4. Next stages in the roadmap: toolbar badge, selected block, compare two checks, Playwright tests in the repository, Firefox.
 
 ### What only the owner can do
 
