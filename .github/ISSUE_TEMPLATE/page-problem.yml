@@ -1,0 +1,44 @@
+name: A page where the check or "Show on page" goes wrong
+description: A problem was missed, a wrong one was reported, the text is unclear, or the highlight does not outline the element.
+title: "[page] "
+labels: ["page-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Do not paste private pages or personal data. A public page, or a small example of the markup, is best.
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+      description: A public address, or write "private" and describe the markup below.
+    validations:
+      required: true
+  - type: input
+    id: rule
+    attributes:
+      label: The problem as the extension shows it
+      description: The title, and the rule id shown as a small caption (for example image-alt).
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong
+      options:
+        - A real problem was not reported
+        - A problem was reported but the page is fine
+        - The explanation is unclear or wrong
+        - 'Show on page does not outline the element, or outlines the wrong one'
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Extension version and Chrome version
+      description: The version is on the extension card in chrome://extensions.
