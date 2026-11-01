@@ -2,6 +2,11 @@
 
 All notable changes to the extension. The website has its own repository and history.
 
+## Unreleased (stage 23, next version)
+
+- **Added:** the popup keeps the result of the last check of a tab. Closing and opening it again on the same page shows the same lists, with the time of the check and a note to press “Check page” to check again. The result is dropped, together with the number on the icon, when the tab loads another page (also after going back, a reload, a change of the address by a single-page site or of the `#fragment`), and when the tab is closed. It lives in `storage.session`, that is in the memory of the browser, and not on disk. No new permission (`tasks/TASK-23.md`).
+- **To do before the release:** `PRIVACY.md`, the privacy page of the website and `store/listing.md` must say that the result is kept in memory for the tab (the sentences about “does not save” change).
+
 ## 0.2.0: prepared, not yet in the store
 
 - **Added:** after “Check page”, the icon shows the number of issues found on that tab (the same number as “Issues found” in the popup). It is empty for zero issues, because an automated check cannot say that a page is accessible, and Chrome resets it when the tab loads another page. No new permission and nothing is stored (`tasks/TASK-19.md`, `tasks/TASK-21.md`).

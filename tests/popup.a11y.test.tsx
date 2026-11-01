@@ -4,7 +4,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/popup/App';
-import type { CheckResponse } from '../src/report/messages';
+import type { CheckResponse, StoredCheck } from '../src/report/messages';
 import type { ViolationItem } from '../src/report/violations';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -34,6 +34,8 @@ let store: Record<string, unknown> = {};
 let container: HTMLDivElement;
 let root: Root;
 let respond: () => Promise<CheckResponse>;
+/** What the service worker keeps for the open tab; null means nothing. */
+let kept: StoredCheck | null = null;
 
 function stubBrowser() {
   vi.stubGlobal('browser', {
@@ -41,6 +43,7 @@ function stubBrowser() {
       connect: () => ({ disconnect: () => undefined }),
       sendMessage: async (message: { type: string }) => {
         if (message.type === 'run-check') return respond();
+        if (message.type === 'get-last-result') return { ok: true, result: kept };
         if (message.type === 'highlight') return { ok: true, found: 1 };
         return { ok: true, found: 0 };
       },
@@ -87,6 +90,7 @@ async function violationsOf(): Promise<string[]> {
 
 beforeEach(() => {
   store = {};
+  kept = null;
   stubBrowser();
   document.documentElement.lang = 'ru';
   document.title = 'Plain A11y';
@@ -451,6 +455,7 @@ describe('messages after pressing Show on page', () => {
         connect: () => ({ disconnect: () => undefined }),
         sendMessage: async (message: { type: string }) => {
           if (message.type === 'run-check') return respond();
+        if (message.type === 'get-last-result') return { ok: true, result: kept };
           if (message.type === 'highlight') return highlightResponse;
           return { ok: true, found: 0 };
         },
@@ -488,5 +493,69 @@ describe('messages after pressing Show on page', () => {
     await pressShow({ ok: true, found: 2 });
     expect(container.textContent).toContain('Highlighted elements: 2.');
     expect(container.textContent).not.toContain('nearest visible parent');
+  });
+});
+
+describe('the result kept from an earlier opening', () => {
+  const CHECKED_AT = new Date(2026, 10, 1, 14, 5).getTime();
+  const KEPT: StoredCheck = {
+    url: 'https://example.com/kept',
+    checkedAt: CHECKED_AT,
+    items: ITEMS,
+    review: REVIEW,
+    aaa: [],
+  };
+
+  it('is shown when the popup opens, with the time of the check and how to check again', async () => {
+    kept = KEPT;
+    await mount();
+    expect(container.textContent).toContain(`Issues found: ${ITEMS.length}`);
+    expect(container.textContent).toContain(`Needs manual review: ${REVIEW.length}`);
+    expect(container.querySelectorAll('li').length).toBeGreaterThan(0);
+    const status = container.querySelector('[role="status"]')?.textContent ?? '';
+    expect(status).toMatch(/Showing the result of the check at .*05/);
+    expect(status).toContain('Press “Check page” to check again.');
+    // The button keeps its name.
+    expect([...container.querySelectorAll('button')].some((b) => b.textContent === 'Check page')).toBe(true);
+    expect(await violationsOf()).toEqual([]);
+  });
+
+  it('shows nothing when there is no kept result, and no note', async () => {
+    await mount();
+    expect(container.querySelectorAll('li').length).toBe(0);
+    expect(container.textContent).not.toContain('Showing the result');
+  });
+
+  it('is replaced by a new check, and the note goes away', async () => {
+    kept = KEPT;
+    respond = async () => ({ ok: true, url: 'https://example.com/new', items: [ITEMS[0] as ViolationItem], review: [], aaa: [] });
+    await mount();
+    await clickByName('Check page');
+    expect(container.textContent).toContain('Issues found: 1');
+    expect(container.textContent).not.toContain('Showing the result');
+  });
+
+  it('uses the time of the check in the copied report, not the time of opening', async () => {
+    kept = KEPT;
+    const written: string[] = [];
+    vi.stubGlobal('navigator', { clipboard: { writeText: async (text: string) => void written.push(text) } });
+    await mount();
+    await clickByName('Copy report');
+    expect(written).toHaveLength(1);
+    expect(written[0]).toContain('2026-11-01');
+    expect(written[0]).toContain('https://example.com/kept');
+  });
+
+  it('stays empty when the service worker does not answer', async () => {
+    vi.stubGlobal('browser', {
+      runtime: {
+        connect: () => ({ disconnect: () => undefined }),
+        sendMessage: async () => Promise.reject(new Error('no receiver')),
+      },
+      storage: { local: { get: async () => ({}), set: async () => undefined } },
+    });
+    await mount();
+    expect(container.textContent).toContain('Check page');
+    expect(container.querySelectorAll('li').length).toBe(0);
   });
 });

@@ -5,6 +5,7 @@ import {
   DEFAULT_TITLE,
   badgeText,
   badgeTitle,
+  clearIssueCount,
   showIssueCount,
   type BadgeApi,
 } from '../src/background/badge';
@@ -85,5 +86,13 @@ describe('showIssueCount', () => {
       throw new Error('No tab with id: 9.');
     };
     await expect(showIssueCount(9, 2, api)).rejects.toThrow('No tab');
+  });
+});
+
+describe('clearIssueCount', () => {
+  it('empties the text and puts the plain name back in the tooltip, for that tab only', async () => {
+    const api = fakeApi();
+    await clearIssueCount(4, api);
+    expect(api.calls).toEqual(['text 4 ""', `title 4 "${DEFAULT_TITLE}"`]);
   });
 });

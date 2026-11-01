@@ -12,7 +12,7 @@ import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { CheckResponse, HighlightResponse } from '../../src/report/messages';
+import type { CheckResponse, HighlightResponse, LastResultResponse } from '../../src/report/messages';
 import type { HighlightTarget } from '../../src/report/violations';
 
 const BUILT = join(process.cwd(), '.output', 'chrome-mv3');
@@ -73,6 +73,10 @@ export interface Tools {
   check(target: Page, popup: Page): Promise<Extract<CheckResponse, { ok: true }>>;
   highlight(popup: Page, targets: HighlightTarget[]): Promise<Extract<HighlightResponse, { ok: true }>>;
   clearHighlight(popup: Page): Promise<void>;
+  /** What the popup gets when it asks for the result kept for the tab that is in front. */
+  lastResult(target: Page, popup: Page): Promise<Extract<LastResultResponse, { ok: true }>['result']>;
+  /** The keys in `storage.session` and in `storage.local`. */
+  storageKeys(): Promise<{ session: string[]; local: string[] }>;
   /** The badge text and the tooltip of the tab that has this address. */
   badge(url: string): Promise<{ text: string; title: string }>;
   /** The markup of the page, including open shadow roots. Reads nothing in between. */
@@ -161,6 +165,20 @@ export const test = base.extend<{ tools: Tools }, { session: Worker1 }>({
         await popup.evaluate(async () => {
           await chrome.runtime.sendMessage({ type: 'clear-highlight' });
         });
+      },
+      async lastResult(target, popup) {
+        await target.bringToFront();
+        const response = await popup.evaluate(
+          async () => (await chrome.runtime.sendMessage({ type: 'get-last-result' })) as LastResultResponse,
+        );
+        if (!response.ok) throw new Error(`The request failed: ${response.error}`);
+        return response.result;
+      },
+      async storageKeys() {
+        return worker.evaluate(async () => ({
+          session: Object.keys(await chrome.storage.session.get(null)),
+          local: Object.keys(await chrome.storage.local.get(null)),
+        }));
       },
       async badge(url) {
         return worker.evaluate(async (address) => {

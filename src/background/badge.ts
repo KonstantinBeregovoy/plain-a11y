@@ -40,6 +40,15 @@ export async function showIssueCount(
   await api.setTitle(tabId, badgeTitle(count));
 }
 
+/**
+ * Removes the number and the tooltip text of one tab. Chrome does this itself only
+ * for a full navigation, not when a single-page site changes the address.
+ */
+export async function clearIssueCount(tabId: number, api: BadgeApi): Promise<void> {
+  await api.setText(tabId, '');
+  await api.setTitle(tabId, DEFAULT_TITLE);
+}
+
 /** The badge API of the browser, for one tab each time. */
 export function browserBadgeApi(): BadgeApi {
   return {

@@ -10,6 +10,10 @@ import { useHighlight } from './useHighlight';
 import { useRoleFilter } from './useRoleFilter';
 import { useShowAaa } from './useShowAaa';
 
+function formatTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 export function App() {
   const [notice, setNotice] = useState('');
   const highlight = useHighlight(setNotice);
@@ -80,6 +84,12 @@ export function App() {
               : `Issues found: ${state.items.length}`}
             {state.review.length > 0 &&
               ` Needs manual review: ${state.review.length}.`}
+          </p>
+        )}
+        {state.status === 'done' && state.restored && (
+          <p>
+            Showing the result of the check at {formatTime(state.checkedAt)}. Press “Check page” to
+            check again.
           </p>
         )}
         {notice && <p>{notice}</p>}
