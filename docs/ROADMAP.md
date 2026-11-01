@@ -22,12 +22,20 @@ All of these are finished. The results and deviations are at the end of each tas
 | --- | --- |
 | 17 | “Show on page” for elements with no visible area (nearest visible parent, or a clear message). Still open: elements clipped by a parent with hidden overflow, and the real cases from the owner's manual run (page, issue, what happens), to be collected after publishing. |
 
+## Done: stages 22 to 24
+
+| Stage | What |
+| --- | --- |
+| 22 | Release 0.2.0 prepared: version, manifest description from the listing, privacy line, changelog. See `tasks/TASK-22.md`. |
+| 23 | The popup keeps the last result of a tab in `storage.session` and shows it again; it is dropped when the tab loads another page or is closed. See `tasks/TASK-23.md`. |
+| 24 | The icon and the summary count elements in three groups, a yellow “!” when only a manual review or AAA recommendations are left, and `label-content-name-mismatch` moved to the manual review. See `tasks/TASK-24.md`. |
+
 ## Done: stage 20
 
 | Stage | What |
 | --- | --- |
-| 20 | Browser end-to-end tests in the repository (`@playwright/test`, `npm run test:e2e`, 19 tests). See `tasks/TASK-20.md`. |
-| 21 | Removed the badge reset listener of stage 19: Chrome resets the badge itself, and an e2e test guards that. See `tasks/TASK-21.md`. |
+| 20 | Browser end-to-end tests in the repository (`@playwright/test`, `npm run test:e2e`, 33 tests after stage 24). See `tasks/TASK-20.md`. |
+| 21 | Removed the badge reset listener of stage 19: Chrome resets the badge itself on a full navigation, and an e2e test guards that. Stage 23 brought a listener back for single-page sites, where Chrome keeps the badge. See `tasks/TASK-21.md`. |
 
 ## Done: stage 19
 

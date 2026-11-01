@@ -19,7 +19,9 @@ What you get:
 - For every problem: what is wrong, who it affects and how to fix it.
 - The role that should handle the task: design, content or code. The list can be filtered by role.
 - Highlighting of the problem element right on the page.
-- The number of issues on the extension icon after a check (nothing for zero issues).
+- The result stays when you close the window and open it again on the same page, until the page changes. Press “Check page” to check again.
+- The extension icon shows the number of elements with issues after a check, or a yellow mark when only items for a manual review or AAA recommendations are left (nothing when nothing is found).
+- Three separate groups: issues, items that need a manual review, and optional AAA recommendations.
 - A Markdown report with checkboxes in one click: paste it into a ticket.
 
 Privacy: the check runs entirely in your browser. The extension collects nothing, sends nothing and loads nothing from the network. It asks only for the activeTab, scripting and storage permissions, with no access to all sites.
@@ -38,7 +40,7 @@ Check the open tab for accessibility problems and show the result in plain langu
 | --- | --- |
 | `activeTab` | Gives access to the current tab only after the user clicks the extension icon, so that exactly this tab is checked. There is no permanent access to sites. |
 | `scripting` | Injects the axe-core check script and the element highlight script into the current tab. It is the only way to run the check inside the page. |
-| `storage` | Stores two choices locally so that they are restored the next time: the selected role filter and whether the AAA block is shown. No other data is saved. |
+| `storage` | Stores two choices locally so that they are restored the next time: the selected role filter and whether the AAA block is shown. It also keeps the last result of a tab in the memory of the browser (`storage.session`, never written to disk by the extension) so that the window shows it again; it is removed when the tab loads another page or is closed. Nothing is sent anywhere. |
 
 Host access (`host_permissions`) is not requested. There is no remotely loaded code: all code is in the package.
 

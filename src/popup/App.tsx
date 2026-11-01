@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { groupByRole, groupReport } from '../report/groupReport';
+import { summarize, summaryLine } from '../report/summary';
 import { toMarkdown } from '../report/toMarkdown';
 import { IssueGroups } from './IssueGroups';
 import { AaaSection } from './AaaSection';
@@ -78,13 +79,7 @@ export function App() {
       <div role="status" aria-live="polite">
         {state.status === 'loading' && <p>Checking…</p>}
         {state.status === 'done' && (
-          <p>
-            {state.items.length === 0
-              ? 'No issues found.'
-              : `Issues found: ${state.items.length}`}
-            {state.review.length > 0 &&
-              ` Needs manual review: ${state.review.length}.`}
-          </p>
+          <p>{summaryLine(summarize(state))}</p>
         )}
         {state.status === 'done' && state.restored && (
           <p>

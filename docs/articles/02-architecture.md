@@ -34,7 +34,7 @@ A Manifest V3 extension is not one program. It is three, in different places, an
    ◀──────────── CheckResponse { items, review, aaa } ──────────────┘
 ```
 
-**The popup** is a React interface. It shows the result, groups it by severity and by role, looks up the plain-language text for each rule, and builds the Markdown report. It holds the settings (the role filter and whether the AAA block is shown) in `storage.local`.
+**The popup** is a React interface. It shows the result, groups it by severity and by role, looks up the plain-language text for each rule, and builds the Markdown report. It holds the settings (the role filter and whether the AAA block is shown) in `storage.local`. The service worker keeps the last result of each tab in `storage.session`, which lives in the memory of the browser, so that the window shows it again when you reopen it on the same page.
 
 **The service worker** is the go-between. It finds the active tab, makes sure the content script is there, forwards the request and returns the answer. It also holds a small piece of state: which tab currently has a highlight, so it can remove it when the popup closes.
 
@@ -72,7 +72,7 @@ axe-core knows a rule by its id and gives a technical description. The popup doe
 
 ## The number on the icon
 
-After a check, the service worker also puts the number of issues on the icon of that tab, with the same number as “Issues found” in the popup. For zero issues the icon stays empty on purpose: a “0” or a mark could be read as “passed”, and the extension must never say that. It is one call to the browser (`action.setBadgeText`) and needs no new permission. Chrome removes it again when the tab loads another page, which I first coded by hand and then removed when a test showed it was not needed (part 6).
+After a check, the service worker also puts a number on the icon of that tab: the number of elements with issues, in red. When there are no issues but there are items for a manual review or AAA recommendations, it shows a yellow “!”. When nothing is found the icon stays empty on purpose: a “0” or a green mark could be read as “passed”, and the extension must never say that. It is a few calls to the browser (`action.setBadgeText` and the colors) and needs no new permission. Chrome removes the number again when the tab loads another page, but not when a single-page site changes the address, so the service worker also listens for the tab starting to load and clears the icon and the kept result (part 6).
 
 ## Highlighting without leaving a trace
 

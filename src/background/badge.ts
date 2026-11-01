@@ -1,6 +1,13 @@
-/** The color pair of the badge. White on this red has a contrast of 7.8:1. */
+import type { ResultSummary } from '../report/summary';
+
+/** Issues: white on this red has a contrast of 7.8:1. */
 export const BADGE_BACKGROUND = '#a01d17';
 export const BADGE_TEXT_COLOR = '#ffffff';
+/** Nothing is wrong for sure, but a person has something to look at: black on this amber, 13:1. */
+export const BADGE_ATTENTION_BACKGROUND = '#ffc107';
+export const BADGE_ATTENTION_TEXT_COLOR = '#000000';
+/** The mark for "look at the popup". It is not a number, so it cannot be read as a count. */
+export const ATTENTION_MARK = '!';
 /** The tooltip of the icon when there is no count to show (the name of the extension). */
 export const DEFAULT_TITLE = 'Plain A11y';
 
@@ -14,30 +21,63 @@ export interface BadgeApi {
 }
 
 /**
- * The text on the icon. Nothing for zero issues: a "0" or a mark could be read as
- * "this page passed", and an automated check cannot say that.
+ * The number of elements with issues. Nothing for zero: a "0" could be read as "passed",
+ * and an automated check cannot say that.
  */
 export function badgeText(count: number): string {
   if (count <= 0) return '';
   return count > MAX_SHOWN ? `${MAX_SHOWN}+` : String(count);
 }
 
-/** The same information in words, for the tooltip. */
-export function badgeTitle(count: number): string {
-  if (count <= 0) return DEFAULT_TITLE;
-  const noun = count === 1 ? 'issue' : 'issues';
-  return `${DEFAULT_TITLE}: ${count} ${noun} found in the last check`;
+/** What the icon shows for a result: a red number, an amber mark, or nothing. */
+export function badgeLook(summary: ResultSummary): {
+  text: string;
+  background: string;
+  textColor: string;
+} {
+  if (summary.issues.elements > 0) {
+    return {
+      text: badgeText(summary.issues.elements),
+      background: BADGE_BACKGROUND,
+      textColor: BADGE_TEXT_COLOR,
+    };
+  }
+  if (summary.review.elements > 0 || summary.aaa.elements > 0) {
+    return {
+      text: ATTENTION_MARK,
+      background: BADGE_ATTENTION_BACKGROUND,
+      textColor: BADGE_ATTENTION_TEXT_COLOR,
+    };
+  }
+  return { text: '', background: BADGE_BACKGROUND, textColor: BADGE_TEXT_COLOR };
 }
 
-/** Shows the number of issues on the icon, for one tab only. */
-export async function showIssueCount(
+/** The same information in words, for the tooltip: the three groups, zero groups left out. */
+export function badgeTitle(summary: ResultSummary): string {
+  const { issues, review, aaa } = summary;
+  const parts: string[] = [];
+  if (issues.elements > 0) {
+    parts.push(`${issues.elements} ${issues.elements === 1 ? 'issue' : 'issues'}`);
+  }
+  if (review.elements > 0) parts.push(`${review.elements} to review by hand`);
+  if (aaa.elements > 0) {
+    parts.push(`${aaa.elements} AAA ${aaa.elements === 1 ? 'recommendation' : 'recommendations'}`);
+  }
+  return parts.length === 0
+    ? DEFAULT_TITLE
+    : `${DEFAULT_TITLE}: ${parts.join(', ')} in the last check`;
+}
+
+/** Shows the result on the icon, for one tab only. */
+export async function showResultBadge(
   tabId: number,
-  count: number,
+  summary: ResultSummary,
   api: BadgeApi,
 ): Promise<void> {
-  await api.setColors(tabId, BADGE_BACKGROUND, BADGE_TEXT_COLOR);
-  await api.setText(tabId, badgeText(count));
-  await api.setTitle(tabId, badgeTitle(count));
+  const look = badgeLook(summary);
+  await api.setColors(tabId, look.background, look.textColor);
+  await api.setText(tabId, look.text);
+  await api.setTitle(tabId, badgeTitle(summary));
 }
 
 /**

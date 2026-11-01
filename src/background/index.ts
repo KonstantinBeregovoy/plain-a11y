@@ -12,7 +12,8 @@ import {
   type PingResponse,
   type RunAxeRequest,
 } from '../report/messages';
-import { browserBadgeApi, clearIssueCount, showIssueCount } from './badge';
+import { summarize } from '../report/summary';
+import { browserBadgeApi, clearIssueCount, showResultBadge } from './badge';
 import { ensureContentScript } from './inject';
 import {
   browserSessionStore,
@@ -58,7 +59,7 @@ async function checkActiveTab(): Promise<CheckResponse> {
     if (response.ok) {
       // The badge and the kept result are conveniences: if they cannot be set, the check still succeeded.
       // Both are dropped when the tab loads a page (see forgetTab).
-      await showIssueCount(tabId, response.items.length, browserBadgeApi()).catch(
+      await showResultBadge(tabId, summarize(response), browserBadgeApi()).catch(
         () => undefined,
       );
       await saveResult(

@@ -200,7 +200,7 @@ describe('axe on the popup UI', () => {
     });
     await mount();
     await clickByName('Check page');
-    expect(container.textContent).toContain('Issues found: 5');
+    expect(container.textContent).toContain('Issues found: 6 (5 kinds).');
     expect(container.textContent).toContain('Needs manual review: 3');
     expect(container.querySelector('#review-heading')?.textContent).toBe(
       'Needs manual review: 3',
@@ -284,7 +284,7 @@ describe('axe on the popup UI', () => {
     });
     await mount();
     await clickByName('Check page');
-    expect(container.textContent).toContain('Issues found: 5');
+    expect(container.textContent).toContain('Issues found: 6 (5 kinds).');
     expect(container.querySelector('#aaa-heading')?.textContent).toBe(
       'AAA recommendations: 2',
     );
@@ -509,8 +509,8 @@ describe('the result kept from an earlier opening', () => {
   it('is shown when the popup opens, with the time of the check and how to check again', async () => {
     kept = KEPT;
     await mount();
-    expect(container.textContent).toContain(`Issues found: ${ITEMS.length}`);
-    expect(container.textContent).toContain(`Needs manual review: ${REVIEW.length}`);
+    expect(container.textContent).toContain('Issues found: 6 (5 kinds).');
+    expect(container.textContent).toContain('Needs manual review: 4 (3 kinds).');
     expect(container.querySelectorAll('li').length).toBeGreaterThan(0);
     const status = container.querySelector('[role="status"]')?.textContent ?? '';
     expect(status).toMatch(/Showing the result of the check at .*05/);
@@ -531,7 +531,7 @@ describe('the result kept from an earlier opening', () => {
     respond = async () => ({ ok: true, url: 'https://example.com/new', items: [ITEMS[0] as ViolationItem], review: [], aaa: [] });
     await mount();
     await clickByName('Check page');
-    expect(container.textContent).toContain('Issues found: 1');
+    expect(container.textContent).toContain('Issues found: 2 (1 kind).');
     expect(container.textContent).not.toContain('Showing the result');
   });
 

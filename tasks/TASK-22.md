@@ -24,6 +24,10 @@ Publish, tag or upload anything. Add features. Change the permissions. Change th
 2. Load `.output/chrome-mv3` as an unpacked extension in a real Chrome, press the icon on an ordinary page, press “Check page”, see the number on the icon, go to another page in the same tab and see it disappear. This is the only check of the `activeTab` path: the browser tests add a host permission to a copy.
 3. Merge this pull request, build the zip on `main` (`npm run zip`), upload it in the store console (Package, Upload new package), check the listing text, Submit for review.
 
+## Update after stages 23 and 24
+
+The release is not uploaded yet, so version 0.2.0 now also contains the kept result of a tab (`tasks/TASK-23.md`) and the counts in three groups (`tasks/TASK-24.md`). The numbers in Results below were true when they were written. Because the extension now keeps the result of a tab in memory, `PRIVACY.md`, `store/listing.md` and the privacy page of the website were changed again; the website pull request is merged on the day the store approves the version. In the owner's manual check (step 2) add: close the window, open it again on the same page and see the same result with the time; go to another page and see that the result and the number are gone; check a page with a manual review only and see the yellow “!”.
+
 ## Results
 
 1. Done: version, description, listing, `PRIVACY.md`, `CHANGELOG.md`, `docs/PROJECT_LOG.md`, and two new tests in `tests/package.test.ts` (the description equals the listing and is at most 132 characters; the privacy policy has the icon paragraph).

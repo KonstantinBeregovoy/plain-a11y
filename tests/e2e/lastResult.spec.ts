@@ -9,7 +9,7 @@ async function checked(tools: Tools) {
   expect(result.items).toHaveLength(5);
   // Without this, the tests that expect a drop would also pass when nothing was ever kept.
   expect((await tools.lastResult(page, popup))?.items).toHaveLength(5);
-  expect((await tools.badge(page.url())).text).toBe('5');
+  expect((await tools.badge(page.url())).text).toBe('6');
   return { page, popup };
 }
 
@@ -29,7 +29,7 @@ test.describe('the result kept for a tab', () => {
 
     // The popup page is opened again while the checked tab is in front.
     await popup.reload();
-    await expect(popup.getByText('Issues found: 5')).toBeVisible();
+    await expect(popup.getByText('Issues found: 6 (5 kinds).')).toBeVisible();
     await expect(popup.getByText(/Showing the result of the check at/)).toBeVisible();
     await expect(popup.getByRole('button', { name: 'Check page' })).toBeVisible();
     expect(await popup.getByRole('listitem').count()).toBeGreaterThan(0);
@@ -100,7 +100,7 @@ test.describe('the result kept for a tab', () => {
     await page.frameLocator('iframe').locator('body').waitFor();
     await page.waitForTimeout(500);
     expect((await tools.lastResult(page, popup))?.items).toHaveLength(5);
-    expect((await tools.badge(page.url())).text).toBe('5');
+    expect((await tools.badge(page.url())).text).toBe('6');
   });
 
   test('is removed when the tab is closed, and it never goes to storage.local', async ({ tools }) => {

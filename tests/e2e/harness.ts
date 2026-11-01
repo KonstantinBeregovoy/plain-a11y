@@ -77,6 +77,8 @@ export interface Tools {
   lastResult(target: Page, popup: Page): Promise<Extract<LastResultResponse, { ok: true }>['result']>;
   /** The keys in `storage.session` and in `storage.local`. */
   storageKeys(): Promise<{ session: string[]; local: string[] }>;
+  /** The background color [red, green, blue, alpha] of the badge of the tab that has this address. */
+  badgeColor(url: string): Promise<number[]>;
   /** The badge text and the tooltip of the tab that has this address. */
   badge(url: string): Promise<{ text: string; title: string }>;
   /** The markup of the page, including open shadow roots. Reads nothing in between. */
@@ -179,6 +181,14 @@ export const test = base.extend<{ tools: Tools }, { session: Worker1 }>({
           session: Object.keys(await chrome.storage.session.get(null)),
           local: Object.keys(await chrome.storage.local.get(null)),
         }));
+      },
+      async badgeColor(url) {
+        return worker.evaluate(async (address) => {
+          const tabs = await chrome.tabs.query({});
+          const tab = tabs.find((candidate) => candidate.url === address);
+          if (tab?.id === undefined) throw new Error(`No tab with the address ${address}`);
+          return [...(await chrome.action.getBadgeBackgroundColor({ tabId: tab.id }))];
+        }, url);
       },
       async badge(url) {
         return worker.evaluate(async (address) => {

@@ -101,6 +101,37 @@ describe('buildCheckResult', () => {
     expect(result.aaa).toEqual([]);
   });
 
+  it('sends a violation of a review-only rule to the manual review, not to the issues', () => {
+    const result = buildCheckResult(
+      {
+        violations: [rule('image-alt'), rule('label-content-name-mismatch')],
+        incomplete: [],
+      },
+      AAA,
+    );
+    expect(result.items.map((item) => item.id)).toEqual(['image-alt']);
+    expect(result.review.map((item) => item.id)).toEqual(['label-content-name-mismatch']);
+    expect(result.review[0]?.impact).toBe('unknown');
+    expect(result.review[0]?.nodeCount).toBe(1);
+  });
+
+  it('keeps one item per rule when the rule is in both lists, with the elements added up', () => {
+    const twoNodes = {
+      ...rule('label-content-name-mismatch'),
+      nodes: [{ target: ['a'] }, { target: ['b'] }],
+    };
+    const result = buildCheckResult(
+      {
+        violations: [twoNodes],
+        incomplete: [rule('label-content-name-mismatch', null)],
+      },
+      AAA,
+    );
+    expect(result.review).toHaveLength(1);
+    expect(result.review[0]?.nodeCount).toBe(3);
+    expect(result.review[0]?.targets).toEqual(['p', 'a', 'b']);
+  });
+
   it('returns three empty lists for an empty result', () => {
     expect(buildCheckResult({ violations: [], incomplete: [] }, AAA)).toEqual({
       items: [],

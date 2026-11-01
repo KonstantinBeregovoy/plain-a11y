@@ -25,10 +25,21 @@ describe('release texts', () => {
     expect((text ?? '').length).toBeLessThanOrEqual(132);
   });
 
-  it('keeps the privacy policy in step with the number on the icon', () => {
+  it('keeps the privacy policy in step with what the extension keeps: the number on the icon and the last result of a tab', () => {
     const policy = readFileSync('PRIVACY.md', 'utf8');
     expect(policy).toContain('**Number on the icon.**');
     expect(policy).toMatch(/does not save it and does not send it/);
+    expect(policy).toMatch(/yellow mark/);
+    expect(policy).toContain('**Last result of a tab.**');
+    expect(policy).toContain('chrome.storage.session');
+    expect(policy).toMatch(/removed when the tab loads another page, when the tab is closed and when the browser is closed/);
+  });
+
+  it('says the same about the kept result in the store text, with no promise that nothing is stored', () => {
+    const listing = readFileSync('store/listing.md', 'utf8');
+    expect(listing).toContain('storage.session');
+    expect(listing).toMatch(/yellow mark/);
+    expect(readFileSync('PRIVACY.md', 'utf8')).not.toMatch(/are not sent anywhere and are not stored/);
   });
 });
 

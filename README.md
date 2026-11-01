@@ -9,10 +9,12 @@ Who it is for: designers, content editors, PMs and QA people without deep knowle
 - The “Check page” button runs the check on the current tab.
 - Problems are grouped by severity (critical, serious, minor) and by role (design, content, code). A role filter is available and is remembered.
 - For every problem: what is wrong, who it affects, how to fix it. The technical rule id stays as a small caption.
-- Cases the automated check could not decide on its own (axe calls them “incomplete”, for example text over a background picture or a video whose captions it cannot judge) are listed in a separate “Needs manual review” section. They are not counted as issues, have the same texts and highlight, and appear in the Markdown report in their own section.
+- Cases the automated check could not decide on its own (axe calls them “incomplete”, for example text over a background picture or a video whose captions it cannot judge) are listed in a separate “Needs manual review” section. They are not counted as issues, have the same texts and highlight, and appear in the Markdown report in their own section. The rule that compares the visible text of a link or button with its accessible name (`label-content-name-mismatch`) is always listed here, because a difference is often fine (a link “Notifications” that shows “5”) and a person has to decide.
 - Three rules of the optional AAA level (enhanced contrast, links with the same text that lead to different places, delayed page refresh) are shown in a separate “AAA recommendations” block at the bottom. It is not counted as issues, can be hidden (the choice is remembered), and is included in the Markdown report only while it is shown.
 - The “Show on page” button outlines the problem elements and scrolls to the first one. The highlight is removed by pressing the button again or by closing the popup, and the page markup returns to its original state.
-- After a check the icon shows the number of issues found on that tab (nothing for zero issues, because an automated check cannot say that a page is accessible). Chrome resets it when the tab loads another page.
+- The summary line counts elements and shows three groups: issues, items for a manual review and AAA recommendations (for example “Issues found: 8 (5 kinds)”).
+- After a check the icon shows the number of elements with issues on that tab, or a yellow “!” when there are no issues but there are items for a manual review or AAA recommendations. Nothing is shown when nothing is found, because an automated check cannot say that a page is accessible. The number goes away when the tab loads another page.
+- The popup keeps the last result of the tab in the memory of the browser (`storage.session`). Closing and opening the window on the same page shows it again; loading another page, closing the tab or closing the browser removes it, and “Check page” checks again.
 - The “Copy report” button puts a Markdown report with checkboxes on the clipboard, ready to paste into a ticket.
 
 ## Install
@@ -44,7 +46,7 @@ To check local files (`file://`), turn on “Allow access to file URLs” in the
 | `npm run zip` | Builds the archive for upload to the Chrome Web Store: `.output/plain-a11y-<version>-chrome.zip` |
 | `npm run typecheck` | Type check (TypeScript strict) |
 | `npm run test` | Tests (Vitest) |
-| `npm run test:e2e` | Builds, then runs 19 browser tests: the built extension is loaded into a real Chromium (check, “Show on page”, badge, no network, the popup page with axe) |
+| `npm run test:e2e` | Builds, then runs 33 browser tests: the built extension is loaded into a real Chromium (check, “Show on page”, badge, kept result, no network, the popup page with axe) |
 | `npm run icons` | Regenerates the 16, 48 and 128 px icons from `scripts/icon.svg` |
 | `npm run dev` | Development build with reload |
 
