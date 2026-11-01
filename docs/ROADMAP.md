@@ -22,12 +22,17 @@ All of these are finished. The results and deviations are at the end of each tas
 | --- | --- |
 | 17 | “Show on page” for elements with no visible area (nearest visible parent, or a clear message). Still open: elements clipped by a parent with hidden overflow, and the real cases from the owner's manual run (page, issue, what happens), to be collected after publishing. |
 
+## Done: stage 19
+
+| Stage | What |
+| --- | --- |
+| 19 | Toolbar badge with the issue count after a check (empty for zero issues, reset when the tab loads another page). See `tasks/TASK-19.md`. |
+
 ## Next: important features (in this order)
 
 1. **Check a selected block of the page.** Let the person pick a part of the page and run the check only there.
 2. **Compare two checks.** Show what was fixed and what appeared between two runs. Needs the previous result to be stored.
-3. **Toolbar badge with the issue count after a check** (a small stage). After “Check page” the icon shows the number of issues found on that tab, until the tab navigates away. It needs no new permission (`chrome.action.setBadgeText`). The badge never says “accessible”: it shows a count, and for zero it shows nothing or a neutral “0”, never a green mark, because automated checking cannot certify a page (see the limits on the website).
-4. **Browser end-to-end tests in the repository.** Playwright tests that load the built extension in Chromium. Today these checks are run by hand with scripts outside the repo. This is a new dev dependency.
+3. **Browser end-to-end tests in the repository.** Playwright tests that load the built extension in Chromium. Today these checks are run by hand with scripts outside the repo. This is a new dev dependency.
 
 ## Backlog (not now)
 
