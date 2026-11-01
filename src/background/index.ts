@@ -11,6 +11,7 @@ import {
   type PingResponse,
   type RunAxeRequest,
 } from '../report/messages';
+import { browserBadgeApi, clearBadge, showIssueCount } from './badge';
 import { ensureContentScript } from './inject';
 
 /** The tab where the highlight is currently on. */
@@ -46,7 +47,14 @@ async function checkActiveTab(): Promise<CheckResponse> {
       },
     });
     const request: RunAxeRequest = { type: 'run-axe' };
-    return (await browser.tabs.sendMessage(tabId, request)) as CheckResponse;
+    const response = (await browser.tabs.sendMessage(tabId, request)) as CheckResponse;
+    if (response.ok) {
+      // The badge is a convenience: if it cannot be set, the check still succeeded.
+      await showIssueCount(tabId, response.items.length, browserBadgeApi()).catch(
+        () => undefined,
+      );
+    }
+    return response;
   } catch (error) {
     return { ok: false, error: errorMessage(error) };
   }
@@ -93,6 +101,13 @@ export default defineBackground(() => {
       return true;
     }
     return false;
+  });
+
+  // An old count must not stay on a new page: reset the tab when it starts loading.
+  browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    if (changeInfo.status === 'loading') {
+      void clearBadge(tabId, browserBadgeApi()).catch(() => undefined);
+    }
   });
 
   // The port stays alive while the popup is open. Closing the popup drops it.
