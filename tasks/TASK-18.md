@@ -10,7 +10,7 @@ Goal: the process files (`SPEC.md`, `AGENTS.md`, `CLAUDE.md`, `tasks/`) are in E
 5. Do not touch the git history. The earlier Russian versions stay in it.
 
 ## Acceptance criteria
-- No Cyrillic letters in any tracked file of the repository (`LC_ALL=en_US.UTF-8 git grep -InP "[А-Яа-яЁё]"` finds nothing; the option `-I` skips binary files such as PNG).
+- No Cyrillic letters in any tracked file of the repository (`LC_ALL=en_US.UTF-8 git grep -InP '[\x{0400}-\x{04FF}]'` finds nothing; the option `-I` skips binary files such as PNG; the pattern is written with escapes so that this file does not match itself).
 - The section headings of every task file are the same as before, in English: Goal, Steps, Acceptance criteria, Do not, and the results sections.
 - `npm run typecheck`, `npm run test`, `npm run build` and `npm run zip` pass; the number of tests does not change (131).
 - The package contains none of the process files (a check of the zip content).
@@ -21,7 +21,7 @@ Change code, tests, the stack or the pinned versions. Rewrite the history. Chang
 ## Results
 
 1. Translated: `SPEC.md`, `AGENTS.md` and the 17 files `tasks/TASK-1.md` to `tasks/TASK-17.md`. Headings, order of sections, numbers and file names are kept. `CLAUDE.md` is now a pointer to `AGENTS.md` (a link and the import line `@AGENTS.md`).
-2. Check for Cyrillic: before, 19 files had Russian lines (`SPEC.md` 32 lines, the task files 10 to 27 each). After, `LC_ALL=en_US.UTF-8 git grep -InP "[А-Яа-яЁё]"` finds nothing in text files. The same command finds 32 lines in the old `SPEC.md`, so the check itself works. The first form of the command in the criteria did not work (`\x{...}` is not accepted by git grep); it is corrected above.
+2. Check for Cyrillic: before, 19 files had Russian lines (`SPEC.md` 32 lines, the task files 10 to 27 each). After, the command in the criteria finds nothing in text files. The same command finds 32 lines in the old `SPEC.md`, so the check itself works. The first form of the command did not work without `LC_ALL=en_US.UTF-8` (git grep refused `\x{0400}` in the default locale), so the locale is part of the command now. Correction made later: an earlier version of this result wrote the pattern with Cyrillic letters, so the check matched `TASK-18.md` itself; the pattern now uses escapes.
 3. One sentence was repaired while translating. In the old `TASK-17.md` result 2 the number of tests was written in a garbled way (“131 before the wording and after”). The new text says “131, all pass (there were 122: 6 new highlight tests, 3 new popup message tests)”, which is what the numbers mean (122 + 9 = 131). No other result was changed in meaning.
 4. `README.md` (the folder table) and `docs/PROJECT_LOG.md` (the list of what is left, decision 7, the number of task files) are updated.
 5. Checks: `npm run typecheck` passes, `npm run test` 131 of 131, `npm run build` 952.52 kB, `npm run zip` 279.89 kB. The zip contains no process files; the only `.md` in it is `THIRD_PARTY_NOTICES.md`.

@@ -9,3 +9,4 @@
 7. The interface must be accessible: semantic tags, labels on all fields, keyboard control, visible focus.
 8. At the end of the answer, list briefly: what was done, which commands were run and their result, what is still unresolved.
 9. Do not change the stack, the folder structure or the pinned versions without an explicit request.
+10. `main` is protected: never push to it and never force-push. Work on a branch, push the branch and open a pull request with `gh pr create`. The owner merges. For the website repository a merge deploys the site.

@@ -107,3 +107,7 @@ The interface is checked with axe in the tests and in a real browser. What has b
 ## License
 
 Plain A11y is released under the [MIT License](LICENSE), copyright (c) 2026 Konstantin Beregovoy. The extension bundles axe-core (MPL-2.0) and React (MIT); see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) before you open a pull request, and [SECURITY.md](SECURITY.md) to report a security problem. Found a page where the check or “Show on page” goes wrong? Open an issue with the form: it asks for the page, the problem and what happened.
