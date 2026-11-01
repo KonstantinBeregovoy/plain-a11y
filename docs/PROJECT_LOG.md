@@ -8,19 +8,21 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 | --- | --- |
 | Extension (this repository) | Stages 1 to 18 are done. 131 tests. The popup header shows the AA logo. All commits are authored by the owner with the GitHub noreply address. |
 | Website (`plain-a11y-site` repository) | Deployed on Cloudflare Workers at `a11y-ext.bereg.dev`. Pushes to `main` deploy by themselves. `workers.dev` and preview URLs are switched off in `wrangler.jsonc`. 45 tests. |
-| GitHub | Both repositories are public (made public on 29 October 2026). The history was rewritten on 29 October 2026: every commit now uses `16078757+KonstantinBeregovoy@users.noreply.github.com`, no personal email is left in the history. |
+| GitHub | Both repositories are public (made public on 29 October 2026). `main` is protected in both by a ruleset: changes only through a pull request, no force-push, no deletion (0 approvals, because the owner is the only maintainer; the owner merges). Two-factor authentication is on for the owner's account. The history was rewritten on 29 October 2026: every commit now uses `16078757+KonstantinBeregovoy@users.noreply.github.com`, no personal email is left in the history. |
 | Name | “Plain A11y” checked by search: no exact match in Chrome Web Store, Firefox Add-ons, npm, PyPI. Close names: Plainwork (Accessibility Report), Omi A11Y, A11Y Audit, A11yTrail. The mark “A11Y” exists in the US (class 42), see the log below. WIPO and USPTO were not searched directly. |
 | Contact | `contact@bereg.dev` (Cloudflare Email Routing to the owner's mailbox, tested). It is in the privacy policy (`PRIVACY.md` and the website) and in `store/listing.md`. |
 | Chrome Web Store | Live in the store on 30 October 2026: https://chromewebstore.google.com/detail/plain-a11y/cnldihaficjignkhpgodanceilllbjfb . The website links to it. |
+| Project card | Done: the page of the project in the `bereg.dev` portfolio (`src/content/projects/plain-a11y.md`). |
 | Firefox | Not started. It is in the roadmap. |
 | Testing by a person with a screen reader and a keyboard | First short run done on 29 October (logo, check, highlight). The full list in `docs/a11y-checklist.md` is not done. It is planned after publishing. |
 
 ### What is left, in order
 
-1. Cloudflare: turn off the automatic Web Analytics script for `a11y-ext.bereg.dev`. The Content Security Policy blocks it and logs an error on every page, and the site says it has no analytics (the owner does it).
-2. The owner's full manual check with a keyboard, NVDA and VoiceOver, and the real cases of “Show on page” that still miss (page, issue, what happens), then fixes.
-3. The article and the project card (ask first: the story of the product, or the process with AI).
-4. Next stages in the roadmap: toolbar badge, selected block, compare two checks, Playwright tests in the repository, Firefox.
+1. Merge the open pull requests, then check the live site in Chromium: no Content Security Policy error in the console, and visits shown in Cloudflare Web Analytics (it may take a while for the data to appear).
+2. The owner's full manual check with a keyboard, NVDA and VoiceOver, and the real cases of “Show on page” that still miss (page, issue, what happens; the issue template in `.github/ISSUE_TEMPLATE/` collects them), then fixes.
+3. The article series: the plan and the drafts are in `docs/articles/` (a separate pull request, so they can be read before they are merged).
+4. Stage 19: the toolbar badge with the issue count. Stage 20: Playwright tests in the repository. Then Firefox, selected block, compare two checks (see `docs/ROADMAP.md`).
+5. When a new version is uploaded to the store, also change the `description` in `wxt.config.ts`: the store shows it as the short summary, and today it differs from the short description in `store/listing.md`.
 
 ### What only the owner can do
 
@@ -32,7 +34,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 
 1. **axe-core, not own rules.** Writing and keeping accessibility rules is expensive and error-prone. The extension only changes what the result looks like. The version is pinned to an exact number, because rules change between versions.
 2. **Three permissions only** (`activeTab`, `scripting`, `storage`), no access to all sites, no network requests, no remote code. A test fails if this changes.
-3. **No backend, accounts or analytics.** The product promise and the privacy policy are one sentence long because of it.
+3. **No backend, accounts or analytics in the extension.** The product promise and the privacy policy are one sentence long because of it.
 4. **Plain language for every rule.** All 94 rules the extension runs have a title, who is affected and how to fix it, and a role (Design, Content or Code). A test compares the dictionary with the rules of the installed axe-core, so a missing or extra entry fails.
 5. **Honest limits.** An empty result says that automation covers only part of the requirements. Unclear cases go to “Needs manual review” and are not counted as issues. The icon has no check mark, because a check mark means “passed”.
 6. **No automatic “accessible or not” badge.** Checking every page needs access to all sites, costs CPU, and a green badge would claim more than automation can. A badge with an issue count after a check, and an opt-in per-site auto check, are in the roadmap.
@@ -40,6 +42,8 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 8. **MIT license.** Axe-core is MPL-2.0 and stays unchanged; its license and source link ship inside the package.
 9. **The website is a separate static repository.** Plain HTML and CSS, no scripts, a strict Content Security Policy, meant to be deployed as Cloudflare Workers static assets like bereg.dev. Its design follows bereg.dev (dark “Engineering Blueprint”, IBM Plex).
 10. **The icon is the letters AA** on the paper color of the owner's posts (`#f2eee3`) in near-black ink (`#17181a`), contrast 15.3:1.
+11. **Visits to the website are counted, the extension counts nothing.** Cloudflare Web Analytics is on for the whole `bereg.dev` domain (automatic setup, visits from the EU excluded), so its script is added to every page of the site. The site says so on every page and in its privacy policy, and its Content Security Policy allows exactly the Cloudflare script and the site's own `/cdn-cgi/rum`. The extension's promise is unchanged: it collects nothing and sends nothing.
+12. **`main` changes only through a pull request** in both repositories, so that nothing reaches the website without the owner reading it (the website deploys on every merge).
 
 ## Facts for the article
 

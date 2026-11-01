@@ -6,6 +6,8 @@ Plain A11y
 
 ## Short description (up to 132 characters)
 
+Note: the store takes this summary from `description` in the manifest (set in `wxt.config.ts`), not from this file. At the first release the manifest said “Check a page for accessibility problems and get plain-language explanations.” Change the manifest the next time a version is uploaded, so that the two match.
+
 Check a page for accessibility problems in plain language: what is wrong, who it affects, how to fix it and who should do it.
 
 ## Full description
