@@ -22,6 +22,12 @@ All of these are finished. The results and deviations are at the end of each tas
 | --- | --- |
 | 17 | “Show on page” for elements with no visible area (nearest visible parent, or a clear message). Still open: elements clipped by a parent with hidden overflow, and the real cases from the owner's manual run (page, issue, what happens), to be collected after publishing. |
 
+## Done: stage 20
+
+| Stage | What |
+| --- | --- |
+| 20 | Browser end-to-end tests in the repository (`@playwright/test`, `npm run test:e2e`, 19 tests). See `tasks/TASK-20.md`. |
+
 ## Done: stage 19
 
 | Stage | What |
@@ -32,7 +38,6 @@ All of these are finished. The results and deviations are at the end of each tas
 
 1. **Check a selected block of the page.** Let the person pick a part of the page and run the check only there.
 2. **Compare two checks.** Show what was fixed and what appeared between two runs. Needs the previous result to be stored.
-3. **Browser end-to-end tests in the repository.** Playwright tests that load the built extension in Chromium. Today these checks are run by hand with scripts outside the repo. This is a new dev dependency.
 
 ## Backlog (not now)
 
