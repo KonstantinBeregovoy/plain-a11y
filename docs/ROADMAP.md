@@ -27,6 +27,7 @@ All of these are finished. The results and deviations are at the end of each tas
 | Stage | What |
 | --- | --- |
 | 20 | Browser end-to-end tests in the repository (`@playwright/test`, `npm run test:e2e`, 19 tests). See `tasks/TASK-20.md`. |
+| 21 | Removed the badge reset listener of stage 19: Chrome resets the badge itself, and an e2e test guards that. See `tasks/TASK-21.md`. |
 
 ## Done: stage 19
 

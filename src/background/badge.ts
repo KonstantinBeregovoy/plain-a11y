@@ -40,12 +40,6 @@ export async function showIssueCount(
   await api.setTitle(tabId, badgeTitle(count));
 }
 
-/** Removes the count of one tab, for example when the tab loads another page. */
-export async function clearBadge(tabId: number, api: BadgeApi): Promise<void> {
-  await api.setText(tabId, '');
-  await api.setTitle(tabId, DEFAULT_TITLE);
-}
-
 /** The badge API of the browser, for one tab each time. */
 export function browserBadgeApi(): BadgeApi {
   return {

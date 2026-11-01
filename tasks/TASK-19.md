@@ -7,7 +7,7 @@ Goal: after “Check page” the extension icon shows the number of issues found
 2. For zero issues the badge is empty. A “0” or a green mark could be read as “passed”, and the extension must not say that (see decision 6 in `docs/PROJECT_LOG.md`).
 3. The badge uses a dark red background and white text with a contrast of at least 4.5:1. It shows up to 99; more is shown as “99+”.
 4. The tooltip of the icon on that tab says the same in words: “Plain A11y: N issues found in the last check”, and “1 issue” for one.
-5. The badge and the tooltip of a tab are reset when that tab starts loading a page, so an old count never stays on a new page.
+5. The badge and the tooltip of a tab are reset when that tab loads a page, so an old count never stays on a new page. (This was first done by a `tabs.onUpdated` listener. `TASK-21.md` removed it: Chrome does the reset by itself.)
 6. No new permission. A failure to set the badge never fails the check.
 
 ## Acceptance criteria
@@ -21,7 +21,7 @@ Count items for manual review or AAA in the badge. Check pages automatically. Sh
 
 ## Results
 
-1. New file `src/background/badge.ts`: `badgeText`, `badgeTitle`, `showIssueCount`, `clearBadge` and `browserBadgeApi` (the real API behind a small interface, like `inject.ts`). `src/background/index.ts` sets the badge after a successful check, and clears the tab on `tabs.onUpdated` with `status: 'loading'`. A failure to set the badge is swallowed, the check result is still returned.
+1. New file `src/background/badge.ts`: `badgeText`, `badgeTitle`, `showIssueCount`, `clearBadge` and `browserBadgeApi` (the real API behind a small interface, like `inject.ts`). `src/background/index.ts` sets the badge after a successful check, and (until `TASK-21.md`) cleared the tab on `tabs.onUpdated` with `status: 'loading'`; `clearBadge` went away with it. A failure to set the badge is swallowed, the check result is still returned.
 2. Colors: `#a01d17` background and white text, contrast 7.8:1 (the test requires at least 4.5:1).
 3. Tests: 140, all pass (9 new in `tests/badge.test.ts`: text for 0, 1, 5, 99, 100; singular and plural tooltip and no “accessible” in any tooltip; contrast; setting and clearing with a fake API; a failing API rejects so the caller can ignore it). `npm run typecheck`, `npm run build` (953.29 kB) pass. The built manifest has the same permissions (`activeTab`, `scripting`, `storage`) and no host permissions.
 4. Checked in Chromium with the built extension (a temporary copy of `.output/chrome-mv3` with `host_permissions: <all_urls>`, the main manifest is not changed; Playwright, headless new; local pages): `basic.html` gives 5 issues, and the badge text of that tab is “5”, with the tooltip “Plain A11y: 5 issues found in the last check” and the color 160,29,23. Two other tabs that were not checked have no badge. A clean page gives 0 issues and an empty badge. After the same tab navigated to another page, its badge text was empty, the tooltip was “Plain A11y” and the color was reset; a new check there gave 0 and an empty badge. The popup shows `items.length` as “Issues found”, the same number the badge uses (read from the message answer, not from a screenshot of the popup).

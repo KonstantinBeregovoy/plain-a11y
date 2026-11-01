@@ -12,7 +12,7 @@ Who it is for: designers, content editors, PMs and QA people without deep knowle
 - Cases the automated check could not decide on its own (axe calls them “incomplete”, for example text over a background picture or a video whose captions it cannot judge) are listed in a separate “Needs manual review” section. They are not counted as issues, have the same texts and highlight, and appear in the Markdown report in their own section.
 - Three rules of the optional AAA level (enhanced contrast, links with the same text that lead to different places, delayed page refresh) are shown in a separate “AAA recommendations” block at the bottom. It is not counted as issues, can be hidden (the choice is remembered), and is included in the Markdown report only while it is shown.
 - The “Show on page” button outlines the problem elements and scrolls to the first one. The highlight is removed by pressing the button again or by closing the popup, and the page markup returns to its original state.
-- After a check the icon shows the number of issues found on that tab (nothing for zero issues, because an automated check cannot say that a page is accessible). The count is reset when the tab loads another page.
+- After a check the icon shows the number of issues found on that tab (nothing for zero issues, because an automated check cannot say that a page is accessible). Chrome resets it when the tab loads another page.
 - The “Copy report” button puts a Markdown report with checkboxes on the clipboard, ready to paste into a ticket.
 
 ## Install
