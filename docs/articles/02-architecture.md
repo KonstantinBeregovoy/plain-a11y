@@ -70,6 +70,10 @@ That `CheckResponse` is the whole contract between the page and the popup. Every
 
 axe-core knows a rule by its id and gives a technical description. The popup does a lookup: id in, plain-language entry out (title, who is affected, how to fix it, role). If the rule is not in the dictionary, it shows the axe text and the role Code, so a new rule in a future axe version never breaks the screen. The next post is about the dictionary itself.
 
+## The number on the icon
+
+After a check, the service worker also puts the number of issues on the icon of that tab, with the same number as “Issues found” in the popup. For zero issues the icon stays empty on purpose: a “0” or a mark could be read as “passed”, and the extension must never say that. It is one call to the browser (`action.setBadgeText`) and needs no new permission. Chrome removes it again when the tab loads another page, which I first coded by hand and then removed when a test showed it was not needed (part 6).
+
 ## Highlighting without leaving a trace
 
 “Show on page” outlines the problem element and scrolls to it. It looks simple and it was the source of most of my bugs. The selectors come from axe, and for elements inside shadow DOM they are chains, not strings. Elements with no visible area (an empty icon link is 0 by 0 pixels) get no visible outline, so the highlight outlines the nearest visible parent, or says plainly that nothing can be outlined. The content of iframes is not checked at all; the README and the website say so.
