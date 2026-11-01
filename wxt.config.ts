@@ -12,7 +12,8 @@ export default defineConfig({
   }),
   manifest: {
     name: 'Plain A11y',
-    description: 'Check a page for accessibility problems and get plain-language explanations.',
+    description:
+      'Check a page for accessibility problems in plain language: what is wrong, who it affects, how to fix it and who should do it.',
     permissions: ['activeTab', 'scripting', 'storage'],
   },
 });

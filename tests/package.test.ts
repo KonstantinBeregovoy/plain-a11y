@@ -14,6 +14,24 @@ function sourceFiles(dir: string): string[] {
 const SOURCES = sourceFiles('src').filter((path) => /\.(ts|tsx|html)$/.test(path));
 
 
+describe('release texts', () => {
+  it('uses the short description of the store listing as the manifest description, within the store limit', async () => {
+    const manifest =
+      typeof config.manifest === 'function' ? undefined : await config.manifest;
+    const section = readFileSync('store/listing.md', 'utf8').split('## Short description')[1]?.split('\n## ')[0] ?? '';
+    const [, text] = section.split('\n\n').map((paragraph) => paragraph.trim());
+    expect(text).toBeTruthy();
+    expect(manifest?.description).toBe(text);
+    expect((text ?? '').length).toBeLessThanOrEqual(132);
+  });
+
+  it('keeps the privacy policy in step with the number on the icon', () => {
+    const policy = readFileSync('PRIVACY.md', 'utf8');
+    expect(policy).toContain('**Number on the icon.**');
+    expect(policy).toMatch(/does not save it and does not send it/);
+  });
+});
+
 describe('package constraints', () => {
   it('declares only activeTab, scripting and storage and no host_permissions', async () => {
     expect(typeof config.manifest).not.toBe('function');
