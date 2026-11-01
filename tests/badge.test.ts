@@ -5,7 +5,6 @@ import {
   DEFAULT_TITLE,
   badgeText,
   badgeTitle,
-  clearBadge,
   showIssueCount,
   type BadgeApi,
 } from '../src/background/badge';
@@ -62,7 +61,7 @@ describe('badge colors', () => {
   });
 });
 
-describe('showIssueCount and clearBadge', () => {
+describe('showIssueCount', () => {
   it('sets the colors, the text and the title of one tab', async () => {
     const api = fakeApi();
     await showIssueCount(12, 4, api);
@@ -78,12 +77,6 @@ describe('showIssueCount and clearBadge', () => {
     await showIssueCount(3, 0, api);
     expect(api.calls).toContain('text 3 ""');
     expect(api.calls).toContain(`title 3 "${DEFAULT_TITLE}"`);
-  });
-
-  it('clears the text and restores the title of one tab', async () => {
-    const api = fakeApi();
-    await clearBadge(9, api);
-    expect(api.calls).toEqual(['text 9 ""', `title 9 "${DEFAULT_TITLE}"`]);
   });
 
   it('passes a failure of the browser API on, so the caller can ignore it', async () => {
