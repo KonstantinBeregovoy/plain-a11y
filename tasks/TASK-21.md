@@ -15,6 +15,9 @@ Goal: remove code that does nothing. The e2e test of stage 20 showed that Chrome
 ## Do not
 Change what the badge shows. Add a replacement for the listener.
 
+## Changed later
+Chrome resets the badge on a full navigation only. After `pushState` or a change of the `#fragment` it keeps the old number (measured in `TASK-23.md`), so a `tabs.onUpdated` listener is back, for the badge and for the kept result of the tab.
+
 ## Results
 
 1. Removed the `tabs.onUpdated` listener from `src/background/index.ts`, the function `clearBadge` from `src/background/badge.ts`, and its unit test. The built `background.js` no longer contains `onUpdated`. A comment where the badge is set says that Chrome does the reset and names the e2e test.

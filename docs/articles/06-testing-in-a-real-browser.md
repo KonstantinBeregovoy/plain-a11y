@@ -34,7 +34,7 @@ Reading the badge uses the service worker itself: `chrome.action.getBadgeText({ 
 
 - The check finds the five expected rules on a page with deliberate problems, nothing on a clean page, items for manual review where axe cannot decide, and an AAA item apart from the issues.
 - “Show on page” outlines every issue, and after it is removed the markup of the page is exactly what it was, also with elements inside nested shadow roots. It outlines the nearest visible parent of an empty link, and removes the outline when the popup closes.
-- The badge shows the number of issues of that tab only, is empty for a clean page, and is gone after the tab loads another page.
+- The badge shows the number of elements with issues of that tab only, a yellow “!” when only a manual review or AAA recommendations are left, is empty for a clean page, and is gone after the tab loads another page, also after `pushState` and a `#fragment` change.
 - During a check, no request leaves the browser except to the local server and the extension itself.
 - The popup page has no axe violations in the light and the dark scheme.
 
@@ -57,7 +57,7 @@ It also found two weak tests of mine. The test for elements with no visible area
 
 ## What the tests found in the code
 
-With the listener that resets the badge on navigation removed on purpose, the badge test still passed. Chrome resets the badge of a tab when the tab loads another page, by itself. The listener from the previous stage was dead weight that woke the service worker on every tab load in the browser. It is removed now, and the test stays, because it checks the behaviour and not the listener.
+With the listener that resets the badge on navigation removed on purpose, the badge test still passed. Chrome resets the badge of a tab when the tab loads another page, by itself. The listener from the previous stage was dead weight at that moment, and I removed it. Later, when the extension began to keep the last result of a tab, I measured again with `pushState` and a `#fragment` change: there Chrome keeps the badge, so a listener is needed after all, for the badge and for the kept result. The test for a full navigation stays, and two new ones cover the single-page cases.
 
 ## What they do not cover
 

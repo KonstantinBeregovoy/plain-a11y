@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { groupByRole, groupReport } from '../report/groupReport';
+import { summarize, summaryLine } from '../report/summary';
 import { toMarkdown } from '../report/toMarkdown';
 import { IssueGroups } from './IssueGroups';
 import { AaaSection } from './AaaSection';
@@ -9,6 +10,10 @@ import { useCheck } from './useCheck';
 import { useHighlight } from './useHighlight';
 import { useRoleFilter } from './useRoleFilter';
 import { useShowAaa } from './useShowAaa';
+
+function formatTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 
 export function App() {
   const [notice, setNotice] = useState('');
@@ -74,12 +79,12 @@ export function App() {
       <div role="status" aria-live="polite">
         {state.status === 'loading' && <p>Checking…</p>}
         {state.status === 'done' && (
+          <p>{summaryLine(summarize(state))}</p>
+        )}
+        {state.status === 'done' && state.restored && (
           <p>
-            {state.items.length === 0
-              ? 'No issues found.'
-              : `Issues found: ${state.items.length}`}
-            {state.review.length > 0 &&
-              ` Needs manual review: ${state.review.length}.`}
+            Showing the result of the check at {formatTime(state.checkedAt)}. Press “Check page” to
+            check again.
           </p>
         )}
         {notice && <p>{notice}</p>}

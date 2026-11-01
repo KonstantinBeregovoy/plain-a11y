@@ -5,6 +5,11 @@ export interface RunCheckRequest {
   type: 'run-check';
 }
 
+/** The popup asks the service worker for the result kept for the open tab. */
+export interface GetLastResultRequest {
+  type: 'get-last-result';
+}
+
 /** The service worker asks the content script to run axe-core. */
 export interface RunAxeRequest {
   type: 'run-axe';
@@ -38,6 +43,20 @@ export type CheckResponse =
       review: ViolationItem[];
       aaa: ViolationItem[];
     }
+  | { ok: false; error: string };
+
+/** What is kept for a tab after a check: the three lists, the page address and the time. */
+export interface StoredCheck {
+  url: string;
+  /** Milliseconds since 1970 (`Date.now()`). */
+  checkedAt: number;
+  items: ViolationItem[];
+  review: ViolationItem[];
+  aaa: ViolationItem[];
+}
+
+export type LastResultResponse =
+  | { ok: true; result: StoredCheck | null }
   | { ok: false; error: string };
 
 export type HighlightResponse =

@@ -12,6 +12,14 @@ test.describe('the check, through the real path', () => {
     for (const item of result.items) expect(item.targets.length, item.id).toBeGreaterThan(0);
   });
 
+  test('puts a name that differs from the visible text into the review, not into the issues', async ({ tools }) => {
+    const page = await tools.open('mismatch.html');
+    const popup = await tools.popup();
+    const result = await tools.check(page, popup);
+    expect(result.items).toEqual([]);
+    expect(ids(result.review)).toEqual(['label-content-name-mismatch']);
+  });
+
   test('finds nothing on a page without problems, and does not claim anything else', async ({ tools }) => {
     const page = await tools.open('clean.html');
     const popup = await tools.popup();

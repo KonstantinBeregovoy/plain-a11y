@@ -1,6 +1,6 @@
 ---
 title: 'How I built an extension with an AI agent, mistakes included'
-description: 'One specification, 21 task files, acceptance criteria and a real browser. How Plain A11y was made, and the times the agent was wrong.'
+description: 'One specification, 24 task files, acceptance criteria and a real browser. How Plain A11y was made, and the times the agent was wrong.'
 date: 2026-11-09
 kind: article
 tags: ['ai-tooling', 'accessibility']
@@ -18,7 +18,7 @@ I did not describe the product in one long prompt. I wrote a small set of files 
 - **`AGENTS.md`**: a short list of rules for the agent. Read the spec and the task before you start. Do only that stage. Do not add features, dependencies or files beyond the task. Do not invent APIs: look in the documentation or in `node_modules`. Write tests together with the code. Strict TypeScript. Small commits. Report what was done, which commands ran, and what is unresolved.
 - **A task file per stage** in `tasks/`: a goal, steps, acceptance criteria, a “do not” list, and at the end a results section where the agent writes what it did, where it deviated and what it is unsure about.
 
-There are 21 task files now. They run from the base (a popup that runs axe) through the dictionary (four parts), the “Needs manual review” section, the AAA block, shadow DOM, the nearest-visible-parent highlight, the English translation of the process files, the toolbar badge, the browser tests, and the removal of code that a test showed was not needed.
+There are 24 task files now. They run from the base (a popup that runs axe) through the dictionary (four parts), the “Needs manual review” section, the AAA block, shadow DOM, the nearest-visible-parent highlight, the English translation of the process files, the toolbar badge, the browser tests, the removal of code that a test showed was not needed, the kept result of a tab, and the counts in three groups.
 
 ## One stage at a time
 
@@ -46,7 +46,7 @@ The agent made mistakes, and the process is designed to find them. Six that I ke
 - **A wrong guess about a security header.** When I decided to count visits on the website, the agent allowed the analytics script in the Content Security Policy and guessed where it reports to. A look at the live site in Chromium showed the report goes to the site's own address, so the first policy blocked it. A second pull request fixed it. The agent had said that this address came from general knowledge, not from documentation. It was wrong, and the check said so.
 
 - **Tests that had never failed.** The first run of the new browser tests was 18 green tests in five seconds. The agent then broke six things on purpose to see if the tests could fail, and found two weak tests of its own: one that passed with the logic broken and one that did not break what it claimed to. Both were rewritten (part 6).
-- **Code that was not needed.** In the badge stage the agent added a listener that clears the badge when a tab navigates. One of the browser tests then showed that Chrome does that by itself. The listener, its helper and its test were removed in the next stage. The task file says what was assumed and what was measured.
+- **Code that was not needed, and then was.** In the badge stage the agent added a listener that clears the badge when a tab navigates. A browser test showed that Chrome does that by itself, so the listener was removed. Two stages later I measured again for single-page sites: Chrome keeps the badge after `pushState` and a `#fragment` change, so a listener came back, for that case and for clearing the kept result. The first removal was right for the cases that were measured and wrong as a general claim.
 
 None of these reached users for long. All of them were found by a check, not by trust. That is the part of the process I would copy first.
 

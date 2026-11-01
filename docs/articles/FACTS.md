@@ -12,8 +12,8 @@ One page with the numbers and claims that the drafts use, and the command that p
 | Rules with a plain-language entry | 94 (90 default, `target-size`, 3 AAA) | `tests/dictionary.test.ts` |
 | Permissions | `activeTab`, `scripting`, `storage`; no host permissions | `.output/chrome-mv3/manifest.json` |
 | Runtime dependencies | `axe-core`, `react`, `react-dom` | `package.json` |
-| Package size | about 280 KB zip (axe-core is most of it) | `npm run zip` |
-| Source | 24 files, about 2,400 lines of TypeScript, TSX and CSS | `git ls-files src` |
+| Package size | about 281 KB zip (axe-core is most of it) | `npm run zip` |
+| Source | 25 files, about 2,700 lines of TypeScript, TSX and CSS | `git ls-files src` |
 | The content script | about 250 lines in 3 files (`src/content`) | `wc -l src/content/*.ts` |
 | Not checked by the engine | the content of iframes, closed shadow roots, `chrome://` pages | `README.md` |
 
@@ -21,8 +21,8 @@ One page with the numbers and claims that the drafts use, and the command that p
 
 | Fact | Value | How to check |
 | --- | --- | --- |
-| Unit and component tests (Vitest) | 139, about 1,800 lines | `npm run test` |
-| Browser tests (Playwright) | 19, about 440 lines, 5 s of test time | `npm run test:e2e` |
+| Unit and component tests (Vitest) | 164, about 2,100 lines | `npm run test` |
+| Browser tests (Playwright) | 33, about 630 lines, 9 s of test time | `npm run test:e2e` |
 | Website tests | 71 | `npm test` in the site repository |
 | Popup states audited with axe in a real browser | 14 (7 states, light and dark), plus others for review and AAA: 0 violations | `docs/PROJECT_LOG.md` |
 | Website audit | 4 pages, widths 1280 and 320, light and dark: 16 runs, 0 violations, no sideways scroll | a script outside the repository, see part 7 |
@@ -51,5 +51,5 @@ One page with the numbers and claims that the drafts use, and the command that p
 
 - Number of installs, ratings and reviews: none are claimed. Add real numbers from the store console later, with the date.
 - Whether `llms.txt` changes what AI assistants say about the project: not known. Part 7 says so.
-- Whether Chrome versions other than the one used for the e2e tests reset the badge on navigation: not checked.
+- Whether Chrome versions other than the one used for the e2e tests reset the badge on navigation, and whether they send the `loading` event for `pushState`: not checked.
 - How a screen reader user finds the popup: the manual checklist in `docs/a11y-checklist.md` is not done.

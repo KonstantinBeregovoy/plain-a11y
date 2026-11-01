@@ -61,6 +61,33 @@ export function toViolationItems(
   }));
 }
 
+/**
+ * Rules where a difference that axe reports is often fine in real life and needs a person to
+ * decide: a link named "Notifications" that shows "5" is normal, a button that shows "Search" and
+ * is named "Find" is not. Their violations go to the manual review, not to the issues.
+ */
+export const REVIEW_ONLY_RULES: readonly string[] = ['label-content-name-mismatch'];
+
+/** The same rule can be in two lists of one axe run: one item per rule, the elements added up. */
+function mergeById(list: readonly ViolationItem[]): ViolationItem[] {
+  const merged = new Map<string, ViolationItem>();
+  for (const item of list) {
+    const earlier = merged.get(item.id);
+    merged.set(
+      item.id,
+      earlier === undefined
+        ? item
+        : {
+            ...earlier,
+            impact: 'unknown',
+            nodeCount: earlier.nodeCount + item.nodeCount,
+            targets: [...earlier.targets, ...item.targets],
+          },
+    );
+  }
+  return [...merged.values()];
+}
+
 /** What one axe run turns into: issues, cases to review by hand, and AAA recommendations. */
 export interface CheckResult {
   items: ViolationItem[];
@@ -71,7 +98,8 @@ export interface CheckResult {
 /**
  * Splits an axe result. AAA rules are optional recommendations, so their
  * violations go to `aaa`, and neither their violations nor their unclear cases
- * end up in the main list or in the manual-review list.
+ * end up in the main list or in the manual-review list. Violations of the
+ * review-only rules go to the manual-review list.
  */
 export function buildCheckResult(
   results: {
@@ -81,9 +109,16 @@ export function buildCheckResult(
   aaaRuleIds: readonly string[],
 ): CheckResult {
   const isAaa = (rule: AxeViolationLike) => aaaRuleIds.includes(rule.id);
+  const isReviewOnly = (rule: AxeViolationLike) => REVIEW_ONLY_RULES.includes(rule.id);
+  const issues = results.violations.filter((rule) => !isAaa(rule) && !isReviewOnly(rule));
+  const moved = results.violations.filter((rule) => !isAaa(rule) && isReviewOnly(rule));
   return {
-    items: toViolationItems(results.violations.filter((rule) => !isAaa(rule))),
-    review: toViolationItems(results.incomplete.filter((rule) => !isAaa(rule))),
+    items: toViolationItems(issues),
+    review: mergeById([
+      ...toViolationItems(results.incomplete.filter((rule) => !isAaa(rule))),
+      // Their impact is not shown in the review list, so it is the same as for unclear cases.
+      ...toViolationItems(moved).map((item) => ({ ...item, impact: 'unknown' as const })),
+    ]),
     aaa: toViolationItems(results.violations.filter(isAaa)),
   };
 }

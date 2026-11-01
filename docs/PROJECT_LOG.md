@@ -6,7 +6,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 
 | Part | State |
 | --- | --- |
-| Extension (this repository) | Stages 1 to 22 are done in the repository (the last one, version 0.2.0 with the toolbar badge, is prepared and not yet in the store). 141 Vitest tests and 19 browser tests. The popup header shows the AA logo. All commits are authored by the owner with the GitHub noreply address. |
+| Extension (this repository) | Stages 1 to 24 are done in the repository. Version 0.2.0 (toolbar badge, stage 19; the popup keeps the last result of a tab, stage 23; counts of elements, three groups and the yellow mark, stage 24) is built and not yet in the store. 164 Vitest tests and 33 browser tests. The popup header shows the AA logo. All commits are authored by the owner with the GitHub noreply address. |
 | Website (`plain-a11y-site` repository) | Deployed on Cloudflare Workers at `a11y-ext.bereg.dev`. Pushes to `main` deploy by themselves. `workers.dev` and preview URLs are switched off in `wrangler.jsonc`. 45 tests. |
 | GitHub | Both repositories are public (made public on 29 October 2026). `main` is protected in both by a ruleset: changes only through a pull request, no force-push, no deletion (0 approvals, because the owner is the only maintainer; the owner merges). Two-factor authentication is on for the owner's account. The history was rewritten on 29 October 2026: every commit now uses `16078757+KonstantinBeregovoy@users.noreply.github.com`, no personal email is left in the history. |
 | Name | “Plain A11y” checked by search: no exact match in Chrome Web Store, Firefox Add-ons, npm, PyPI. Close names: Plainwork (Accessibility Report), Omi A11Y, A11Y Audit, A11yTrail. The mark “A11Y” exists in the US (class 42), see the log below. WIPO and USPTO were not searched directly. |
@@ -18,7 +18,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 
 ### What is left, in order
 
-1. Release 0.2.0 (`tasks/TASK-22.md`): the owner merges the website pull request with the privacy line, tries the build by hand in a real Chrome, merges this pull request, uploads `plain-a11y-0.2.0-chrome.zip` to the store and submits it.
+1. Release 0.2.0 (`tasks/TASK-22.md`, with the changes of `tasks/TASK-23.md` and `tasks/TASK-24.md`): the owner tries the build by hand in a real Chrome, merges the pull request of the extension, builds the zip, uploads `plain-a11y-0.2.0-chrome.zip` to the store, updates the full description from `store/listing.md` and submits it. The website pull request with the new privacy text is merged **on the day the version is approved**, not before (a merge deploys the site at once).
 2. After the store approves it: look at the store page, install from the store in a normal profile and repeat the quick check; then a `v0.2.0` tag and a GitHub release with the zip (the owner decides).
 3. The owner's full manual check with a keyboard, NVDA and VoiceOver, and the real cases of “Show on page” that still miss (page, issue, what happens; the issue template in `.github/ISSUE_TEMPLATE/` collects them), then fixes.
 4. The article series (`docs/articles/`, seven drafts, `FACTS.md`): re-check the numbers, add covers, publish after the release.
@@ -38,7 +38,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 3. **No backend, accounts or analytics in the extension.** The product promise and the privacy policy are one sentence long because of it.
 4. **Plain language for every rule.** All 94 rules the extension runs have a title, who is affected and how to fix it, and a role (Design, Content or Code). A test compares the dictionary with the rules of the installed axe-core, so a missing or extra entry fails.
 5. **Honest limits.** An empty result says that automation covers only part of the requirements. Unclear cases go to “Needs manual review” and are not counted as issues. The icon has no check mark, because a check mark means “passed”.
-6. **No automatic “accessible or not” badge.** Checking every page needs access to all sites, costs CPU, and a green badge would claim more than automation can. A badge with an issue count after a check, and an opt-in per-site auto check, are in the roadmap.
+6. **No automatic “accessible or not” badge.** Checking every page needs access to all sites, costs CPU, and a green badge would claim more than automation can. A badge after a check is there (stage 19, changed in stage 24): a red number of elements with issues, or a yellow “!” when only a manual review or AAA recommendations are left, and nothing when nothing is found. An opt-in per-site auto check is in the roadmap.
 7. **English only.** The interface, the dictionary, the report and the documents. This includes the process files (`SPEC.md`, `AGENTS.md`, `tasks/`), translated in stage 18; the earlier Russian versions stay in the git history.
 8. **MIT license.** Axe-core is MPL-2.0 and stays unchanged; its license and source link ship inside the package.
 9. **The website is a separate static repository.** Plain HTML and CSS, no scripts, a strict Content Security Policy, meant to be deployed as Cloudflare Workers static assets like bereg.dev. Its design follows bereg.dev (dark “Engineering Blueprint”, IBM Plex).
@@ -52,12 +52,12 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 | --- | --- | --- |
 | Axe-core version and rules | 4.14.0, 105 rules, 90 on by default | `node -e "const a=require('axe-core');console.log(a.getRules().length)"` |
 | Rules with a plain-language entry | 94 (90 by default, `target-size`, and 3 AAA rules) | `tests/dictionary.test.ts` |
-| Source | 23 files, about 2,300 lines of TypeScript, TSX and CSS | `git ls-files src` |
-| Tests | 141 Vitest tests (about 1,800 lines) and 19 browser tests (`npm run test:e2e`); 71 more in the website repository | `npm run test` |
-| Package size | 272 KB zip, of which the axe-core content script is 653 KB unpacked | `npm run zip` |
+| Source | 25 files, about 2,700 lines of TypeScript, TSX and CSS | `git ls-files src` |
+| Tests | 164 Vitest tests and 33 browser tests (`npm run test:e2e`); 71 more in the website repository | `npm run test` |
+| Package size | 281 KB zip, of which the axe-core content script is 653 KB unpacked | `npm run zip` |
 | Permissions | `activeTab`, `scripting`, `storage`; no host permissions | `.output/chrome-mv3/manifest.json` |
 | Runtime dependencies | axe-core, react, react-dom | `package.json` |
-| Stages | 22 task files with acceptance criteria; the later ones end with a results section | `tasks/` |
+| Stages | 24 task files with acceptance criteria; the later ones end with a results section | `tasks/` |
 | Popup states audited with axe in a real browser | 14 (7 states, light and dark), plus 4 for manual review, 4 for the AAA block and 2 for the frame note: 0 violations | scripts outside the repository, see below |
 | Website audit | 4 pages, widths 1280 and 320, 16 runs: 0 violations, no horizontal scroll, no policy violations | script outside the repository |
 | Network requests of the extension | 0 | `tests/package.test.ts` forbids `fetch`, XHR and friends; a browser run showed no external requests |

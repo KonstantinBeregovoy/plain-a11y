@@ -19,6 +19,9 @@ Goal: after “Check page” the extension icon shows the number of issues found
 ## Do not
 Count items for manual review or AAA in the badge. Check pages automatically. Show a badge for a clean page. Store the count anywhere (no new data in `storage`).
 
+## Changed later
+`TASK-24.md` changed what the number means: it counts elements, not kinds of problem, and a yellow “!” shows when only a manual review or AAA recommendations are left. The tooltip text changed with it. Steps 1 to 3 above describe the first version.
+
 ## Results
 
 1. New file `src/background/badge.ts`: `badgeText`, `badgeTitle`, `showIssueCount`, `clearBadge` and `browserBadgeApi` (the real API behind a small interface, like `inject.ts`). `src/background/index.ts` sets the badge after a successful check, and (until `TASK-21.md`) cleared the tab on `tabs.onUpdated` with `status: 'loading'`; `clearBadge` went away with it. A failure to set the badge is swallowed, the check result is still returned.

@@ -7,12 +7,20 @@ import {
   type ClearHighlightRequest,
   type HighlightRequest,
   type HighlightResponse,
+  type LastResultResponse,
   type PingRequest,
   type PingResponse,
   type RunAxeRequest,
 } from '../report/messages';
-import { browserBadgeApi, showIssueCount } from './badge';
+import { summarize } from '../report/summary';
+import { browserBadgeApi, clearIssueCount, showResultBadge } from './badge';
 import { ensureContentScript } from './inject';
+import {
+  browserSessionStore,
+  forgetResult,
+  loadResult,
+  saveResult,
+} from './lastResult';
 
 /** The tab where the highlight is currently on. */
 let highlightedTabId: number | undefined;
@@ -49,16 +57,44 @@ async function checkActiveTab(): Promise<CheckResponse> {
     const request: RunAxeRequest = { type: 'run-axe' };
     const response = (await browser.tabs.sendMessage(tabId, request)) as CheckResponse;
     if (response.ok) {
-      // The badge is a convenience: if it cannot be set, the check still succeeded.
-      // Chrome resets the badge of a tab when the tab loads another page (tests/e2e/badge.spec.ts).
-      await showIssueCount(tabId, response.items.length, browserBadgeApi()).catch(
+      // The badge and the kept result are conveniences: if they cannot be set, the check still succeeded.
+      // Both are dropped when the tab loads a page (see forgetTab).
+      await showResultBadge(tabId, summarize(response), browserBadgeApi()).catch(
         () => undefined,
       );
+      await saveResult(
+        tabId,
+        {
+          url: response.url,
+          checkedAt: Date.now(),
+          items: response.items,
+          review: response.review,
+          aaa: response.aaa,
+        },
+        browserSessionStore(),
+      ).catch(() => undefined);
     }
     return response;
   } catch (error) {
     return { ok: false, error: errorMessage(error) };
   }
+}
+
+async function lastResultOfActiveTab(): Promise<LastResultResponse> {
+  try {
+    const tabId = await activeTabId();
+    if (tabId === undefined) return { ok: true, result: null };
+    return { ok: true, result: await loadResult(tabId, browserSessionStore()) };
+  } catch (error) {
+    return { ok: false, error: errorMessage(error) };
+  }
+}
+
+/** Drops what a check left on a tab: the kept result and the number on the icon. */
+async function forgetTab(tabId: number, clearBadge: boolean): Promise<void> {
+  await forgetResult(tabId, browserSessionStore()).catch(() => undefined);
+  // The tab may be gone already.
+  if (clearBadge) await clearIssueCount(tabId, browserBadgeApi()).catch(() => undefined);
 }
 
 async function highlight(request: HighlightRequest): Promise<HighlightResponse> {
@@ -93,6 +129,10 @@ export default defineBackground(() => {
       checkActiveTab().then(sendResponse);
       return true;
     }
+    if (hasType(message, 'get-last-result')) {
+      lastResultOfActiveTab().then(sendResponse);
+      return true;
+    }
     if (isHighlightRequest(message)) {
       highlight(message).then(sendResponse);
       return true;
@@ -102,6 +142,16 @@ export default defineBackground(() => {
       return true;
     }
     return false;
+  });
+
+  // The tab starts loading a page, also after going back, reloading, or when a single-page site
+  // changes the address: the old result no longer describes the page (tests/e2e/lastResult.spec.ts).
+  // Loading an iframe later does not fire this. The event also needs no host permission.
+  browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    if (changeInfo.status === 'loading') void forgetTab(tabId, true);
+  });
+  browser.tabs.onRemoved.addListener((tabId) => {
+    void forgetTab(tabId, false);
   });
 
   // The port stays alive while the popup is open. Closing the popup drops it.
