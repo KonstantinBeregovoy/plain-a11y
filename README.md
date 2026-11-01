@@ -44,8 +44,13 @@ To check local files (`file://`), turn on “Allow access to file URLs” in the
 | `npm run zip` | Builds the archive for upload to the Chrome Web Store: `.output/plain-a11y-<version>-chrome.zip` |
 | `npm run typecheck` | Type check (TypeScript strict) |
 | `npm run test` | Tests (Vitest) |
+| `npm run test:e2e` | Builds, then runs 19 browser tests: the built extension is loaded into a real Chromium (check, “Show on page”, badge, no network, the popup page with axe) |
 | `npm run icons` | Regenerates the 16, 48 and 128 px icons from `scripts/icon.svg` |
 | `npm run dev` | Development build with reload |
+
+### Browser tests
+
+`npm run test:e2e` needs a Chromium for Playwright: run `npx playwright install chromium` once, or set `PLAYWRIGHT_CHROMIUM_PATH` to a browser that is already installed. The tests load a temporary copy of `.output/chrome-mv3` that has the extra host permission a driven browser needs, so the real manifest is never changed; a test checks that the copy differs only by that line. They use only the local pages in `tests/fixtures`.
 
 ## Architecture
 
