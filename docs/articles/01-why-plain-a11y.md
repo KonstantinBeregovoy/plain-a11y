@@ -46,4 +46,12 @@ I did not write my own accessibility rules. That is expensive and easy to get wr
 
 It is free and open source (MIT). The [Chrome Web Store page](https://chromewebstore.google.com/detail/plain-a11y/cnldihaficjignkhpgodanceilllbjfb), the [website](https://a11y-ext.bereg.dev) and the [source code](https://github.com/KonstantinBeregovoy/plain-a11y) are all public.
 
-This is the first of a few posts. The next ones are about how it is built, how the plain-language dictionary works, what my tests missed and a real browser found, and how the whole thing was made with an AI coding agent, including the times the agent was wrong.
+This is the first of seven posts:
+
+1. Why it exists (this one).
+2. How it is built: the architecture and the limits that shaped it.
+3. The dictionary: 94 rules in plain language, and the tests that keep it honest.
+4. Ten things my tests missed and a real browser found.
+5. How the whole thing was made with an AI coding agent, including the times the agent was wrong.
+6. How I test a Chrome extension in a real browser.
+7. A website that keeps the same promise as the extension.
