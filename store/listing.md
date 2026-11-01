@@ -6,9 +6,9 @@ Plain A11y
 
 ## Short description (up to 132 characters)
 
-Note: the store takes this summary from `description` in the manifest (set in `wxt.config.ts`), not from this file. At the first release the manifest said “Check a page for accessibility problems and get plain-language explanations.” Change the manifest the next time a version is uploaded, so that the two match.
-
 Check a page for accessibility problems in plain language: what is wrong, who it affects, how to fix it and who should do it.
+
+Note: the store takes this summary from `description` in the manifest (`wxt.config.ts`), not from this file. At the first release (0.1.0) the manifest had a different, shorter text; from 0.2.0 the two are the same, and a test in `tests/package.test.ts` fails if they differ.
 
 ## Full description
 
@@ -19,6 +19,7 @@ What you get:
 - For every problem: what is wrong, who it affects and how to fix it.
 - The role that should handle the task: design, content or code. The list can be filtered by role.
 - Highlighting of the problem element right on the page.
+- The number of issues on the extension icon after a check (nothing for zero issues).
 - A Markdown report with checkboxes in one click: paste it into a ticket.
 
 Privacy: the check runs entirely in your browser. The extension collects nothing, sends nothing and loads nothing from the network. It asks only for the activeTab, scripting and storage permissions, with no access to all sites.

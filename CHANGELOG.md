@@ -2,9 +2,10 @@
 
 All notable changes to the extension. The website has its own repository and history.
 
-## 0.2.0: not released yet
+## 0.2.0: prepared, not yet in the store
 
 - **Added:** after “Check page”, the icon shows the number of issues found on that tab (the same number as “Issues found” in the popup). It is empty for zero issues, because an automated check cannot say that a page is accessible, and Chrome resets it when the tab loads another page. No new permission and nothing is stored (`tasks/TASK-19.md`, `tasks/TASK-21.md`).
+- **Changed:** the short description in the manifest is now the one in `store/listing.md` (the store shows the manifest text), and a test keeps the two equal. The privacy policy says what happens to the number on the icon (`PRIVACY.md`, and the same text on the website).
 - **Internal:** browser end-to-end tests in the repository (`npm run test:e2e`, 19 tests, `tasks/TASK-20.md`). Rules for contributors (`CONTRIBUTING.md`, `SECURITY.md`, an issue form for pages where the check goes wrong). The process files and task files are in English.
 
 ## 0.1.0: 30 October 2026
