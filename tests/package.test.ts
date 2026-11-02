@@ -25,6 +25,25 @@ describe('release texts', () => {
     expect((text ?? '').length).toBeLessThanOrEqual(132);
   });
 
+  it('has a changelog entry for the version in package.json, newest first, with ISO dates for released versions', () => {
+    const log = readFileSync('CHANGELOG.md', 'utf8');
+    const { version } = JSON.parse(readFileSync('package.json', 'utf8')) as { version: string };
+    const headings = [...log.matchAll(/^## (\d+\.\d+\.\d+) - (.+)$/gm)].map((match) => ({
+      version: match[1] ?? '',
+      when: match[2] ?? '',
+    }));
+    expect(headings[0]?.version, 'the newest entry must be the version in package.json').toBe(version);
+    for (const { version: entry, when } of headings) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(when)) {
+        expect(new Date(`${when}T00:00:00Z`).toISOString().slice(0, 10), entry).toBe(when);
+      } else {
+        expect(when, entry).toMatch(/^under review in the Chrome Web Store$/);
+      }
+    }
+    expect(headings.at(-1)).toEqual({ version: '0.1.0', when: '2026-10-30' });
+    expect(log).toContain('Launch of the base version');
+  });
+
   it('keeps the privacy policy in step with what the extension keeps: the number on the icon and the last result of a tab', () => {
     const policy = readFileSync('PRIVACY.md', 'utf8');
     expect(policy).toContain('**Number on the icon.**');
