@@ -53,7 +53,7 @@ State of the project on 29 October 2026, the decisions behind it, and verifiable
 | Axe-core version and rules | 4.14.0, 105 rules, 90 on by default | `node -e "const a=require('axe-core');console.log(a.getRules().length)"` |
 | Rules with a plain-language entry | 94 (90 by default, `target-size`, and 3 AAA rules) | `tests/dictionary.test.ts` |
 | Source | 25 files, about 2,700 lines of TypeScript, TSX and CSS | `git ls-files src` |
-| Tests | 165 Vitest tests and 33 browser tests (`npm run test:e2e`); 71 more in the website repository | `npm run test` |
+| Tests | 165 Vitest tests and 33 browser tests (`npm run test:e2e`); 102 more in the website repository | `npm run test` |
 | Package size | 281 KB zip, of which the axe-core content script is 653 KB unpacked | `npm run zip` |
 | Permissions | `activeTab`, `scripting`, `storage`; no host permissions | `.output/chrome-mv3/manifest.json` |
 | Runtime dependencies | axe-core, react, react-dom | `package.json` |

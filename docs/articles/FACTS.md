@@ -21,9 +21,9 @@ One page with the numbers and claims that the drafts use, and the command that p
 
 | Fact | Value | How to check |
 | --- | --- | --- |
-| Unit and component tests (Vitest) | 164, about 2,100 lines | `npm run test` |
+| Unit and component tests (Vitest) | 165, about 2,100 lines | `npm run test` |
 | Browser tests (Playwright) | 33, about 630 lines, 9 s of test time | `npm run test:e2e` |
-| Website tests | 71 | `npm test` in the site repository |
+| Website tests | 102 | `npm test` in the site repository |
 | Popup states audited with axe in a real browser | 14 (7 states, light and dark), plus others for review and AAA: 0 violations | `docs/PROJECT_LOG.md` |
 | Website audit | 4 pages, widths 1280 and 320, light and dark: 16 runs, 0 violations, no sideways scroll | a script outside the repository, see part 7 |
 | Mutation checks of the e2e tests | 6 things broken on purpose; each time the right test failed; 2 weak tests found and fixed | `tasks/TASK-20.md`, result 4 and 5 |
