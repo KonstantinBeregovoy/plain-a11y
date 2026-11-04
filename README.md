@@ -38,12 +38,16 @@ Then in Chrome:
 
 To check local files (`file://`), turn on “Allow access to file URLs” in the extension settings.
 
+For Firefox (version 140 or newer) run `npm run build:firefox` and load `.output/firefox-mv3` as a temporary add-on. How to try it, how to send it to addons.mozilla.org and what was checked: [docs/FIREFOX.md](docs/FIREFOX.md).
+
 ## Commands
 
 | Command | What it does |
 | --- | --- |
 | `npm run build` | Builds the extension into `.output/chrome-mv3` |
 | `npm run zip` | Builds the archive for upload to the Chrome Web Store: `.output/plain-a11y-<version>-chrome.zip` |
+| `npm run build:firefox` | Builds the extension for Firefox into `.output/firefox-mv3` |
+| `npm run zip:firefox` | Builds the archives for addons.mozilla.org: the package `.output/plain-a11y-<version>-firefox.zip` and the sources `.output/plain-a11y-<version>-sources.zip` |
 | `npm run typecheck` | Type check (TypeScript strict) |
 | `npm run test` | Tests (Vitest) |
 | `npm run test:e2e` | Builds, then runs 33 browser tests: the built extension is loaded into a real Chromium (check, “Show on page”, badge, kept result, no network, the popup page with axe) |
