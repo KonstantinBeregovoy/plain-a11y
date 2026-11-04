@@ -4,6 +4,7 @@ import {
   loadResult,
   resultKey,
   saveResult,
+  startsNewPage,
   type SessionStore,
 } from '../src/background/lastResult';
 import type { StoredCheck } from '../src/report/messages';
@@ -85,5 +86,22 @@ describe('the kept result of a tab', () => {
     await expect(saveResult(7, CHECK, failing)).rejects.toThrow('quota');
     await expect(loadResult(7, failing)).rejects.toThrow('quota');
     await expect(forgetResult(7, failing)).rejects.toThrow('quota');
+  });
+});
+
+describe('the signal that a tab shows another page', () => {
+  it('is a status "loading" (Chrome: navigation, reload, back, pushState, fragment)', () => {
+    expect(startsNewPage({ status: 'loading' })).toBe(true);
+    expect(startsNewPage({ status: 'loading', url: 'https://example.com/a' })).toBe(true);
+  });
+
+  it('is a new address even when the status is "complete" (Firefox: pushState, fragment)', () => {
+    expect(startsNewPage({ status: 'complete', url: 'https://example.com/a#x' })).toBe(true);
+    expect(startsNewPage({ url: 'https://example.com/a#x' })).toBe(true);
+  });
+
+  it('is not the end of a load, a title or an icon change', () => {
+    expect(startsNewPage({ status: 'complete' })).toBe(false);
+    expect(startsNewPage({})).toBe(false);
   });
 });
