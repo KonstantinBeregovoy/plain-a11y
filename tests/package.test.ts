@@ -13,11 +13,17 @@ function sourceFiles(dir: string): string[] {
 
 const SOURCES = sourceFiles('src').filter((path) => /\.(ts|tsx|html)$/.test(path));
 
+/** The manifest the config produces for one target browser (the manifest is a function of the browser). */
+async function manifestFor(browser: 'chrome' | 'firefox') {
+  const { manifest } = config;
+  if (typeof manifest !== 'function') return manifest;
+  return manifest({ browser, manifestVersion: 3, mode: 'production', command: 'build' });
+}
+
 
 describe('release texts', () => {
   it('uses the short description of the store listing as the manifest description, within the store limit', async () => {
-    const manifest =
-      typeof config.manifest === 'function' ? undefined : await config.manifest;
+    const manifest = await manifestFor('chrome');
     const section = readFileSync('store/listing.md', 'utf8').split('## Short description')[1]?.split('\n## ')[0] ?? '';
     const [, text] = section.split('\n\n').map((paragraph) => paragraph.trim());
     expect(text).toBeTruthy();
@@ -63,17 +69,35 @@ describe('release texts', () => {
 });
 
 describe('package constraints', () => {
-  it('declares only activeTab, scripting and storage and no host_permissions', async () => {
-    expect(typeof config.manifest).not.toBe('function');
-    const manifest =
-      typeof config.manifest === 'function' ? undefined : await config.manifest;
-    expect(manifest).toBeDefined();
-    expect([...(manifest?.permissions ?? [])].sort()).toEqual([
-      'activeTab',
-      'scripting',
-      'storage',
-    ]);
-    expect(manifest?.host_permissions).toBeUndefined();
+  it('declares only activeTab, scripting and storage and no host_permissions, for Chrome and for Firefox', async () => {
+    for (const browser of ['chrome', 'firefox'] as const) {
+      const manifest = await manifestFor(browser);
+      expect(manifest, browser).toBeDefined();
+      expect([...(manifest?.permissions ?? [])].sort(), browser).toEqual([
+        'activeTab',
+        'scripting',
+        'storage',
+      ]);
+      expect(manifest?.host_permissions, browser).toBeUndefined();
+      expect(manifest?.optional_permissions, browser).toBeUndefined();
+    }
+  });
+
+  it('keeps the Firefox settings out of the Chrome manifest and changes nothing else', async () => {
+    const chrome = await manifestFor('chrome');
+    const firefox = await manifestFor('firefox');
+    expect(chrome?.browser_specific_settings).toBeUndefined();
+    expect(firefox?.browser_specific_settings).toBeDefined();
+    const { browser_specific_settings: firefoxOnly, ...withoutSettings } = firefox ?? {};
+    expect(firefoxOnly).toBeDefined();
+    expect(withoutSettings).toEqual(chrome);
+  });
+
+  it('gives the Firefox manifest an id and says that no data is collected', async () => {
+    const gecko = (await manifestFor('firefox'))?.browser_specific_settings?.gecko;
+    expect(gecko?.id).toBe('plain-a11y@bereg.dev');
+    expect(gecko?.data_collection_permissions).toEqual({ required: ['none'] });
+    expect(Number.parseInt(gecko?.strict_min_version ?? '', 10)).toBeGreaterThanOrEqual(140);
   });
 
   it('has no network calls or remotely loaded code in the sources', () => {
