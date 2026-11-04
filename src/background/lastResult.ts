@@ -7,6 +7,15 @@ export interface SessionStore {
   remove(key: string): Promise<void>;
 }
 
+/**
+ * True when a `tabs.onUpdated` change means the tab shows another page, so the kept result is stale.
+ * Chrome reports a new page, a `pushState` and a change of the `#fragment` as status "loading".
+ * Firefox reports the last two as a change of the address with status "complete" (measured in Firefox 160).
+ */
+export function startsNewPage(changeInfo: { status?: string; url?: string }): boolean {
+  return changeInfo.status === 'loading' || changeInfo.url !== undefined;
+}
+
 /** One key per tab. */
 export function resultKey(tabId: number): string {
   return `result:${tabId}`;

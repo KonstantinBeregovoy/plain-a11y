@@ -20,6 +20,7 @@ import {
   forgetResult,
   loadResult,
   saveResult,
+  startsNewPage,
 } from './lastResult';
 
 /** The tab where the highlight is currently on. */
@@ -147,8 +148,9 @@ export default defineBackground(() => {
   // The tab starts loading a page, also after going back, reloading, or when a single-page site
   // changes the address: the old result no longer describes the page (tests/e2e/lastResult.spec.ts).
   // Loading an iframe later does not fire this. The event also needs no host permission.
+  // Firefox reports a pushState and a fragment change only as a new address (startsNewPage).
   browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
-    if (changeInfo.status === 'loading') void forgetTab(tabId, true);
+    if (startsNewPage(changeInfo)) void forgetTab(tabId, true);
   });
   browser.tabs.onRemoved.addListener((tabId) => {
     void forgetTab(tabId, false);
