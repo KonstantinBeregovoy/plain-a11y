@@ -4,7 +4,7 @@ All notable changes to the extension, newest first. The website has its own repo
 
 How it is kept: each version has a heading `## <version> - <date>`, with the date as `YYYY-MM-DD`. The date is the day the version appeared in the Chrome Web Store, not the day of the commit. A version that is still under review has no date yet and says so; the date is filled in when the store approves it. Changes are grouped under Added, Changed, Fixed, Privacy and Internal, and a stage's task file is named where there is one.
 
-## 0.2.0 - under review in the Chrome Web Store
+## 0.2.0 - 2026-11-02
 
 ### Added
 - The popup keeps the result of the last check of a tab. Closing and opening it again on the same page shows the same lists, with the time of the check and a note to press “Check page” to check again. The result is dropped when the tab loads another page (also after going back, a reload, a change of the address by a single-page site or of the `#fragment`) and when the tab is closed (`tasks/TASK-23.md`).
