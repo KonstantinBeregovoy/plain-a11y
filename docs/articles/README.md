@@ -30,7 +30,7 @@ Suggested order of publishing: 1, then 4 (the most readable), then 2, 3, 5, 6, 7
 
 - Re-check the numbers in `FACTS.md`; every row has the command that proves it. They were true on 1 November 2026: 105 rules in axe-core 4.14.0, 90 on by default, 94 with a plain-language entry, 165 Vitest tests and 33 browser tests, three permissions, 24 task files.
 - Add a cover (1200×630) and a `coverAlt` text, set the date, and set `draft: false`. After the post is on LinkedIn, add its address as `linkedin`.
-- Parts 2, 5 and 6 mention the toolbar badge, the kept result and the counts, which are in `main` but not yet in the store (version 0.2.0 is not released). Publish them after the release, or say “in the next version”.
+- Parts 2, 5 and 6 mention the toolbar badge, the kept result and the counts, which were released in version 0.2.0 (in the store since 2 November 2026), so these parts can be published.
 - Parts 2 to 5 mention the project in the first person. The agent is called “the agent” and the owner “I”; change this if you want a different voice.
 - Part 5 says that the project was built with an AI coding agent. That is a decision about how you present your work; the text is written to be honest about it, not to hide it.
 
