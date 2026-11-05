@@ -43,7 +43,7 @@ describe('release texts', () => {
       if (/^\d{4}-\d{2}-\d{2}$/.test(when)) {
         expect(new Date(`${when}T00:00:00Z`).toISOString().slice(0, 10), entry).toBe(when);
       } else {
-        expect(when, entry).toMatch(/^under review in the Chrome Web Store$/);
+        expect(when, entry).toMatch(/^under review$/);
       }
     }
     expect(headings.at(-1)).toEqual({ version: '0.1.0', when: '2026-10-30' });

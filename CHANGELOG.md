@@ -2,7 +2,21 @@
 
 All notable changes to the extension, newest first. The website has its own repository and history, and a short version of this list for users at https://a11y-ext.bereg.dev/changelog.
 
-How it is kept: each version has a heading `## <version> - <date>`, with the date as `YYYY-MM-DD`. The date is the day the version appeared in the Chrome Web Store, not the day of the commit. A version that is still under review has no date yet and says so; the date is filled in when the store approves it. Changes are grouped under Added, Changed, Fixed, Privacy and Internal, and a stage's task file is named where there is one.
+How it is kept: each version has a heading `## <version> - <date>`, with the date as `YYYY-MM-DD`. The date is the day the version first appeared in a store (the Chrome Web Store or addons.mozilla.org), not the day of the commit. A version that is still under review has no date yet and says “under review”; the date is filled in when the first store approves it. Changes are grouped under Added, Changed, Fixed, Privacy and Internal, and a stage's task file is named where there is one.
+
+## 0.2.1 - under review
+
+### Added
+- Plain A11y for desktop Firefox 140 or newer (addons.mozilla.org). The same checks and the same three permissions; the manifest says that no data is collected. How to try the build and what was checked: `docs/FIREFOX.md` (`tasks/TASK-26.md`).
+
+### Changed
+- The kept result of a tab and the number on the icon are also dropped when a page changes its address without loading (`history.pushState`, a change of the `#fragment`) in Firefox, which reports these changes differently from Chrome. Nothing changes in Chrome.
+
+### Privacy
+- No change: the same three permissions, no network requests, no data collected.
+
+### Internal
+- The manifest is built per browser (`wxt.config.ts`): only the Firefox build carries the add-on id `plain-a11y@bereg.dev`, the minimum Firefox version and the data collection line. New scripts `build:firefox` and `zip:firefox` (the second also makes the archive of the sources that Mozilla asks for). The release routine for two stores is in `tasks/TASK-27.md`.
 
 ## 0.2.0 - 2026-11-02
 
